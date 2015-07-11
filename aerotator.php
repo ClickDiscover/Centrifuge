@@ -43,8 +43,6 @@ if ($result) {
     $step2_image = "http://www.img2srv.com/".$step2.".png";
     $step1_name = $result["step1_name"];
     $step2_name = $result["step2_name"];
-	
-	
 }
 ?>
 

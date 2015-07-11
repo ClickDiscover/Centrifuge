@@ -23,8 +23,10 @@ function ad_exchange_request($affiliate_id, $vertical, $country, $user_agent)
     return json_decode($return, true);
 }
 
-function ad_exchange_url($affiliate_id, $vertical, $country)
-{
-    $res = ad_exchange_request($affiliate_id, $vertical, $country, $_SERVER["HTTP_USER_AGENT"]);
-    return $res;
-}
+
+
+// function ad_exchange_url($affiliate_id, $vertical, $country)
+// {
+//     $res = ad_exchange_request($affiliate_id, $vertical, $country, $_SERVER["HTTP_USER_AGENT"]);
+//     return $res;
+// }

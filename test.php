@@ -25,16 +25,27 @@ $res = Product::fetchFromAdExchange($affiliate_id, $vertical, $country);
 <h3>Server shit</h3>
 
 
+<?php
+    echo "<pre>";
+    print_r($_SERVER);
+    echo "</pre>";
+?>
+
+
+<div>
+<?php
+    foreach ($res as $r) {
+        echo $r->getName();
+        echo '<img src="'.$r->getImageUrl().'"/>';
+    }
+?>
+</div>
 
 <?php
-foreach ($res as $r) {
-    echo $r->getName();
-    echo '<img src="'.$r->getImageUrl().'"/>';
-}
-
 include "tracking.php";
-
 ?>
+
+<?php phpinfo(); ?>
 
 </body>
 </html>
