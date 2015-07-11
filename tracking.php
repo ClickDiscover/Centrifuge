@@ -1,5 +1,5 @@
 <?php
-include 'defines.php';
+include_once 'defines.php';
 ?>
 
 <?php if (ENABLE_GOOGLE_ANALYTICS == true): ?>

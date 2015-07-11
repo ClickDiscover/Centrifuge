@@ -1,7 +1,7 @@
 <?php
 
 require 'vendor/autoload.php';
-require 'adexchange.php';
+require_once 'adexchange.php';
 use League\Url\Url;
 
 

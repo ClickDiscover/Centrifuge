@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- saved from url=(0049)http://womenshousekeepingmag.com/wh/slimming.html -->A
 <?php
-include "master.php"
+include_once "master.php"
 ?>
 
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

@@ -1,6 +1,7 @@
 <?php
-include "master.php";
-require "product.php";
+include_once "master.php";
+require_once "product.php";
+require_once "defines.php";
 
 
 $url = click_url(1);
@@ -25,13 +26,6 @@ $res = Product::fetchFromAdExchange($affiliate_id, $vertical, $country);
 <h3>Server shit</h3>
 
 
-<?php
-    echo "<pre>";
-    print_r($_SERVER);
-    echo "</pre>";
-?>
-
-
 <div>
 <?php
     foreach ($res as $r) {
@@ -41,11 +35,31 @@ $res = Product::fetchFromAdExchange($affiliate_id, $vertical, $country);
 ?>
 </div>
 
+
+<?php
+
+$db = new PDO(PDO_URL);
+$query = $db->query('SELECT * FROM offers');
+
+foreach ($query as $q) {
+    // print_r($q);
+    print_r($q['id']);
+    echo "<br>";
+    print_r($q['name']);
+    echo "<br>";
+    print_r($q['parameters']);
+    echo "<br>";
+}
+
+
+?>
+
+
+
 <?php
 include "tracking.php";
 ?>
 
-<?php phpinfo(); ?>
 
 </body>
 </html>
