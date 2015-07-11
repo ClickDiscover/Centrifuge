@@ -1,5 +1,9 @@
 <?php
-include "master.php"
+include "master.php";
+
+
+$url = click_url(1);
+
 ?>
 
 <html>
@@ -9,6 +13,8 @@ include "master.php"
 <body>
 
 <h1>Hello</h1>
+<p><?= $url ?></p>
+<p><?= click_url(2) ?></p>
 <p><?= $step1_link ?></p>
 <p><?= $step2_link ?></p>
 
@@ -19,6 +25,7 @@ include "master.php"
 <?php
 print_r($_SERVER);
 
-include "tracking.php" ?>
+include "tracking.php";
+?>
 </body>
 </html>

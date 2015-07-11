@@ -1,5 +1,18 @@
 <?php
 
+require 'vendor/autoload.php';
+use League\Url\Url;
+use League\Url\UrlImmutable;
+
+function click_url($step_id)
+{
+    $url = Url::createFromServer($_SERVER);
+    $url->setPath("base2.php");
+    $url->getQuery()->modify(array("id" => $step_id));
+    return $url;
+}
+
+
 $affiliate_id = 170317;
 $vertical = "skin";
 $country = "US";
@@ -17,5 +30,6 @@ $step2_link = "http://cpv.flagshippromotions.com/base2.php?id=2";
 if (isset($_SERVER['QUERY_STRING'])) {
     $step2_link .= '&'.$_SERVER['QUERY_STRING'];
 }
+
 $step2_name = "Bright Skin Cream";
 $step2_image = "http://www.img2srv.com/272.png";
