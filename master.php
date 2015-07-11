@@ -4,6 +4,7 @@ require 'vendor/autoload.php';
 use League\Url\Url;
 use League\Url\UrlImmutable;
 
+
 function click_url($step_id)
 {
     $url = Url::createFromServer($_SERVER);
@@ -12,24 +13,32 @@ function click_url($step_id)
     return $url;
 }
 
+// $affiliate_id = 170317;
+// $vertical = "skin";
+// $country = "US";
 
-$affiliate_id = 170317;
-$vertical = "skin";
-$country = "US";
+// $step1_link = "http://cpv.flagshippromotions.com/base2.php?id=1";
 
-$step1_link = "http://cpv.flagshippromotions.com/base2.php?id=1";
+// if (isset($_SERVER['QUERY_STRING'])) {
+//     $step1_link .= '&'.$_SERVER['QUERY_STRING'];
+// }
+// // &" . $_SERVER['QUERY_STRING'];
+// $step1_name = "NuVie Firming Serum";
+// $step1_image = "http://www.img2srv.com/78.png";
 
-if (isset($_SERVER['QUERY_STRING'])) {
-    $step1_link .= '&'.$_SERVER['QUERY_STRING'];
-}
-// &" . $_SERVER['QUERY_STRING'];
-$step1_name = "NuVie Firming Serum";
-$step1_image = "http://www.img2srv.com/78.png";
+// $step2_link = "http://cpv.flagshippromotions.com/base2.php?id=2";
+// if (isset($_SERVER['QUERY_STRING'])) {
+//     $step2_link .= '&'.$_SERVER['QUERY_STRING'];
+// }
 
-$step2_link = "http://cpv.flagshippromotions.com/base2.php?id=2";
-if (isset($_SERVER['QUERY_STRING'])) {
-    $step2_link .= '&'.$_SERVER['QUERY_STRING'];
-}
+// $step2_name = "Bright Skin Cream";
+// $step2_image = "http://www.img2srv.com/272.png";
 
-$step2_name = "Bright Skin Cream";
-$step2_image = "http://www.img2srv.com/272.png";
+// if ($result) {
+
+//     $step1 = $result["step1"];
+//     $step2 = $result["step2"];
+//     $step1_image = "http://www.img2srv.com/".$step1.".png";
+//     $step2_image = "http://www.img2srv.com/".$step2.".png";
+//     $step1_name = $result["step1_name"];
+//     $step2_name = $result["step2_name"];

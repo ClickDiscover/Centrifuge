@@ -1,8 +1,15 @@
 <?php
 include "master.php";
+require "product.php";
 
 
 $url = click_url(1);
+$affiliate_id = 170317;
+$vertical = "skin";
+$country = "US";
+
+$res = Product::fetchFromAdExchange($affiliate_id, $vertical, $country);
+
 
 ?>
 
@@ -15,17 +22,19 @@ $url = click_url(1);
 <h1>Hello</h1>
 <p><?= $url ?></p>
 <p><?= click_url(2) ?></p>
-<p><?= $step1_link ?></p>
-<p><?= $step2_link ?></p>
-
-
 <h3>Server shit</h3>
 
 
+
 <?php
-print_r($_SERVER);
+foreach ($res as $r) {
+    echo $r->getName();
+    echo '<img src="'.$r->getImageUrl().'"/>';
+}
 
 include "tracking.php";
+
 ?>
+
 </body>
 </html>
