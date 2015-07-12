@@ -1,5 +1,5 @@
 <?php
-include_once 'defines.php';
+include_once dirname(__FILE__).'/./defines.php';
 ?>
 
 <?php if (ENABLE_GOOGLE_ANALYTICS == true): ?>

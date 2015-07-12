@@ -1,6 +1,6 @@
 <?php
-include_once "master.php";
-require_once "product.php";
+include_once "adexchange.php";
+require_once "models/product.php";
 require_once "defines.php";
 
 
@@ -52,12 +52,6 @@ foreach ($query as $q) {
 }
 
 
-?>
-
-
-
-<?php
-include "tracking.php";
 ?>
 
 

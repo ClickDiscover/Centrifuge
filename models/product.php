@@ -1,7 +1,7 @@
 <?php
 
-require 'vendor/autoload.php';
-require_once 'adexchange.php';
+require dirname(__FILE__).'/../vendor/autoload.php';
+require_once dirname(__FILE__).'/../adexchange.php';
 use League\Url\Url;
 
 
@@ -24,13 +24,11 @@ class Product
         return array($s1, $s2);
     }
 
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
-    public function getImageUrl()
-    {
+    public function getImageUrl() {
         return "http://www.img2srv.com/".$this->id.".png";
     }
 }
