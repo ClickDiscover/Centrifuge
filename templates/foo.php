@@ -7,7 +7,7 @@
 <h1>Womens Dumb Magazine</h1>
 
 <h2>Shocking new products get rid of that menopause/over 40/baby/water/period/you just ate 2 donuts/pregnancy weight immediately!
-Absolutely NO EFFORT REQUIRED. Doctor's hate it. Oprah's addicted to it, Dr Oz invented it.</h2>
+Absolutely NO EFFORT REQUIRED. Doctor's hate it, Oprah's addicted to it, Dr Oz invented it.</h2>
 <div>Look at how fat this chick is!<br>[put a fat pic here]</br></div>
 
 
@@ -27,5 +27,6 @@ Damn... Im jelly!
 </div>
 
 
+<?= $tracking->getTrackingHTML() ?>
 </body>
 </html>

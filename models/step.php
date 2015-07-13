@@ -16,6 +16,18 @@ class Step
         $this->p = $product;
     }
 
+    public static function fromProducts($products) {
+        $c = 1;
+        $steps = array();
+        foreach ($products as $r) {
+            $steps[$c] = new Step($c, $r);
+            $c++;
+        }
+        return $steps;
+    }
+
+
+
     public function getId() {
         return $this->id;
     }
