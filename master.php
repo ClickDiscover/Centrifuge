@@ -6,9 +6,32 @@ require_once "models/step.php";
 require_once "models/tracking.php";
 require 'vendor/autoload.php';
 
+// use Symfony\Component\HttpFoundation\Request;
+// use Symfony\Component\HttpFoundation\Response;
+
+// $router = new League\Route\RouteCollection;
+// $router->get('/silly', function (Request $request, Response $response) {
+//     $response->setContent('Silly');
+//     $response->setStatusCode(200);
+//     return $response;
+// });
+
+// $dispatcher = $router->getDispatcher();
+// $request = Request::createFromGlobals();
+// print_r($request->getMethod());
+// print_r($request->getPathInfo());
+
+// if ($request->getPathInfo() != '/silly') {
+//     $uri = '/' . $request->getPathInfo();
+//     $response = $dispatcher->dispatch($request->getMethod(), $uri);
+//     $response->send();
+// }
+
+
+
+
 $templates    = new League\Plates\Engine(__DIR__.'/templates/');
 $lander_id = 2;
-
 
 $db = new PDO(PDO_URL);
 $sql = <<<SQL
