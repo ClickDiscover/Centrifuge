@@ -1,0 +1,649 @@
+@charset "utf-8";
+/* Universal Styles */
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+a, img {
+	border:none;
+
+}
+.fl {
+	float: left;
+}
+.fr {
+	float: right;
+}
+.clr {
+	clear: both
+}
+a {
+	text-decoration: none;
+	color:#ad208e;
+}
+body {
+	font-family: sans-serif;
+	color: #252525;
+	
+}
+p {
+		font-family: Verdana, Geneva, sans-serif;
+
+	font-size: 14px;
+line-height: 23px;
+}
+
+#container {
+	background-color:#ffffff;
+}
+h1 {
+	color: #333;
+}
+h4 {
+	color: #666;
+}
+hr {
+display: block;
+height: 1px;
+border: 0;
+border-top: 1px dotted #CCC;
+margin: 0;
+padding: 0;
+}
+.border {
+	border-bottom: 1px solid #CDCDCD;
+	border-top: 1px solid #CDCDCD;
+	height: 20px;
+	padding: 8px 0;
+	margin-bottom:15px;
+}
+.center {
+	text-align: center;
+}
+.rightPad {
+	padding-right: 40px!important;
+}
+.padding {
+	padding-bottom:5px;
+	padding-top:5px;
+}
+.padtop {
+	padding-top:30px;
+	padding-left:40px;
+}
+.padbottom {
+	padding-bttom:10px;
+	margin-bottom:5px;
+	}	
+.text_center {
+text-align: center !important;
+}
+
+/*header*/
+
+#header {
+	width: 100%;
+	margin-left:auto;
+	margin-right:auto;
+	height: 170px;
+	background-color: #ffffff;
+	border-bottom-width: 3px;
+	border-bottom-style: solid;
+	border-bottom-color: #DDD;
+}
+
+.headerInside {
+	height: 100px;
+	width: 940px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.search img {
+	bottom: 0px;
+}
+.headerInside a {
+	color: #ad208e;
+	font-size: 90%;
+	font-weight: 600;
+}
+.headerInside a:hover {
+	text-decoration: underline;
+}
+.search {
+/*margin-top:55px;
+*/	padding-top: 55px;
+	width: 300px;
+	height: 90px;
+	text-align: right;
+}
+.headerRight {
+	margin-top:20px;
+}
+.headerRight ul li {
+	display: inline;
+	text-transform: uppercase;
+	padding-right: 10px;
+	padding-left: 10px;
+	list-style-type: none;
+}
+
+#banner-search{
+	margin-top:15px;
+}
+
+#banner-search #navigationSearchInput{
+margin: 4px 6px;
+padding: 1px;
+width: 200px;
+height: 18px;
+border: 1px solid #31ddf6;
+font: 12px/15px arial,sans-serif;
+color: #666;
+background: #FFF;
+}
+
+#navigationSearchSubmit {
+	top: -22px;
+	left: 222px;
+	position:relative;
+display:block;
+	width: 19px;
+	height: 16px;
+	border: none;
+	font-size: 0;
+	cursor: pointer;
+	background-color: rgba(0, 0, 0, 0);
+	background-image: url("http://antiagingskincaresecret.com/lp4/images/icon-search.png");
+	background-repeat: no-repeat;
+	background-position: 0 0;
+}
+
+#logoImg {
+	background: url("logoGH.png") no-repeat bottom;
+	height: 180px;
+	width: 200px;
+	margin-top: 10px;
+	text-indent: -99999px;
+	display: block;
+}
+.subscribe {
+	width: 80px;
+	height: 100px;
+	line-height: 160px;
+	color: #FFF;
+	font-weight: 700;
+	font-size: 110%;
+}
+.logIn {
+	width: 130px;
+	height: 100px;
+	line-height: 160px;
+	color: #FFF;
+	font-weight: 700;
+	font-size: 110%;
+}
+.healthMag {
+	width: 100px;
+	height: 100px;
+	position: relative;
+	border:none;
+}
+.healthMag img {
+	position: absolute;
+	bottom: 0px;
+	border:none;
+}
+/*main*/
+#content {
+/*	margin-top:10px;
+*/}
+.pageheader {
+	text-align: center;
+	font-family: 'Georgia', 'Book Antiqua', Palatino, serif;
+	font-size: 19px;
+	margin-top: 10px;
+	margin-bottom: 15px;
+	font-style: italic;
+}
+.celebcaption {
+	width: 600px;
+	margin: auto;
+	font-weight: bold;
+	text-align: center;
+	line-height:90%;
+/*	padding: 2px 5px;
+*/}
+.small p {
+	padding-left: 5px;
+	line-height: 140%!important;
+	font-size: 90%;
+}
+.subjectheader {
+	font-size: 26px!important;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	text-align:center;
+}
+.testdiaryp {
+    float: left;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0 0 10px;
+    width: 400px;
+}
+.pfirst {
+	margin-top: 10px;
+}
+.testdiaryimg {
+	float: left;
+	width: 150px;
+}
+.day img {
+	padding-left:10px;
+	padding-bottom:5px;
+}
+.day {
+	background-image: url("bubble.jpg");
+	background-repeat: no-repeat;
+	padding-top: 10px;
+	padding-right: 5px;
+	margin-left: 10px;
+	margin-top: 20px;
+}
+.day h2 {
+	color:#F39;
+	text-transform:uppercase;
+	margin-top:-2px;
+}
+.day-text {
+	margin-left: 14px;
+	width: 587px;
+	background-color: #CCC;
+	background-image: url("http://dailyskincarenews.com/goodhousekeeping/index_files/bubble-bottom.jpg");
+	background-repeat: no-repeat;
+	background-position: bottom;
+}
+.pullleft {
+	float: left;
+}
+.pullright {
+	float: right;
+}
+.step {
+	border: thin solid #CCC;
+	margin-top: 15px;
+	background-image: url("step1.jpg");
+	background-repeat: no-repeat;	
+	padding-left:70px;
+	height:250px;
+	padding-top:20px;
+}
+.step #rvtl {
+	padding-top:0px;
+	padding-right:20px;
+	width: 158px;
+}
+.step h2 {
+	padding-left:20px;
+	color:#333;
+}
+.step2 {
+	border: thin solid #CCC;
+	margin-top: 15px;
+	background-image: url("step2.jpg");
+	background-repeat: no-repeat;
+	padding-left: 70px;
+	height: 280px;
+	background-position: 0px 5px;
+	padding-top:10px;
+}
+.step2 h2 {
+	padding-left:20px;
+	color:#333;
+}
+.step2 #equinox {
+	padding-right:20px;
+	padding-left:10px;
+}
+.imgInline {
+	float:left;
+	display:inline;
+	padding-right:20px;
+	margin-top:3px;
+}
+#main {
+	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #FFF;
+	height: 100%;
+	/*	position: relative;
+-webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+-moz-box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);*/
+
+	padding: 27px;
+	margin-top: 20px;
+	/*position: relative;
+	z-index: 1;
+	background-image: url("http://antiagingskincaresecret.com/lp4/css/wht-overlay.png");
+	background-repeat: no-repeat;
+	background-position: center 1px;*/
+}
+.frame {
+	width: 1000px;
+	border: 0;
+	margin: 0 auto;
+	text-align: left;
+	min-height: 200px;
+	margin-top: -10px;
+	z-index: 1;
+	background-image: url("http://dailyskincarenews.com/goodhousekeeping/index_files/wht-overlay.png");
+	background-repeat: no-repeat;
+}
+#main p {
+	line-height: 150%;
+}
+#banner {
+	width: 100%;
+	height: 120px;
+	text-align: center;
+	padding-top: 30px;
+}
+.gradient {
+
+	background-image: url("http://antiagingskincaresecret.com/lp4/css/gradient.png");
+	background-repeat: repeat-x;
+}
+/*Left Column*/
+
+.letter {
+	float: left;
+	width: .8em;
+	font-size: 3.25em;
+	font-family: Georgia;
+	line-height: 80%;
+	padding-top: 4px;
+	padding-right: 0px;
+	padding-left: 3px;
+}
+.leftColumn {
+	padding-bottom: 30px;
+	padding-right: 30px;
+	width: 630px;
+	margin-top: -180px;
+	margin-right: 0px;
+	margin-bottom: 40px;
+	margin-left: 30px;
+}
+.leftColumn ul {
+	padding-top: 5px;
+	margin-left: 5px;
+	list-style-position: outside;
+}
+.imgLeft {
+	display: inline;
+	float: left;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	padding-top: 10px;
+}
+.imgRight {
+	display: inline;
+	float: right;
+	padding-left: 20px;
+	padding-bottom: 20px;
+	padding-top: 10px;
+}
+.textRight {
+	text-align: right;
+}
+.noBullet {
+	display: block;
+	list-style-position: inside;
+	list-style-image: none;
+	list-style-type: none;
+}
+/*Sidebar*/
+
+.sidebar {
+	width: 265px;
+	margin-top:-180px;
+	padding-right:40px;
+}
+
+.news {
+	margin-top:30px;
+}
+.shareCare {
+	margin-top:30px;
+}
+.shareCare a {
+	color:#3CC;
+}
+.shareCare img {
+	padding-bottom:20px;
+}
+.news img {
+	padding-right:15px;
+}
+.shareCare p{
+	font-size:80%;
+	line-height:130%!important;
+}
+
+.news p {
+	font-size:80%;
+	line-height:130%!important;
+}
+.highlight {
+	float: left;
+	text-transform: uppercase;
+	color: #666;
+	width:100%;
+	padding: 2px 3px 1px 3px;
+	margin-bottom: 15px;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #31ddf6;
+}
+.rightimgcaption {
+	width: 238px;
+	font-size: 14px;
+	line-height: 23px;
+	font-style: italic;
+	text-align: left;
+	padding-top: 10px;	/*margin: 5px;
+	margin-right: 0;	border: 1px dotted #000;*/
+	padding-left: 5px;
+}
+/*Social Media*/
+
+#socialmedia {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+#socialmedia .inner {
+	border-bottom: 1px solid #CDCDCD;
+	border-top: 1px solid #CDCDCD;
+	height: 20px;
+	padding: 8px 0;
+}
+.stButton {
+    color: #000000;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 11px;
+    line-height: 16px;
+    margin-left: 0px!important;
+    margin-right: 0px!important;
+    position: relative;
+    text-decoration: none;
+    z-index: 1;
+}
+/*Nav Styles*/
+
+#nav {
+	width: 100%;
+	height: 50px;
+	background-color: #4CBBD3;
+-webkit-box-shadow: 0 1px 3px #CCC;
+-moz-box-shadow: 0 1px 3px #ccc;
+box-shadow: 0 1px 3px #CCC;
+position: relative;
+margin-bottom:50px;
+}
+
+#nav ul li {
+	display: inline;
+	text-align: left;
+	height: 20px;
+	margin-top: 0;
+	margin-right: 19px;
+	margin-bottom: -2px;
+	margin-left: 0;
+	padding-top: 2;
+	padding-right: 0;
+	padding-bottom: 2px;
+	padding-left: 0;
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+
+#nav ul {
+	line-height: 50px;
+	color: #000;
+	text-align: center;
+	font-size: 120%;
+	font-weight: 500;
+}
+#nav li a {
+	border-left: solid 1px #FFFFFF;
+	padding-left: 18px;
+	margin-right: -6px;
+	padding-bottom: 0;
+	text-decoration: none;
+	text-align: left;
+	color: #000;
+}
+#nav li a:hover {
+	color: #666;
+}
+#nav li.first a {
+	border-left: 0px;
+	padding-left: 8px;
+}
+/*end Nav Styles*/
+
+/*offer box*/
+
+.rounded-corners {
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	-khtml-border-radius: 20px;
+	border-radius: 20px;
+	border-top-color: #EC2C91;
+	border-right-color: #EC2C91;
+	border-bottom-color: #EC2C91;
+	border-left-color: #EC2C91;
+}
+
+.offerbox {
+	
+	width: 630px;
+	height: 385px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 10px;
+	margin-bottom: 40px;
+	border: 1px solid #EE2B93;
+	border-radius: 25px;
+}
+.offerbox h1 {
+	font-family: 'Raleway', sans-serif;
+	text-align: center;
+	color:#333;
+	line-height: 160%;
+	padding-top: 3px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0;
+	font-weight:700;
+}
+.offerbox a {
+	color:#EE2B93;
+}
+.offerbox a:hover {
+	color:#666;;
+}
+.productright {
+	margin-top: -10px;
+	padding-right:10px;
+	display: block;
+}
+.productleft {
+	width: 350px;
+}
+.productleft ul {
+	margin-left:30px;
+}
+.productleft ul li {
+	font-family: 'Raleway', sans-serif;
+	font-size: 14px;
+	margin-bottom: 10px;
+
+	list-style-type: disc;
+	list-style-image: url("http://www.skinbeautysecret.org/us5/plus.jpg");
+}
+.productleft img {
+	padding-top: 5px;
+	padding-left:5px;
+}
+.promo {
+	padding-left:5px;
+}
+.promo p {
+	line-height:120%!important;
+}
+/*end offer box*/
+
+#fullWidth {
+	width:960px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+/*footer*/
+#footer {
+	width:100%;
+	background-color:#000;
+	text-align:center;
+	margin-top:50px;
+}
+.copyright {
+	padding-top:15px;
+	padding-bottom:15px;
+	width:1020px;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+	font-size:11px;
+	color:#666;
+}
+.leftColumn ol li {
+	list-style-position: inside;
+}
+.day-text h2 {
+	font-size: 110%;
+	color: #ad208e;
+	padding-bottom: 5px;
+}
+
+/** toggle menu **/
+.toggleMenu {
+display: none;
+background: url("http://dailyskincarenews.com/goodhousekeeping/index_files/toggle-icon.png") no-repeat 0px;
+width: 40px;
+height:16px;
+margin: 22px 0px 0px 0px;}

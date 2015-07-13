@@ -1,6 +1,7 @@
 {
     "require": {
         "league/url": "^3.3",
-        "league/plates": "^3.1"
+        "league/plates": "^3.1",
+        "league/route": "^1.1"
     }
 }

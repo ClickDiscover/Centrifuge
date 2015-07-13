@@ -12,8 +12,14 @@ class Tracking
     {
         $this->enable['googleAnalytics'] = $enableGA;
         $this->enable['perfectAudience'] = $enablePA;
-
         $this->initTracking();
+    }
+
+    public static function fromPGArray($arr) {
+        $tags = explode(',', trim($res['tracking_tags'], '{}'));
+        $ga = in_array('googleAnalytics', $tags);
+        $pa = in_array('perfectAudience', $tags);
+        return new Tracking($ga, $pa);
     }
 
     public function getTrackingHTML() {

@@ -1,0 +1,430 @@
+/*****************
+	Media queries
+******************/
+
+@media only screen and (min-width: 769px) and (max-width: 1900px) {
+#nav ul{ display:inline-block !important; width:100%;}
+
+}
+
+@media only screen and (min-width: 960px) and (max-width: 1080px) {
+	iframe, object{ max-width:100% !important;}
+	.top_head  { width:95% !important; }
+	.headerInside { width:95% !important; }
+	.top_head img { width:100%; }
+	.search {}
+	#nav { width:100% !important;  }
+	.leftColumn { width:51% !important; }
+	.frame {width: 98% ;background-size: 100%;}
+	.widd { width:100% !important; height:auto !important; }
+	#main { width:94% !important; }
+	.copyright { width:94% !important; }
+	#fullWidth { width: 89% !important; }
+	.offer_width { width:100%; }
+	
+	.women_health{margin: 2% 8% 0 0 !important;}
+	.scissor{ width:100%;}
+	.logobig{width:100%;}
+	
+	
+	.day-text { width:88%; background-image:none; padding:20px; border-radius:10px;}
+	.day { background-image:none;}
+	.testdiaryp { float:none; width:100%;}
+	
+}
+
+
+@media only screen and (min-width: 840px) and (max-width: 959px) {
+	
+		iframe, object{ max-width:100% !important;}
+	.top_head  { width:95% !important; }
+	.headerInside { width:95% !important; }
+	.top_head img { width:100%; }
+	
+	#nav { width:100% !important;  }
+	#nav ul li{ margin:0px 4px -2px 0px; }
+		#nav li a { font-weight:300 !important; padding-left: 16px; margin-right:0px; font-size:17px; }
+	.leftColumn { width:51% !important; }
+	.frame {width: 100% ;background-size: 100%;}
+	.widd { width:100% !important; height:auto !important; }
+	#main { width:94% !important; }
+	.copyright { width:94% !important; }
+	#fullWidth { width: 89% !important; }
+	.offer_width { width:100%; }
+	.sidebar { padding-right: 10px; }
+	.padtop {padding-top: 23px !important;padding-left: 15px !important;}
+	
+	.hydroxad_wid { width: 27%;height: auto;  }
+
+	.headerRight ul li {display: inline-block !important;  padding-bottom: 4px; }
+	#container { overflow:hidden;}
+	
+	#evp-9SATKG9HEI-video-shim { width:100% !important; }
+	#evp-9SATKG9HEI { width:100% !important; }
+	#evp-9SATKG9HEI-video_wrapper { width:100% !important; }
+	#evp-9SATKG9HEI-video-shim { width:100% !important; height: auto !important; }
+	
+	.women_health{margin: 2.3% 6% 0 0 !important;}
+	.scissor{ width:100%;}
+	.logobig{width:100%;}
+	
+		
+	.day-text { width:88%; background-image:none; padding:20px; border-radius:10px;}
+	.day { background-image:none;}
+	.testdiaryp { float:none; width:100%;}
+	
+	
+	
+	
+}
+
+
+@media only screen and (min-width: 768px) and (max-width: 839px) {
+	
+	
+	
+	iframe, object{ max-width:100% !important;}
+	.top_head  { width:95% !important; }
+	.headerInside { width:95% !important; }
+	.top_head img { width:100%; }
+	.search { padding-top: 36px;   }
+	#nav { width:100% !important; margin-bottom: 30px;  }
+	#nav ul li{ margin:0px 10px -2px 0px; }
+		#nav li a { font-weight:300 !important; padding-left: 9px; font-size:16px; }
+	.leftColumn { width:51% !important; }
+	.leftColumn h1 { font-size:22px;}
+	.frame {width: 100% ;background-size: 100%;}
+	.widd { width:100% !important; height:auto !important; }
+	#main { width:94% ;  margin-top: 0px;}
+	.copyright { width:93% !important; }
+	#fullWidth { width: 89% !important; }
+	.offer_width { width:100%; }
+	.sidebar { padding-right: 13px !important; }
+	.padtop {padding-top: 44px;padding-left: 15px !important; width:105px !important; }
+	.padtop a img { width:100%; height:auto;}
+	#banner-search #navigationSearchInput { }
+	.hydroxad_wid { width: 27%;height: auto;  }
+	
+	.headerRight ul li {display: inline-block !important; padding-bottom: 4px; }
+	#banner-search {margin-top: 5px !important;}
+	#container { overflow:hidden;}
+	
+	#evp-9SATKG9HEI-video-shim { width:100% !important; }
+	#evp-9SATKG9HEI { width:100% !important; }
+	#evp-9SATKG9HEI-video_wrapper { width:100% !important; }
+	#evp-9SATKG9HEI-video-shim { width:100% !important; height: auto !important; }
+	.women_health{margin: 2.8% 3.5% 0 0 !important;}
+	.scissor{ width:100%;}
+	.logobig{width:100%;}
+	
+		
+	.day-text { width:88%; background-image:none; padding:20px; border-radius:10px;}
+	.day { background-image:none;}
+	.testdiaryp { float:none; width:100%;}
+	
+	
+	
+	
+}
+
+
+
+@media only screen and (min-width: 619px) and (max-width: 768px) {
+	
+	
+	iframe, object{ max-width:100% !important;}
+	.top_head  { width:95% !important; }
+	.headerInside { width:95% !important; height:auto;}
+	.top_head img { width:100%; }
+	.search { margin:10px auto 0px auto !important; float:none !important; padding-top:0px !important;}
+	.social{ width:100% !important; display:inline-block !important; position:relative !important; text-align:center !important; margin:24px 0px 0px 0px !important;}
+	.n_header_top p{ width:95% !important; line-height:34px !important; font-size:29px !important;}
+	#nav { width:100% !important;  }
+	.leftColumn {width: 93% ; margin-right: 0px ;  margin-bottom: 0px ;  margin-left: 0px ; float:none; margin:-178px auto 0px auto;padding-right:0px; }
+	.leftColumn h1 { font-size:23px;  }
+    .frame {width: 100% ;background-size: 100%;}
+	.widd { width:100% ; height:auto ; }
+	#main { width:94% ; margin-top:5px; }
+	.copyright { width:93% ; }
+	#fullWidth { width: 89% ; }
+	.offer_width { width:100%; }
+	.sidebar {padding-right: 0px ; width:100% ;margin: 0px auto;float: none ; margin-top:0px; display: table;}
+	.rightimgcaption { width:100% ; }
+	.news { text-align:center ; }
+	.padtop {padding-top: 23px ;padding-left: 15px ; width:163px ; display:none; }
+	.padtop a img { width:100%; height:auto;}
+	.hydroxad_wid { width: 27%;height: auto;  }
+	.toggleMenu {display: block ; margin: 0px auto ; padding: 34px 0px 0px 0px ;}
+	#nav ul { display:none ; background:#20a9c7; }
+	#nav ul li { width:100% ; text-align:center ; border:none; margin:0px ; padding:0px 0px;  display:inline-block ; height:auto ; border-bottom: 1px solid #4cbbd3  }
+	#nav li a { font-weight:300 ; font-size:18px; border:none ; margin:0px ; padding-left:0px ; color:#fff ;  }
+	#nav li a:hover { font-weight:300; color:#fefefe ; }
+	
+	.headerRight ul li {display: inline-block ; padding-bottom: 4px; }
+	#banner-search {margin-top: 5px ;}
+	.celebcaption { width: 100% ; }
+	.jessica_width { width:100% ; }
+	.day-text { width:99% ; }
+	#container { overflow:hidden;}
+	.step { height:auto ; padding-bottom:16px;padding-left:69px; }
+	.step2 { height:auto ; padding-bottom:16px;padding-left:69px;}
+	
+	.alignnone  { width:210px; }
+	
+	#evp-9SATKG9HEI-video-shim { width:100% ; }
+	#evp-9SATKG9HEI { width:100% ; }
+	#evp-9SATKG9HEI-video_wrapper { width:100% ; }
+	#evp-9SATKG9HEI-video-shim { width:100% ; height: auto ; }
+	
+	.women_health{ margin:10px 0px 0px 0px ; width:100%; text-align:center; float:none; position:relative ;}
+	.women_health img{ display:inline-block;}
+	.n_subscribe{ width:100%; display:inline-block; text-align:center;}
+	.scissor{ width:100%;}
+	.logobig{width:100%; height:auto;}
+	.highlight{ text-align:center;}
+	#header{ height:auto; padding-bottom:15px;}
+	.testdiaryp{ width:97%;}
+	.logo { float:none ; text-align:center;}
+	#logoImg {margin: 0 auto;}
+	.multimedia { text-align:center; }
+	#socialmedia { text-align:center;}
+	
+		
+	.day-text { width:88%; background-image:none; padding:20px; border-radius:10px;}
+	.day { background-image:none;}
+	.testdiaryp { float:none; width:100%;}
+	
+	
+}
+
+
+@media only screen and (min-width: 480px) and (max-width: 618px) {
+	
+	iframe, object{ max-width:100% ;}
+	.top_head  { width:95% ; }
+	.headerInside { width:95% ; height:auto; }
+	.top_head img { width:100%; }
+	.search { margin:10px auto 0px auto ; float:none ; padding-top:0px ; height: 67px;}
+	.social{ width:100% ; display:inline-block ; position:relative ; text-align:center ; margin:24px 0px 0px 0px ;}
+	#nav { width:100% ;  margin-bottom:30px; margin-top:21px; }
+	.leftColumn {width: 93% ; margin-right: 0px ;  margin-bottom: 0px ;  margin-left: 0px ; float:none; margin:-178px auto 0px auto;padding-right:0px; }
+	.leftColumn h1 { font-size:23px;  }
+	.frame {width: 100% ;background-size: 100%;}
+	.widd { width:100% ; height:auto ; }
+	#main { width:96% ; margin: 0px auto ; padding:0px; }
+	.copyright { width:92% ; }
+	#fullWidth { width: 89% ; }
+	.offer_width { width:100%; }
+	.sidebar {padding-right: 0px ;margin: 0px auto; width: 100% ;float: none ; margin-top:0px; display: table;}
+	.padtop {padding-top: 23px ;padding-left: 15px ; width:163px ; display:none; }
+	.rightimgcaption { width:100% ; }
+	.news { text-align:center ; }
+	.padtop a img { width:100%; height:auto;}
+	.hydroxad_wid { width: 30%;height: auto; display:none;  }
+	.toggleMenu {display: block ; margin: 0px auto ; padding: 34px 0px 0px 0px ;}
+	#nav ul { display:none ; background:#20a9c7; }
+	#nav ul li { width:100% ; text-align:center ; border:none; margin:0px ; padding:0px 0px;  display:inline-block ; height:auto ; border-bottom: 1px solid #4cbbd3  }
+	#nav li a { font-weight:300 ; font-size:18px ;  border:none ; margin:0px ; padding-left:0px ; color:#fff ;  }
+	#nav li a:hover { font-weight:300; color:#fefefe ; }
+	
+	.headerRight ul li {display: inline-block !important; padding-bottom: 4px; }
+	#banner-search {margin-top: 0px ;}
+	.celebcaption { width: 100% ; }
+	.rexults-width { width:100% ; }
+	.aguilera-ba { width:100%; }
+	.jessica_width { width:100%; }
+	
+	#container { overflow:hidden;}
+	.step { height:auto ; padding-bottom:16px; padding-left:15px; padding-right:10px; background:none;}
+	.step2 { height:auto ; padding-bottom:16px;padding-left:15px; padding-right:10px; background:none;}
+	
+	.alignnone  { width:300px ; }
+	
+	
+	#evp-9SATKG9HEI-video-shim { width:100% ; }
+	#evp-9SATKG9HEI { width:100% ; }
+	#evp-9SATKG9HEI-video_wrapper { width:100% ; }
+	#evp-9SATKG9HEI-video-shim { width:100% ; height: auto ; }
+	
+	.women_health{ margin:10px 0px 0px 0px ; width:100%; text-align:center; float:none; position:relative ;}
+	.women_health img{ display:inline-block;}
+	.n_subscribe{ width:100%; display:inline-block; text-align:center;}
+	.n_header_top p{ font-size:19px ; width:96% ;}
+	.n_header_top img{ width:26px ;}
+	.scissor{ width:100%;}
+	.logobig{width:100%; height:auto;}
+	#header{ height:auto; padding-bottom:15px;}
+	.testdiaryp{ width:96%; float:none;}
+	.day img{ padding-left:0px;}
+	.logo { float:none ; text-align:center;}
+	#logoImg {margin: 0 auto;}
+	.multimedia { text-align:center; }
+	#socialmedia { text-align:center;}
+	
+		
+	.day-text { width:88%; background-image:none; padding:20px; border-radius:10px;}
+	.day { background-image:none; margin-left: 0px;}
+	.testdiaryp { float:none; width:100%;}
+	
+}
+
+
+@media only screen and (min-width: 319px) and (max-width: 479px) {
+	
+	
+	
+	
+	iframe, object{ max-width:100% ;}
+	.top_head  { width:95% ; }
+	.headerInside { width:95% ; height:auto; }
+	#socialmedia { text-align:center;}
+	.frame {width: 100% ;background-size: 100%;}
+	.top_head img { width:100%; }
+	.search { margin:10px auto 0px auto ; float:none ; padding-top:10px !important; width:282px !important;}
+	.social{ width:100% !important; display:inline-block !important; position:relative !important; text-align:center !important; margin:24px 0px 0px 0px !important;}
+	#nav { width:100% !important; margin-bottom:30px; margin-top:26px;  }
+		.leftColumn {width: 93% ; margin-right: 0px ;  margin-bottom: 0px ;  margin-left: 0px ; float:none; margin:-178px auto 0px auto;padding-right:0px; }
+	.leftColumn h1 { font-size:23px;  }
+	.widd { width:100% !important; height:auto !important; }
+	#main {width: 96% !important;margin: 0px auto; padding:0px;}
+	.copyright { width:90% !important; }
+	#fullWidth { width: 89% !important; }
+	.offer_width { width:100%; }
+	.sidebar {padding-right: 0px !important;margin: 0px auto;float: none !important; margin-top:0px; display: table; width:100% !important; }
+	.rightimgcaption  { width:100% !important; }
+	.news { text-align:center; }
+	.padtop {padding-top: 23px !important;padding-left: 15px !important; width:163px !important; display:none; }
+	.padtop a img { width:100%; height:auto;}
+	.hydroxad_wid { width: 30%;height: auto; display:none;  }
+	.toggleMenu {display: block !important; margin: 0px auto !important; padding: 34px 0px 0px 0px ;}
+	#nav ul { display:none ; background:#20a9c7; }
+	#nav ul li { width:100% !important; text-align:center !important; border:none; margin:0px !important; padding:0px 0px!important;  display:inline-block !important; height:auto !important; border-bottom: 1px solid #4cbbd3  }
+	#nav li a { font-weight:300 !important; font-size:16px !important;  border:none !important; margin:0px !important; padding-left:0px !important; color:#fff !important;  }
+	#nav li a:hover { font-weight:300; color:#fefefe !important; }
+	
+	.headerRight ul li {display: inline-block !important; padding-bottom: 4px; }
+	#banner-search {margin-top: 5px !important;}
+	.celebcaption { width: 100% !important; }
+	.jessica_width { width:100% !important; }
+	
+	#container { overflow:hidden;}
+	.step { height:auto !important; padding-bottom:16px; padding-left:15px; padding-right:10px; background:none;}
+	.step2 { height:auto !important; padding-bottom:16px;padding-left:15px; padding-right:10px ; background:none;}
+	
+	.rexults-width { width:100% !important; }
+	.aguilera-ba { width:100% !important; }
+	.day {  margin-left: 0px !important;}
+	.alignnone  { width:214px; }
+	.logo { width:100%; }
+	#logoImg { margin: 0px auto 0px auto !important; }
+	
+	#evp-9SATKG9HEI-video-shim { width:100% !important; }
+	#evp-9SATKG9HEI { width:100% !important; }
+	#evp-9SATKG9HEI-video_wrapper { width:100% !important; }
+	#evp-9SATKG9HEI-video-shim { width:100% !important; height: auto !important; }
+	
+	.women_health{ margin:10px 0px 0px 0px !important; width:100%; text-align:center; float:none; position:relative !important;}
+	.women_health img{ display:inline-block;}
+	.n_subscribe{ width:100%; display:inline-block; text-align:center;}
+	.n_header_top p{ font-size:15px !important; width:95%;}
+	.n_header_top img{ width:26px !important; display:none !important;}
+	.n_subscribe p{ font-size:14px !important; margin: 19px 0px 0px 2px !important;}
+	.n_subscribe img{ margin-left:0 !important; }
+	.scissor{ width:100%;}
+	.logobig{width:100%; height:auto;}
+	#header{padding-bottom:15px; height: 259px;}
+	.testdiaryp{ width:96%; float:none;}
+	.day img{ padding-left:0px;}
+	.headerRight{ display:inline-block;}
+	.multimedia { text-align:center; }
+	
+		
+	.day-text { width:88%; background-image:none; padding:20px; border-radius:10px; margin-left: 0px;}
+	.day { background-image:none;}
+	.testdiaryp { float:none; width:100%;}
+	#content { display:inline-block;}
+	
+	
+}
+
+
+
+
+@media only screen and (min-width: 240px) and (max-width: 318px) {
+	
+	
+	
+	iframe, object{ max-width:100% !important;}
+	.top_head  { width:95% !important; }
+	.headerInside { width:95% !important; height:auto; }
+	.frame {width: 100% ;background-size: 100%;}
+	.top_head img { width:100%; }
+	.search { margin:10px auto 0px auto ; float:none ; padding-top:10px ; width:212px ;}
+	.social{ width:100% !important; display:inline-block !important; position:relative !important; text-align:center !important; margin:24px 0px 0px 0px !important;}
+	#nav { width:100% !important; margin-bottom:30px; margin-top:5px;  }
+		.leftColumn {width: 93% ; margin-right: 0px ;  margin-bottom: 0px ;  margin-left: 0px ; float:none; margin:-178px auto 0px auto;padding-right:0px; }
+	.leftColumn h1 { font-size:23px;  }
+	.widd { width:100% !important; height:auto !important; }
+	#main {width: 96% !important;margin: 0px auto; padding:0px;}
+	.copyright { width:90% !important; }
+	#fullWidth { width: 89% !important; }
+	.offer_width { width:100%; }
+	.sidebar {padding-right: 0px !important;margin: 0px auto;float: none !important; margin-top:0px; display: table; width:100% !important; }
+	.rightimgcaption  { width:100% !important; }
+	.news { text-align:center; }
+	.padtop {padding-top: 23px !important;padding-left: 15px !important; width:163px !important; display:none; }
+	.padtop a img { width:100%; height:auto;}
+	.hydroxad_wid { width: 30%;height: auto; display:none;  }
+	.toggleMenu {display: block !important; margin: 0px auto !important; padding: 34px 0px 0px 0px ;}
+	#nav ul { display:none ; background:#20a9c7; }
+	#nav ul li { width:100% !important; text-align:center !important; border:none; margin:0px !important; padding:0px 0px!important;  display:inline-block !important; height:auto !important; border-bottom: 1px solid #4cbbd3  }
+	#nav li a { font-weight:300 !important; font-size:16px !important;  border:none !important; margin:0px !important; padding-left:0px !important; color:#fff !important;  }
+	#nav li a:hover { font-weight:300; color:#fefefe !important; }
+	
+	.headerRight ul li {display: inline-block !important; padding-bottom: 4px; }
+	#banner-search {margin-top: 5px !important;}
+	.celebcaption { width: 100% !important; }
+	.jessica_width { width:100% !important; }
+	#socialmedia { text-align:center;}
+	
+	#container { overflow:hidden;}
+	.step { height:auto !important; padding-bottom:16px; padding-left:15px; padding-right:10px; background:none;}
+	.step2 { height:auto !important; padding-bottom:16px;padding-left:15px; padding-right:10px ; background:none;}
+	
+	.rexults-width { width:100% !important; }
+	.aguilera-ba { width:100% !important; }
+	.day {  margin-left: 0px !important;}
+	.alignnone  { width:214px; }
+	.logo { width:100%; }
+	#logoImg { margin: 0px auto 0px auto !important; }
+	
+	#evp-9SATKG9HEI-video-shim { width:100% !important; }
+	#evp-9SATKG9HEI { width:100% !important; }
+	#evp-9SATKG9HEI-video_wrapper { width:100% !important; }
+	#evp-9SATKG9HEI-video-shim { width:100% !important; height: auto !important; }
+	
+	.women_health{ margin:10px 0px 0px 0px !important; width:100%; text-align:center; float:none; position:relative !important;}
+	.women_health img{ display:inline-block;}
+	.n_subscribe{ width:100%; display:inline-block; text-align:center;}
+	.n_header_top p{ font-size:15px !important; width:95%;}
+	.n_header_top img{ width:26px !important; display:none !important;}
+	.n_subscribe p{ font-size:14px !important; margin: 19px 0px 0px 2px !important;}
+	.n_subscribe img{ margin-left:0 !important; }
+	.scissor{ width:100%;}
+	.logobig{width:100%; height:auto;}
+	#header{padding-bottom:15px; height: 279px;}
+	.testdiaryp{ width:96%; float:none;}
+	.day img{ padding-left:0px;}
+	.headerRight{ display:inline-block;}
+	.multimedia { text-align:center; }
+	
+		
+	.day-text { width:80%; background-image:none; padding:20px; border-radius:10px; margin-left: 0px;}
+	.day { background-image:none;}
+	.testdiaryp { float:none; width:100%;}
+	#content { display:inline-block;}
+	#banner-search #navigationSearchInput { width:58%;}
+	
+	
+	
+}
