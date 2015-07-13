@@ -1,6 +1,8 @@
-<!DOCTYPE html>
-<!-- saved from url=(0049)http://womenshousekeepingmag.com/wh/slimming.html -->A
+<?php
+include "template_vars.php";
+?>
 
+<!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,7 +14,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="http://womenshousekeepingmag.com/wh/css/main.css">
     <link rel="stylesheet" href="http://womenshousekeepingmag.com/wh/css/overrides.css">
-    <link href="Women's%20Health%20Magazine_files/css.txt" rel="stylesheet" type="text/css">
+    <link href="<?= $assets ?>/extra.css" rel="stylesheet" type="text/css">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -20,7 +22,6 @@
 </head>
 
     <body>
-
     <div class="facebook-exclusive">
 	<p>Exclusive Free Offer for  Facebook Visitors Below</p>
 </div>
@@ -29,7 +30,7 @@
   	<i class="fa fa-bars"></i>
     <a class="brand" href="http://womenshealthsource.net/s1.php" target="_blank">
 		<div class="logo">
-			<img src="Women's%20Health%20Magazine_files/logo.png">
+			<img src="<?= $assets ?>/logo.png">
 		</div>
     </a>
     <div class="clearfix"></div>
@@ -55,7 +56,7 @@
       </div>
 
       <div class="hero">
-       <a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/hero.jpg"></a>
+       <a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/hero.jpg"></a>
       </div>
 
       <div class="accreditation">
@@ -93,12 +94,12 @@
 
 <div class="slider has-dots" style="overflow: hidden; width: 100%; height: 633px;">
   <ul style="width: 600%; position: relative; left: 0%; height: 633px;">
-<li style="width: 16.6666666666667%;"><img src="Women's%20Health%20Magazine_files/001.jpg"></li>
-<li style="width: 16.6666666666667%;"><img src="Women's%20Health%20Magazine_files/002.jpg"></li>
-<li style="width: 16.6666666666667%;"><img src="Women's%20Health%20Magazine_files/003.jpg"></li>
-<li style="width: 16.6666666666667%;"><img src="Women's%20Health%20Magazine_files/004.jpg"></li>
-<li style="width: 16.6666666666667%;"><img src="Women's%20Health%20Magazine_files/005.jpg"></li>
-<li style="width: 16.6666666666667%;"><img src="Women's%20Health%20Magazine_files/006.jpg"></li>
+<li style="width: 16.6666666666667%;"><img src="<?= $assets ?>/001.jpg"></li>
+<li style="width: 16.6666666666667%;"><img src="<?= $assets ?>/002.jpg"></li>
+<li style="width: 16.6666666666667%;"><img src="<?= $assets ?>/003.jpg"></li>
+<li style="width: 16.6666666666667%;"><img src="<?= $assets ?>/004.jpg"></li>
+<li style="width: 16.6666666666667%;"><img src="<?= $assets ?>/005.jpg"></li>
+<li style="width: 16.6666666666667%;"><img src="<?= $assets ?>/006.jpg"></li>
 </ul>
 <ol class="dots"><li class="dot active">1</li><li class="dot">2</li><li class="dot">3</li><li class="dot">4</li><li class="dot">5</li><li class="dot">6</li></ol></div>
 
@@ -108,11 +109,11 @@
 
 <div class="aside-container">
   <aside>
-    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/results1.jpg"></a></p>
+    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/results1.jpg"></a></p>
     <p>“I love my new body and I love what I see in the mirror. I’ve tried dozens of products and treatments but none worked better than <a href="http://womenshealthsource.net/s1.php" target="_blank"><?= $step1_name ?></a>. Thank you from the bottom of my heart!”	</p>
   </aside>
   <div class="main">
-<p>The product we're talking about is called <a href="http://womenshealthsource.net/s1.php" target="_blank"><?= $step1_name ?></a>. You may have seen it in the news, on TV, or trending online as the safe and powerful "secret diet trick” being used by models, celebrities and regular folk all across America.  <?= $step1_name ?>’s high anti-oxidant content and powerful fat burning properties make it a belly busting machine.  Combine it with the detoxifying, cleansing and additional weight loss effect of a Honest Cleanse and you see why this deserves a Special Report.  But maybe the most important part is that <?= $step1_name ?> is finally available nationwide WITHOUT a prescription.
+<p>The product we're talking about is called <a href="http://womenshealthsource.net/s1.php" target="_blank"><?= $step1_name ?></a>. You may have seen it in the news, on TV, or trending online as the safe and powerful "secret diet trick” being used by models, celebrities and regular folk all across America.  <?= $step1_name ?>’s high anti-oxidant content and powerful fat burning properties make it a belly busting machine.  Combine it with the detoxifying, cleansing and additional weight loss effect of a <?= $step2_name ?> and you see why this deserves a Special Report.  But maybe the most important part is that <?= $step1_name ?> is finally available nationwide WITHOUT a prescription.
 </p>
 </div>
   <div class="clearfix"></div>
@@ -124,7 +125,7 @@
 
 <div class="media-container">
   <div class="media">
-    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/featured-before-after.jpg" alt="Alt text"></a></p>
+    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/featured-before-after.jpg" alt="Alt text"></a></p>
   </div>
 </div>
 
@@ -134,7 +135,7 @@
 
 <div class="aside-container">
   <aside>
-    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/results3.jpg"></a></p>
+    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/results3.jpg"></a></p>
     <p>“It’s simply amazing. I can’t believe how quickly I saw results. Real results! I literally saw results after the first day. I can’t thank you enough, I have my youthful figure back”</p>
   </aside>
   <div class="main">
@@ -156,7 +157,7 @@
   </ul>
 </div>
 
-<p>At first, I only wanted to try <a href="http://womenshealthsource.net/s1.php" target="_blank"><?= $step1_name ?></a> since losing fat was my main goal.  However, the pharmaceutical company behind the product advised us that the amino acid boosting, digestive cleansing and detoxifying effect of a Cleanse such as <a href="http://womenshealthsource.net/s2.php" target="_blank">Honest Cleanse</a> combined with <?= $step1_name ?> would create a synergistic effect and actually lead to a 2X increase in fat loss versus using <?= $step1_name ?> alone.  So after reviewing the literature, going through most of the success stories and speaking with the our internal medical staff here at Women’s Health, we came to the decision that I would achieve maximum results using both products together, as they were intended.  </p>
+<p>At first, I only wanted to try <a href="http://womenshealthsource.net/s1.php" target="_blank"><?= $step1_name ?></a> since losing fat was my main goal.  However, the pharmaceutical company behind the product advised us that the amino acid boosting, digestive cleansing and detoxifying effect of a Cleanse such as <a href="http://womenshealthsource.net/s2.php" target="_blank"><?= $step2_name ?></a> combined with <?= $step1_name ?> would create a synergistic effect and actually lead to a 2X increase in fat loss versus using <?= $step1_name ?> alone.  So after reviewing the literature, going through most of the success stories and speaking with the our internal medical staff here at Women’s Health, we came to the decision that I would achieve maximum results using both products together, as they were intended.  </p>
 
 <div class="clinically-proven">
   <h3 id="the-proof-is-in-the-real-world-results">The Proof is in the Real-World Results</h3>
@@ -165,18 +166,18 @@
     <li>Subjects lost more weight – an average of 17 pounds – while supplementing with <?= $step1_name ?> compared to a placebo.</li>
     <li>On average, subjects experienced a 7.2% reduction in body weight.</li>
     <li>Subject also experienced a 16% reduction in body fat.</li>
-    <li>When <?= $step1_name ?> was combined with Honest Cleanse, the subjects saw an additional 49% reduction in fat loss along with a further 4.6% reduction in overall bodyweight.</li>
-    <li>The combination of <?= $step1_name ?> and Honest Cleanse led to an incredible 37.6% acceleration in desired positive results.</li>
+    <li>When <?= $step1_name ?> was combined with <?= $step2_name ?>, the subjects saw an additional 49% reduction in fat loss along with a further 4.6% reduction in overall bodyweight.</li>
+    <li>The combination of <?= $step1_name ?> and <?= $step2_name ?> led to an incredible 37.6% acceleration in desired positive results.</li>
     <li>Subjects did not change their diets while on the study however were all physically active and exercised at least once per week.</li>
   </ul>
 </div>
 
 <div class="featured-in">
-  <p><img src="Women's%20Health%20Magazine_files/featured-in.png">	
-<img src="Women's%20Health%20Magazine_files/newsarticles.png"></p>
+  <p><img src="<?= $assets ?>/featured-in.png">	
+<img src="<?= $assets ?>/newsarticles.png"></p>
 </div>
 
-<p>So I went ahead, visited the <?= $step1_name ?> &amp; Honest Cleanse website, and ordered my Risk Free Trial of the products.  </p>
+<p>So I went ahead, visited the <?= $step1_name ?> &amp; <?= $step2_name ?> website, and ordered my Risk Free Trial of the products.  </p>
 
 <p>They both arrived within 4 days.</p>
 
@@ -186,7 +187,7 @@
 
 <ol>
   <li><a href="http://womenshealthsource.net/s1.php" target="_blank">Take One <?= $step1_name ?> pill every morning</a></li>
-  <li><a href="http://womenshealthsource.net/s2.php" target="_blank">Take One Honest Cleanse pill in the evening before bed</a></li>
+  <li><a href="http://womenshealthsource.net/s2.php" target="_blank">Take One <?= $step2_name ?> pill in the evening before bed</a></li>
 </ol>
 
 <div class="exclusive-for-our-readers results">
@@ -198,10 +199,10 @@
     <p>Week One:</p>
   </div>
 
-  <p>After one week on the diet using <?= $step1_name ?> &amp; Honest Cleanse I was surprised at the dramatic results.  My energy level was up, and I wasn’t even hungry.  Apparently, this is a side effect of the garcinia cambogia and HCA present in <?= $step1_name ?>, which help curb the appetite.</p>
+  <p>After one week on the diet using <?= $step1_name ?> &amp; <?= $step2_name ?> I was surprised at the dramatic results.  My energy level was up, and I wasn’t even hungry.  Apparently, this is a side effect of the garcinia cambogia and HCA present in <?= $step1_name ?>, which help curb the appetite.</p>
 
   <div class="journey-container">
-    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/journey1b.jpg"></a></p>
+    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/journey1b.jpg"></a></p>
   </div>
 
   <p>I honestly felt fantastic.</p>
@@ -215,10 +216,10 @@
     <p>Week Two:</p>
   </div>
 
-  <p>After two weeks of using <?= $step1_name ?> and Honest Cleanse, I started the week off with even more energy and was actually sleeping more soundly than before.  I was no longer waking up during the night and tossing and turning because my body was actually able to relax (I believe this is a result of getting rid of the toxins).  Plus I still managed to lose another 5-lbs, putting me at an unbelievable 12-lbs of weight loss, in just 2 weeks.</p>
+  <p>After two weeks of using <?= $step1_name ?> and <?= $step2_name ?>, I started the week off with even more energy and was actually sleeping more soundly than before.  I was no longer waking up during the night and tossing and turning because my body was actually able to relax (I believe this is a result of getting rid of the toxins).  Plus I still managed to lose another 5-lbs, putting me at an unbelievable 12-lbs of weight loss, in just 2 weeks.</p>
 
   <div class="journey-container">
-    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/journey2.jpg"></a></p>
+    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/journey2.jpg"></a></p>
   </div>
 
   <p>I must admit that I’m starting to believe that this diet is more than just a gimmick.</p>
@@ -231,10 +232,10 @@
   </div>
 
   <div class="journey-container">
-    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/journey3.jpg"></a></p>
+    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/journey3.jpg"></a></p>
   </div>
 
-  <p>After 3 weeks all my doubts and skepticism had absolutely vanished!  I am down, 2 full dress sizes, after losing another 5-lbs.  And I still have a ton of energy.  Quite often, around the third week of other diets, you tend to run out of steam.  But with the <?= $step1_name ?> &amp; Honest Cleanse, my energy levels don’t dip, but remain steady throughout the day.  I no longer need that cat nap around 3pm in the afternoon!  And I am even noticing that my stomach is digesting food so much better.  No bloating or embarrassing gas after I eat!</p>
+  <p>After 3 weeks all my doubts and skepticism had absolutely vanished!  I am down, 2 full dress sizes, after losing another 5-lbs.  And I still have a ton of energy.  Quite often, around the third week of other diets, you tend to run out of steam.  But with the <?= $step1_name ?> &amp; <?= $step2_name ?>, my energy levels don’t dip, but remain steady throughout the day.  I no longer need that cat nap around 3pm in the afternoon!  And I am even noticing that my stomach is digesting food so much better.  No bloating or embarrassing gas after I eat!</p>
 
 </div>
 
@@ -243,35 +244,35 @@
     <p>Week Four:</p>
   </div>
 
-  <p>After the fourth week, my final results were shocking.  I lost an unbelievable 21-lbs since starting the <?= $step1_name ?> &amp; Honest Cleanse diet!   Actually everyone at Women’s Health is kicking themselves for not having volunteered to be the guinea pig.  Using the <?= $step1_name ?> &amp; Honest Cleanse in week 4 I lost 4 more pounds.  But to be honest I really didn’t have much more left to lose.  I am definitely going to continue taking the <?= $step1_name ?> afterwards because it has so many antioxidants and vitamins that it makes my skin look unbelievable.  A pretty sweet side-effect. </p>
+  <p>After the fourth week, my final results were shocking.  I lost an unbelievable 21-lbs since starting the <?= $step1_name ?> &amp; <?= $step2_name ?> diet!   Actually everyone at Women’s Health is kicking themselves for not having volunteered to be the guinea pig.  Using the <?= $step1_name ?> &amp; <?= $step2_name ?> in week 4 I lost 4 more pounds.  But to be honest I really didn’t have much more left to lose.  I am definitely going to continue taking the <?= $step1_name ?> afterwards because it has so many antioxidants and vitamins that it makes my skin look unbelievable.  A pretty sweet side-effect. </p>
 
   <div class="journey-container">
-    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/journey4.jpg"></a></p>
+    <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/journey4.jpg"></a></p>
   </div>
 
   <h2 id="i-couldnt-be-any-happier-with-the-resultsi-lost-21-lbs-in-4-weeks-no-special-diet-no-intense-exercise">“I couldn’t be any happier with the results. I Lost 21-lbs in 4 Weeks, No Special Diet, No Intense Exercise”</h2>
 </div>
 
 <div class="journey-container">
-  <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/beforeafterfront.jpg"></a></p>
+  <p><a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $assets ?>/beforeafterfront.jpg"></a></p>
 </div>
 
-<p><strong>In conclusion:</strong>  Like us, here at Women’s Health, you might be a little doubtful about the effects of this diet, but you need to try it for yourself; the results are real. From my own experiment I can tell you that the results are real. After conducting this personal study we are pleased to see that people really are finding success with it (myself included). And you have nothing to lose.  We are confident that you too can reach your weight loss goals with <?= $step1_name ?> and Honest Cleanse.</p>
+<p><strong>In conclusion:</strong>  Like us, here at Women’s Health, you might be a little doubtful about the effects of this diet, but you need to try it for yourself; the results are real. From my own experiment I can tell you that the results are real. After conducting this personal study we are pleased to see that people really are finding success with it (myself included). And you have nothing to lose.  We are confident that you too can reach your weight loss goals with <?= $step1_name ?> and <?= $step2_name ?>.</p>
 
 <p>Good luck with your own Journey</p>
 
 <div class="offer-container">
   <h1>Limited Time Offer for Facebook Readers</h1>
-  <p><strong>SPECIAL OFFER:</strong> For a limited time, the makers of <?= $step1_name ?> have offered our readers a risk-free 30-day trial of their amazing "skinny pill".  They even decided to throw in a 30-day bottle of Honest Cleanse into the promo and really accelerate the positive effect.  This amazing offer will NOT last so Order Your Trial Today!</p>
+  <p><strong>SPECIAL OFFER:</strong> For a limited time, the makers of <?= $step1_name ?> have offered our readers a risk-free 30-day trial of their amazing "skinny pill".  They even decided to throw in a 30-day bottle of <?= $step2_name ?> into the promo and really accelerate the positive effect.  This amazing offer will NOT last so Order Your Trial Today!</p>
   <div class="exclusive-for-our-readers">
     <p><span>HURRY:</span> Only 8 Trials Remaining</p>
   </div>
   <div class="product-container">
 <div class="product">
-<a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="Women's%20Health%20Magazine_files/life.png" width="109%" height="288"></a>
+<a href="http://womenshealthsource.net/s1.php" target="_blank"><img src="<?= $step1_image ?>" width="109%" height="288"></a>
 </div>
 <div class="description">
-<a href="http://womenshealthsource.net/s1.php" target="_blank">Click here</a> to get a Risk-Free Trial of <?= $step1_name ?> &amp; Honest Cleanse<br>
+<a href="http://womenshealthsource.net/s1.php" target="_blank">Click here</a> to get a Risk-Free Trial of <?= $step1_name ?> &amp; <?= $step2_name ?><br>
 <a href="http://womenshealthsource.net/s1.php" class="btn" target="_blank">Try a Sample Today</a>
 <div class="clearfix"></div>
 <span class="highlight inline">Use this exclusive link and pay just $4.95 for Shipping and Handling</span>
@@ -293,7 +294,7 @@
 			<li class="comment" id="comment-input">
 				<form id="comment-form">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/no-profile.png">
+						<img src="<?= $assets ?>/no-profile.png">
 					</div>
 					<div class="right-container">
 						<input type="text" placeholder="Write a comment...">
@@ -305,7 +306,7 @@
 			    <div class="comment-social">
 			      <ul>
 			        <li class="comment">
-			          <div class="profile-image"> <img src="Women's%20Health%20Magazine_files/369872_722424386_1857330401_q.jpg"> </div>
+			          <div class="profile-image"> <img src="<?= $assets ?>/369872_722424386_1857330401_q.jpg"> </div>
 			          <div class="right-container"> <span class="name">Lauren Kirschenbaum Silver</span> <span class="comment-body">
 			            <p>For once I was able to do something nice for myself without feeling guilty about the cost.</p>
 			            </span>
@@ -318,7 +319,7 @@
 			</li>
 			<li class="comment">
 				<div class="profile-image">
-					<img src="Women's%20Health%20Magazine_files/70524_1387164496_88414351_q.jpg">
+					<img src="<?= $assets ?>/70524_1387164496_88414351_q.jpg">
 			    </div>
 				<div class="right-container">
 					<span class="name">Laura Kelch Miranda</span>
@@ -332,7 +333,7 @@
 			
 				<li class="comment">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/173605_1387563113_14543618_q.jpg">
+						<img src="<?= $assets ?>/173605_1387563113_14543618_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Jenna Ponchot Bush</span>
@@ -346,7 +347,7 @@
 			
 				<li class="comment">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/370953_20903876_26789988_q.jpg">
+						<img src="<?= $assets ?>/370953_20903876_26789988_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Molly Murley Davis</span>
@@ -360,7 +361,7 @@
 			
 				<li class="comment">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/371788_39603151_990746142_q.jpg">
+						<img src="<?= $assets ?>/371788_39603151_990746142_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Jill Phongsa</span>
@@ -374,7 +375,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/275712_1815883270_368899092_q.jpg">
+						<img src="<?= $assets ?>/275712_1815883270_368899092_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Shellie Wilson Hodge</span>
@@ -388,7 +389,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/371925_1426200070_1825128294_q.jpg">
+						<img src="<?= $assets ?>/371925_1426200070_1825128294_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Brittany Jackson</span>
@@ -402,7 +403,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/370345_7008369_2025512953_q.jpg">
+						<img src="<?= $assets ?>/370345_7008369_2025512953_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Amanda Hickam</span>
@@ -416,7 +417,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/187364_20501998_2048679844_q.jpg">
+						<img src="<?= $assets ?>/187364_20501998_2048679844_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Mark Fadlevich</span>
@@ -430,7 +431,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/48783_12401144_1332233149_q.jpg">
+						<img src="<?= $assets ?>/48783_12401144_1332233149_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Alice Chang</span>
@@ -444,7 +445,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/371738_1363268399_1637317047_q.jpg">
+						<img src="<?= $assets ?>/371738_1363268399_1637317047_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Alanna 'martin' Payne</span>
@@ -458,7 +459,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/369223_12411516_333332392_q.jpg">
+						<img src="<?= $assets ?>/369223_12411516_333332392_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Celia Kilgard</span>
@@ -472,7 +473,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/273930_20904468_1027986766_q.jpg">
+						<img src="<?= $assets ?>/273930_20904468_1027986766_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Sarah Williams</span>
@@ -486,7 +487,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/371948_501645553_1716896386_q.jpg">
+						<img src="<?= $assets ?>/371948_501645553_1716896386_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Julie Keyse</span>
@@ -500,7 +501,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/174008_50902984_682021130_q.jpg">
+						<img src="<?= $assets ?>/174008_50902984_682021130_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Amanda Gibson</span>
@@ -514,7 +515,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/572741_30110787_2084442239_q.jpg">
+						<img src="<?= $assets ?>/572741_30110787_2084442239_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Katy Barrott</span>
@@ -528,7 +529,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/157804_21416303_1043059674_q.jpg">
+						<img src="<?= $assets ?>/157804_21416303_1043059674_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Jennifer Jackson Mercer</span>
@@ -542,11 +543,11 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/370176_564964504_308463864_q.jpg">
+						<img src="<?= $assets ?>/370176_564964504_308463864_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Tanya Porquez</span>
-						<span class="comment-body"><p>I saw this combo on CNN a while ago and still using the combo. I’ve been using the products for about 6 wks (<?= $step1_name ?> came first, had to wait for Honest Cleanse for an extra day). Honestly, this is unbelievable, all I have to say is WOW.</p>
+						<span class="comment-body"><p>I saw this combo on CNN a while ago and still using the combo. I’ve been using the products for about 6 wks (<?= $step1_name ?> came first, had to wait for <?= $step2_name ?> for an extra day). Honestly, this is unbelievable, all I have to say is WOW.</p>
 </span>
 						<div class="comment-social">
 							<a href="http://womenshealthsource.net/s1.php" target="_blank">Like</a> · <a href="http://womenshealthsource.net/s1.php" target="_blank">Reply</a> · <a href="http://womenshealthsource.net/s1.php" class="likes" target="_blank">9</a> · <span class="time">yesterday</span>
@@ -556,7 +557,7 @@
 			
 				<li class="comment hidden">
 					<div class="profile-image">
-						<img src="Women's%20Health%20Magazine_files/41554_50302938_1878686864_q.jpg">
+						<img src="<?= $assets ?>/41554_50302938_1878686864_q.jpg">
 					</div>
 					<div class="right-container">
 						<span class="name">Tohloria Lewis</span>
@@ -580,7 +581,7 @@
   <div class="wrap">
   	<a class="brand" href="http://womenshealthsource.net/s1.php" target="_blank">
 			<div class="logo">
-				<img src="Women's%20Health%20Magazine_files/logo.png">
+				<img src="<?= $assets ?>/logo.png">
 			</div>
     </a>
     <h2 class="footer-heading">Copyright © 2014. All rights reserved.</h2>
@@ -588,9 +589,9 @@
 </footer>
 
 
-    <script src="Women's%20Health%20Magazine_files/jquery.min.js"></script>
-    <script src="Women's%20Health%20Magazine_files/app.min.js"></script> 
+    <script src="<?= $assets ?>/jquery.min.js"></script>
+    <script src="<?= $assets ?>/app.min.js"></script> 
 
-    
+<?= $tracking->getTrackingHTML() ?>
 
 </body></html>
