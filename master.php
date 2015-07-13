@@ -13,8 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 $templates = new League\Plates\Engine(__DIR__.'/templates/');
 $db = new PDO(PDO_URL);
 
-$router = new League\Route\RouteCollection;
-$router->get('/silly/{id}', function (Request $request, Response $response, $args) {
+function baseController (Request $request, Response $response, $args) {
     global $db, $templates;
     $lander = LanderFunctions::fetch($db, $args['id']);
 
@@ -27,12 +26,27 @@ $router->get('/silly/{id}', function (Request $request, Response $response, $arg
     $response->setContent($content);
     $response->setStatusCode(200);
     return $response;
+};
+
+$router = new League\Route\RouteCollection;
+$router->get('/silly/{id}', 'baseController');
+$router->get('/crazy_blog/article', function ($req, $res) {
+    return baseController($req, $res, array('id' => 3));
 });
 
 $dispatcher = $router->getDispatcher();
+
+
+
+
+
+
+
+
+
 $request = Request::createFromGlobals();
 $uri = $request->getPathInfo();
-if (substr($uri, 0, 6) !== '/silly') {
+if (substr($uri, 0, 6) !== '/silly' && substr($uri, 0, 4) !== '/cra') {
     $host = Url::createFromServer($_SERVER)->getBaseUrl();
     $url = $host . "/" . $uri;
     print_r($url);
