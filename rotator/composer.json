@@ -4,6 +4,7 @@
         "league/plates": "^3.1",
         "league/route": "^1.1",
         "symfony/http-foundation": "^2.7",
-        "hashids/hashids": "^1.0"
+        "hashids/hashids": "^1.0",
+        "slim/slim": "^2.6"
     }
 }
