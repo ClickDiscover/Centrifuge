@@ -33,7 +33,6 @@ $router->get('/silly/{id}', 'baseController');
 $router->get('/crazy_blog/article', function ($req, $res) {
     return baseController($req, $res, array('id' => 3));
 });
-
 $dispatcher = $router->getDispatcher();
 
 
