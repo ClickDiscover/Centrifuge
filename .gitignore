@@ -2,3 +2,5 @@ vendor/*
 */vendor/*
 *.png
 *.jpg
+*/static/*
+*/*/index_files/*
