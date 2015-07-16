@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__) . '/config.php';
 // Setup defaults...
 error_reporting(-1); // Display ALL errors
 // ini_set('display_errors', '1');
@@ -25,6 +26,7 @@ set_error_handler("exception_error_handler");
 // session_start();
 
 $app->plates = new League\Plates\Engine(BULLET_ROOT . "/landers/");
+$app->db = new PDO(PDO_URL);
 
 
 // Display exceptions with error and 500 status
@@ -54,4 +56,19 @@ $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $respo
 $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use($app) {
     $message = "Whoa! " . $request->url() . " wasn't found!";
     $response->content($message);
+});
+
+
+$app->on('before', function ($request, $response) use ($app) {
+    $routes = $app->db->query("SELECT * FROM routes", PDO::FETCH_ASSOC);
+    foreach ($routes as $r) {
+        if ($request->url() == $r['url']) {
+            $matched_id = $r['lander_id'];
+        }
+    }
+    if (isset($matched_id)) {
+        $response = $app->run('GET', '/landers/' . $matched_id);
+        $response->send();
+        exit;
+    }
 });

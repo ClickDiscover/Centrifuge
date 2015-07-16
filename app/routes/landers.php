@@ -13,10 +13,10 @@ include BULLET_MODELS_ROOT . "/lander.php";
 // $templates = new League\Plates\Engine(BULLET_ROOT . "/landers/");
 
 $app->path('landers', function ($req) use ($app) {
-    $db = new PDO(PDO_URL);
+    // $db = new PDO(PDO_URL);
 
-    $app->param('int', function ($req, $id) use ($app, $db)  {
-        $lander = LanderFunctions::fetch($db, $id);
+    $app->param('int', function ($req, $id) use ($app)  {
+        $lander = LanderFunctions::fetch($app->db, $id);
 
         $app->get(function () use ($app, $lander)  {
             return $app->plates->render($lander->template, $lander->toArray());
@@ -25,6 +25,3 @@ $app->path('landers', function ($req) use ($app) {
 });
 
 
-// $app->url('pure/garcinia', function ($req) use ($app) {
-//     return $app->run('GET', 'landers/3')->content();
-// });
