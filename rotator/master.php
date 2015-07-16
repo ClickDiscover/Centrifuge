@@ -42,7 +42,7 @@ $dispatcher = $router->getDispatcher();
 
 
 
-
+// Stupid routes.php file
 $request = Request::createFromGlobals();
 $uri = $request->getPathInfo();
 if (substr($uri, 0, 6) !== '/silly' && substr($uri, 0, 4) !== '/cra') {
