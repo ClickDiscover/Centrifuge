@@ -1,5 +1,7 @@
 <?php
-require 'vendor/autoload.php';
+
+require_once dirname(dirname(__DIR__)) . '/config.php';
+require BULLET_ROOT . '/vendor/autoload.php';
 use League\Url\Url;
 
 function ad_exchange_request($affiliate_id, $vertical, $country, $user_agent)

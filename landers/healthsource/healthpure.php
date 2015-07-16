@@ -1,5 +1,5 @@
 <?php
-include "template_vars.php";
+include dirname(__DIR__) . "/vars.php";
 ?>
 
 <!DOCTYPE html>

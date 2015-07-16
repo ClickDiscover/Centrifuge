@@ -42,7 +42,7 @@ class LanderFunctions
 
         $steps = Step::fromProducts($products);
         $template = substr($res['template'], 0, -4);
-        $assets = '/templates/' . $res['assets'];
+        $assets = $res['assets'];
         // print_r($template)."<br>";
         // print_r($assets)."<br>";
         // print_r($steps)."<br>";

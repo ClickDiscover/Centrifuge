@@ -1,7 +1,8 @@
 <?php
 
-require dirname(__FILE__).'/../vendor/autoload.php';
-require_once dirname(__FILE__).'/../util/adexchange.php';
+require_once dirname(dirname(__DIR__)) . '/config.php';
+require BULLET_ROOT . '/vendor/autoload.php';
+require_once BULLET_APP_ROOT . '/util/adexchange.php';
 use League\Url\Url;
 
 

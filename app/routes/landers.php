@@ -1,28 +1,32 @@
 <?php
-// require_once dirname(__DIR__) . '/config.php';
+require_once dirname(dirname(__DIR__)) . '/config.php';
+require BULLET_ROOT . '/vendor/autoload.php';
+include BULLET_MODELS_ROOT . "/lander.php";
 
-// require BULLET_ROOT . '/vendor/autoload.php';
-
-// include "models/lander.php";
-
-// use League\Url\Url;
 // use Symfony\Component\HttpFoundation\Request;
 // use Symfony\Component\HttpFoundation\Response;
 // use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
-// $templates = new League\Plates\Engine(__DIR__.'/templates/');
-// $db = new PDO(PDO_URL);
+use League\Url\Url;
+// This should go in the master file
+$templates = new League\Plates\Engine(BULLET_ROOT . "/landers/");
 
-// function baseController (Request $request, Response $response, $args) {
-//     global $db, $templates;
-//     $lander = LanderFunctions::fetch($db, $args['id']);
+$app->path('landers', function ($req) use ($app, $templates) {
+    $db = new PDO(PDO_URL);
 
-//     $content = $templates->render($lander->template, [
-//         'steps' => $lander->steps,
-//         'tracking' => $lander->tracking,
-//         'assets' => $lander->assetDirectory
-//     ]);
+    $app->param('int', function ($req, $id) use ($app, $templates, $db)  {
+        $lander = LanderFunctions::fetch($db, $id);
+
+        $app->get(function () use ($lander, $templates)  {
+            return $templates->render($lander->template, [
+                'steps' => $lander->steps,
+                'tracking' => $lander->tracking,
+                'assets' => $lander->assetDirectory
+            ]);
+        });
+    });
+});
 
 //     $response->setContent($content);
 //     $response->setStatusCode(200);
