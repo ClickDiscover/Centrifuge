@@ -26,6 +26,19 @@ $app->path('landers', function ($req) use ($app, $templates) {
             ]);
         });
     });
+
+    $app->param('slug', function($req, $slug) use ($app) {
+        if ($slug == "pure_g") {
+            return $app->run("GET", 'landers/1')->content();
+            // $lander = LanderFunctions::fetch($db, 3);
+        } elseif ($slug == "aesk") {
+            return $app->run("GET", 'landers/2')->content();
+            // $lander = LanderFunctions::fetch($db, 2);
+        } else {
+            return 404;
+        }
+
+    });
 });
 
 //     $response->setContent($content);
