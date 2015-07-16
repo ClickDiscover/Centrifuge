@@ -1,59 +1,57 @@
 <?php
-// require_once dirname(__DIR__) . '/config.php';
+// Setup defaults...
+error_reporting(-1); // Display ALL errors
+// ini_set('display_errors', '1');
+// ini_set("session.cookie_httponly", '1'); // Mitigate XSS javascript cookie attacks for browers that support it
+// ini_set("session.use_only_cookies", '1'); // Don't allow session_id in URLs
 
-// require BULLET_ROOT . '/vendor/autoload.php';
+// ENV globals
+define('BULLET_ENV', $request->env('BULLET_ENV', 'development'));
 
-// include "models/lander.php";
+// Production setting switch
+if(BULLET_ENV == 'production') {
+    // Hide errors in production
+    error_reporting(0);
+    ini_set('display_errors', '0');
+}
 
-// use League\Url\Url;
-// use Symfony\Component\HttpFoundation\Request;
-// use Symfony\Component\HttpFoundation\Response;
-// use Symfony\Component\HttpFoundation\RedirectResponse;
+// Throw Exceptions for everything so we can see the errors
+function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+      throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+}
+set_error_handler("exception_error_handler");
 
+// Start user session
+// session_start();
 
-// $templates = new League\Plates\Engine(__DIR__.'/templates/');
-// $db = new PDO(PDO_URL);
-
-// function baseController (Request $request, Response $response, $args) {
-//     global $db, $templates;
-//     $lander = LanderFunctions::fetch($db, $args['id']);
-
-//     $content = $templates->render($lander->template, [
-//         'steps' => $lander->steps,
-//         'tracking' => $lander->tracking,
-//         'assets' => $lander->assetDirectory
-//     ]);
-
-//     $response->setContent($content);
-//     $response->setStatusCode(200);
-//     return $response;
-// };
-
-// $router = new League\Route\RouteCollection;
-// $router->get('/silly/{id}', 'baseController');
-// $router->get('/crazy_blog/article', function ($req, $res) {
-//     return baseController($req, $res, array('id' => 3));
-// });
-// $dispatcher = $router->getDispatcher();
+$app->plates = new League\Plates\Engine(BULLET_ROOT . "/landers/");
 
 
+// Display exceptions with error and 500 status
+$app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $response, \Exception $e) use($app) {
+    $data = array(
+        'error' => str_replace('Exception', '', get_class($e)),
+        'message' => $e->getMessage()
+    );
 
+    // Debugging info for development ENV
+    // if(BULLET_ENV !== 'deve') {
+    $data['file'] = $e->getFile();
+    $data['line'] = $e->getLine();
+    // $data['trace'] = $e->getTrace();
+    // }
 
+    $out = '<pre>' . print_r($data, true) . '</pre>';
+    $response->content($out);
 
+    if(BULLET_ENV === 'production') {
+        // An error happened in production. You should really let yourself know about it.
+        // TODO: Email, log to file, or send to error-logging service like Sentry, Airbrake, etc.
+    }
+});
 
-
-
-// // Stupid routes.php file
-// $request = Request::createFromGlobals();
-// $uri = $request->getPathInfo();
-// if (substr($uri, 0, 6) !== '/silly' && substr($uri, 0, 4) !== '/cra') {
-//     $host = Url::createFromServer($_SERVER)->getBaseUrl();
-//     $url = $host . "/" . $uri;
-//     print_r($url);
-//     $response = new RedirectResponse($url);
-// } else {
-//     print_r($uri)."<BR>";
-//     $response = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
-// }
-// $response->send();
-
+// Custom 404 Error Page
+$app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use($app) {
+    $message = "Whoa! " . $request->url() . " wasn't found!";
+    $response->content($message);
+});

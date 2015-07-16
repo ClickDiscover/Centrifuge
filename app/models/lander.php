@@ -18,6 +18,14 @@ class LanderHtml
         $this->steps = $steps;
         $this->tracking = $tracking;
     }
+
+    public function toArray() {
+        return array(
+            'steps' => $this->steps,
+            'tracking' => $this->tracking,
+            'assets' => $this->assetDirectory
+        );
+    }
 }
 
 

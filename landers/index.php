@@ -13,7 +13,7 @@ $app->path('ping', function ($req) use ($app) {
 
 
 
-// require BULLET_APP_ROOT . '/master.php';
+require BULLET_APP_ROOT . '/master.php';
 $routesDir = BULLET_APP_ROOT . '/routes/';
 require $routesDir . 'landers.php';
 // require $routesDir . 'events.php';
