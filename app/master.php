@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__DIR__) . '/config.php';
 // Setup defaults...
-error_reporting(-1); // Display ALL errors
+// error_reporting(-1); // Display ALL errors
 // ini_set('display_errors', '1');
 // ini_set("session.cookie_httponly", '1'); // Mitigate XSS javascript cookie attacks for browers that support it
 // ini_set("session.use_only_cookies", '1'); // Don't allow session_id in URLs
@@ -10,11 +10,11 @@ error_reporting(-1); // Display ALL errors
 define('BULLET_ENV', $request->env('BULLET_ENV', 'development'));
 
 // Production setting switch
-if(BULLET_ENV == 'production') {
-    // Hide errors in production
-    error_reporting(0);
-    ini_set('display_errors', '0');
-}
+// if(BULLET_ENV == 'production') {
+//     // Hide errors in production
+//     error_reporting(0);
+//     ini_set('display_errors', '0');
+// }
 
 // Throw Exceptions for everything so we can see the errors
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {
@@ -25,8 +25,10 @@ set_error_handler("exception_error_handler");
 // Start user session
 // session_start();
 
-$app->plates = new League\Plates\Engine(BULLET_ROOT . "/landers/");
+$app->plates = new League\Plates\Engine(BULLET_WEB_ROOT . "/landers/");
 // $app->plates->addFolder('admin', '/admin/');
+$app['PRODUCT_ROOT'] = '/products/';
+$app['LANDER_ROOT'] = '/landers/';
 $app->db = new PDO(PDO_URL);
 
 

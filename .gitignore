@@ -1,2 +1,7 @@
 vendor/*
-*/vendor/*
+**/vendor/*
+**DS_Store*
+*png
+*jpg
+**/static/*
+**/index_files/*

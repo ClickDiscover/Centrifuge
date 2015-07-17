@@ -16,7 +16,7 @@ $app->path('landers', function ($req) use ($app) {
     // $db = new PDO(PDO_URL);
 
     $app->param('int', function ($req, $id) use ($app)  {
-        $lander = LanderFunctions::fetch($app->db, $id);
+        $lander = LanderFunctions::fetch($app, $id);
 
         $app->get(function () use ($app, $lander)  {
             return $app->plates->render($lander->template, $lander->toArray());

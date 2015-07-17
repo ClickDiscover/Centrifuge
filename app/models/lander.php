@@ -35,9 +35,9 @@ class LanderHtml
 
 class LanderFunctions
 {
-    public static function fetch($db, $id) {
+    public static function fetch($app, $id) {
         $q = LanderFunctions::query($id);
-        $res = $db->query($q)->fetch(PDO::FETCH_ASSOC);
+        $res = $app->db->query($q)->fetch(PDO::FETCH_ASSOC);
         if ($res == false) {
             throw new LanderNotFoundException("Lander id: {$id} does not exist!", $id);
         }
@@ -47,18 +47,18 @@ class LanderFunctions
 
         if ($res['offer'] == 'adexchange') {
             $sql = "SELECT affiliate_id, vertical, country FROM ae_parameters WHERE id = ".$res['param_id'];
-            $params = $db->query($sql)->fetch(PDO::FETCH_ASSOC);
+            $params = $app->db->query($sql)->fetch(PDO::FETCH_ASSOC);
             $products = AdExchangeProduct::fetchFromAdExchange($params['affiliate_id'], $params['vertical'], $params['country']);
         } elseif ($res['offer'] == 'network') {
             $sql = "SELECT name, image_url FROM products WHERE id IN (".implode(',', [$res['product1_id'], $res['product2_id']]).")";
-            foreach ($db->query($sql)->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                $products[] = NetworkProduct::fromArray($row);
+            foreach ($app->db->query($sql)->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                $products[] = NetworkProduct::fromArray($row, $app['PRODUCT_ROOT']);
             }
         }
 
         $steps = Step::fromProducts($products);
         $template = substr($res['template'], 0, -4);
-        $assets = $res['assets'];
+        $assets = $app['LANDER_ROOT'] . $res['assets'];
         // print_r($template)."<br>";
         // print_r($assets)."<br>";
         // print_r($steps)."<br>";

@@ -45,13 +45,16 @@ class NetworkProduct implements Product
     protected $name;
     protected $imageUrl;
 
-    public function __construct($name, $imageUrl) {
+    public function __construct($name, $imageUrl, $productRoot = null) {
         $this->name = $name;
+        if(!is_null($productRoot)) {
+            $imageUrl = $productRoot . $imageUrl;
+        }
         $this->imageUrl = $imageUrl;
     }
 
-    public static function fromArray($arr) {
-        return new NetworkProduct($arr['name'], $arr['image_url']);
+    public static function fromArray($arr, $productRoot = null) {
+        return new NetworkProduct($arr['name'], $arr['image_url'], $productRoot);
     }
 
     public function getName() {
