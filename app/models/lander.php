@@ -5,53 +5,42 @@ require_once __DIR__ . "/product.php";
 require_once __DIR__ . "/step.php";
 require_once __DIR__ . "/tracking.php";
 require_once BULLET_APP_ROOT . "/util/iexception.php";
+require_once BULLET_APP_ROOT . "/util/variant.php";
 
 class LanderNotFoundException extends CustomException {};
-
-
-class LanderHtml
-{
-    public $steps;
-    public $template;
-    public $assetDirectory;
-    public $tracking;
-
-    public function __construct($template, $assetDir, $steps, $tracking) {
-        $this->template = $template;
-        $this->assetDirectory = $assetDir;
-        $this->steps = $steps;
-        $this->tracking = $tracking;
-    }
-
-    public function toArray() {
-        return array(
-            'steps' => $this->steps,
-            'tracking' => $this->tracking,
-            'assets' => $this->assetDirectory
-        );
-    }
-}
 
 
 class VariantLanderHtml
 {
     public $steps;
-    public $template;
+    public $namespace;
+    public $templateFile;
     public $assetDirectory;
+    public $rootPath;
     public $tracking;
 
-    public function __construct($template, $assetDir, $steps, $tracking) {
-        $this->template = $template;
+    public function __construct($namespace, $rootPath, $templateFile, $assetDir, $steps, $tracking) {
+        $this->namespace = $namespace;
+        $this->templateFile = $templateFile;
         $this->assetDirectory = $assetDir;
         $this->steps = $steps;
+        $this->rootPath = $rootPath;
         $this->tracking = $tracking;
+        $this->variants = new VariantHtml($namespace, array());
+    }
+
+    public function getTemplate() {
+        return $this->namespace . '::' . $this->templateFile;
     }
 
     public function toArray() {
+        $assets   = $this->rootPath . '/' . $this->namespace . '/' . $this->assetDirectory;
+
         return array(
             'steps' => $this->steps,
             'tracking' => $this->tracking,
-            'assets' => $this->assetDirectory
+            'assets' => $assets,
+            'v' => $this->variants
         );
     }
 }
@@ -60,7 +49,7 @@ class VariantLanderHtml
 
 class LanderFunctions
 {
-    public static function fetch($app, $id) {
+    public static function fetch($app, $id, $root = null) {
         $q = LanderFunctions::query($id);
         $res = $app->db->query($q)->fetch(PDO::FETCH_ASSOC);
         if ($res == false) {
@@ -82,11 +71,13 @@ class LanderFunctions
         }
 
         $steps = Step::fromProducts($products);
+        $rootPath = isset($root) ? $root : $app['LANDER_ROOT'];
 
-        $template = $res['namespace'] . '::' . $res['template_file'];
-        $assets   = $app['LANDER_ROOT'] . $res['namespace'] . '/' . $res['asset_dir'];
+        // $template = $res['namespace'] . '::' . $res['template_file'];
+        // $assets   = $app['LANDER_ROOT'] . $res['namespace'] . '/' . $res['asset_dir'];
         // $assets = $app['LANDER_ROOT'] . $res['assets'];
-        return new LanderHtml($template, $assets, $steps, $tracking);
+        // return new LanderHtml($template, $assets, $steps, $tracking);
+        return new VariantLanderHtml($res['namespace'], $rootPath, $res['template_file'], $res['asset_dir'], $steps, $tracking);
     }
 
 

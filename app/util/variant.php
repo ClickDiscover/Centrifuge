@@ -1,39 +1,46 @@
 <?php
 
 require_once dirname(dirname(__DIR__)) . '/config.php';
-require BULLET_ROOT . '/vendor/autoload.php';
+require_once BULLET_ROOT . '/vendor/autoload.php';
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 
 class VariantExtension implements ExtensionInterface
 {
-    public $template;
+    // public $template;
     protected $engine;
-    protected $namespace;
-
-    public function __construct($namespace) {
-        $this->namespace = $namespace;
-    }
 
     public function register(Engine $engine) {
-        $this->engine = $engine;
         $engine->registerFunction('variant', [$this, 'variant']);
+        $this->engine = $engine;
     }
 
-    public function variant($kind, $item = null) {
-        return '<pre>' . $kind . ' | ' . print_r($this->template->path(), true) . '</pre>';
-    }
-
-    public function variantfoo($kind, $item = null) {
-        $path = $this->namespace . '::variants/' . $kind . '/';
-        if (isset($item)) {
-            $path .= $item;
-        } else {
-            $path .= 'default';
-        }
-
+    public function variant($variants, $kind, $item = null) {
+        $path = $variants->get($kind, $item);
         return $this->engine->render($path);
     }
+}
 
-    // public function variant
+class VariantHtml {
+    protected $namespace;
+    protected $variants;
+
+    public function __construct($namespace, $variants) {
+        $this->namespace = $namespace;
+        $this->variants = $variants;
+    }
+
+    public function getName($kind, $default='default') {
+        return isset($this->variants[$kind]) ? $this->variants[$kind] : $default;
+    }
+
+    public function get($kind, $override = null) {
+        $path = $this->namespace . '::variants/' . $kind . '/';
+        if (isset($override)) {
+            $path .= $override;
+        } else {
+            $path .= $this->getName($kind);
+        }
+        return $path;
+    }
 }

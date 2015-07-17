@@ -50,7 +50,7 @@ include dirname(__DIR__) . "/vars.php";
       <div class="clearfix"></div>
 
       <div class="headline">
-        <?= $this->variant('headlines', 'canada') ?>
+        <?= $this->variant($v, 'headlines') ?>
       </div>
 
       <div class="hero">

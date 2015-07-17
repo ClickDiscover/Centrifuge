@@ -35,7 +35,10 @@ Damn... Im jelly!
 <img src="<?= $assets ?>/facebook.png">
 </div>
 
-<?= $this->variant('admin'); ?>
+<?= $this->variant($v, 'headlines', 'canada'); ?> <br>
+
+<?= $v->get('headlines'); ?> <br>
+<?= $v->get('headlines', 'canada'); ?>
 
 
 <?= $tracking->getTrackingHTML() ?>
