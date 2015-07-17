@@ -21,16 +21,13 @@ $app->path('test', function() use ($app) {
     return "<pre>{$s}</pre>";
 });
 
-$app->path('info', function() use ($app) {
-    return phpinfo();
-});
 
 
 
 require BULLET_APP_ROOT . '/master.php';
 $routesDir = BULLET_APP_ROOT . '/routes/';
 require $routesDir . 'landers.php';
-// require $routesDir . 'events.php';
+require $routesDir . 'admin.php';
 
 
 echo $app->run($request);

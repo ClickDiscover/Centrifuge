@@ -50,7 +50,7 @@ class LanderFunctions
             $params = $app->db->query($sql)->fetch(PDO::FETCH_ASSOC);
             $products = AdExchangeProduct::fetchFromAdExchange($params['affiliate_id'], $params['vertical'], $params['country']);
         } elseif ($res['offer'] == 'network') {
-            $sql = "SELECT name, image_url FROM products WHERE id IN (".implode(',', [$res['product1_id'], $res['product2_id']]).")";
+            $sql = "SELECT id, name, image_url FROM products WHERE id IN (".implode(',', [$res['product1_id'], $res['product2_id']]).")";
             foreach ($app->db->query($sql)->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 $products[] = NetworkProduct::fromArray($row, $app['PRODUCT_ROOT']);
             }

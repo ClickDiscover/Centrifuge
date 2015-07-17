@@ -3,6 +3,7 @@
 require_once dirname(dirname(__DIR__)) . '/config.php';
 require BULLET_ROOT . '/vendor/autoload.php';
 require_once BULLET_APP_ROOT . '/util/adexchange.php';
+require_once BULLET_APP_ROOT . '/util/identify.php';
 use League\Url\Url;
 
 
@@ -14,7 +15,6 @@ interface Product
 
 class AdExchangeProduct implements Product
 {
-    protected $id;
     protected $name;
 
     public function __construct($id, $name)
@@ -42,10 +42,12 @@ class AdExchangeProduct implements Product
 
 class NetworkProduct implements Product
 {
+    use Identifiable;
     protected $name;
     protected $imageUrl;
 
-    public function __construct($name, $imageUrl, $productRoot = null) {
+    public function __construct($id, $name, $imageUrl, $productRoot = null) {
+        $this->id = $id;
         $this->name = $name;
         if(!is_null($productRoot)) {
             $imageUrl = $productRoot . $imageUrl;
@@ -54,7 +56,7 @@ class NetworkProduct implements Product
     }
 
     public static function fromArray($arr, $productRoot = null) {
-        return new NetworkProduct($arr['name'], $arr['image_url'], $productRoot);
+        return new NetworkProduct($arr['id'], $arr['name'], $arr['image_url'], $productRoot);
     }
 
     public function getName() {
