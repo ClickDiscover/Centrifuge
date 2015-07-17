@@ -16,7 +16,7 @@ class Tracking
     }
 
     public static function fromPGArray($arr) {
-        $tags = explode(',', trim($res['tracking_tags'], '{}'));
+        $tags = explode(',', trim($arr, '[]'));
         $ga = in_array('googleAnalytics', $tags);
         $pa = in_array('perfectAudience', $tags);
         return new Tracking($ga, $pa);

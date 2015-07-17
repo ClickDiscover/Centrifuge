@@ -42,7 +42,7 @@ class LanderFunctions
             throw new LanderNotFoundException("Lander id: {$id} does not exist!", $id);
         }
 
-        $tracking = new Tracking($res['tracking_tags']);
+        $tracking = Tracking::fromPGArray($res['tracking']);
         $products = [];
 
         if ($res['offer'] == 'adexchange') {
@@ -59,9 +59,6 @@ class LanderFunctions
         $steps = Step::fromProducts($products);
         $template = substr($res['template'], 0, -4);
         $assets = $app['LANDER_ROOT'] . $res['assets'];
-        // print_r($template)."<br>";
-        // print_r($assets)."<br>";
-        // print_r($steps)."<br>";
         return new LanderHtml($template, $assets, $steps, $tracking);
     }
 
