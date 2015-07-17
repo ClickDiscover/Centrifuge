@@ -19,14 +19,14 @@ class VariantLanderHtml
     public $rootPath;
     public $tracking;
 
-    public function __construct($namespace, $rootPath, $templateFile, $assetDir, $steps, $tracking) {
+    public function __construct($namespace, $rootPath, $templateFile, $assetDir, $variants, $steps, $tracking) {
         $this->namespace = $namespace;
         $this->templateFile = $templateFile;
         $this->assetDirectory = $assetDir;
         $this->steps = $steps;
         $this->rootPath = $rootPath;
         $this->tracking = $tracking;
-        $this->variants = new VariantHtml($namespace, array());
+        $this->variants = new VariantHtml($namespace, $variants);
     }
 
     public function getTemplate() {
@@ -72,12 +72,13 @@ class LanderFunctions
 
         $steps = Step::fromProducts($products);
         $rootPath = isset($root) ? $root : $app['LANDER_ROOT'];
+        $variants = json_decode($res['variants'], true);
 
         // $template = $res['namespace'] . '::' . $res['template_file'];
         // $assets   = $app['LANDER_ROOT'] . $res['namespace'] . '/' . $res['asset_dir'];
         // $assets = $app['LANDER_ROOT'] . $res['assets'];
         // return new LanderHtml($template, $assets, $steps, $tracking);
-        return new VariantLanderHtml($res['namespace'], $rootPath, $res['template_file'], $res['asset_dir'], $steps, $tracking);
+        return new VariantLanderHtml($res['namespace'], $rootPath, $res['template_file'], $res['asset_dir'], $variants, $steps, $tracking);
     }
 
 
