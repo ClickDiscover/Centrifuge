@@ -8,8 +8,21 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -76,8 +89,9 @@ CREATE TABLE landers (
     product1_id integer,
     product2_id integer,
     param_id integer,
-    notes text,
-    tracking_tags character varying(64)[]
+    variants jsonb DEFAULT '{}'::jsonb,
+    tracking jsonb DEFAULT '["googleAnalytics", "perfectAudience"]'::jsonb,
+    notes text
 );
 
 
@@ -179,8 +193,9 @@ ALTER SEQUENCE routes_id_seq OWNED BY routes.id;
 CREATE TABLE websites (
     id integer NOT NULL,
     name text,
-    template character varying(255),
-    assets character varying(255)
+    namespace character varying(255) NOT NULL,
+    asset_dir character varying(255) DEFAULT '''static'''::character varying NOT NULL,
+    template_file character varying(255) DEFAULT '''base'''::character varying NOT NULL
 );
 
 
