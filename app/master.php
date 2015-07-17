@@ -26,30 +26,43 @@ set_error_handler("exception_error_handler");
 // session_start();
 
 $app->plates = new League\Plates\Engine(BULLET_ROOT . "/landers/");
+// $app->plates->addFolder('admin', '/admin/');
 $app->db = new PDO(PDO_URL);
 
 
 // Display exceptions with error and 500 status
 $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $response, \Exception $e) use($app) {
     $data = array(
-        'error' => str_replace('Exception', '', get_class($e)),
-        'message' => $e->getMessage()
+        // 'error' => str_replace('Exception', '', get_class($e)),
+        'error' => get_class($e),
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'code' => $e->getCode()
     );
-
-    // Debugging info for development ENV
-    // if(BULLET_ENV !== 'deve') {
-    $data['file'] = $e->getFile();
-    $data['line'] = $e->getLine();
     // $data['trace'] = $e->getTrace();
-    // }
 
     $out = '<pre>' . print_r($data, true) . '</pre>';
     $response->content($out);
-
     if(BULLET_ENV === 'production') {
         // An error happened in production. You should really let yourself know about it.
         // TODO: Email, log to file, or send to error-logging service like Sentry, Airbrake, etc.
     }
+});
+
+$app->on('LanderNotFoundException', function ($req, $res, \Exception $e) use($app) {
+    $data = array(
+        // 'error' => str_replace('Exception', '', get_class($e)),
+        'error' => get_class($e),
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'code' => $e->getCode()
+    );
+    // $data['trace'] = $e->getTrace();
+
+    $out = '<pre>' . print_r($data, true) . '</pre>';
+    $res->content($out);
 });
 
 // Custom 404 Error Page

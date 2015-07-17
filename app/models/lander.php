@@ -1,8 +1,12 @@
 <?php
 
+require_once dirname(dirname(__DIR__)) . '/config.php';
 require_once __DIR__ . "/product.php";
 require_once __DIR__ . "/step.php";
 require_once __DIR__ . "/tracking.php";
+require_once BULLET_APP_ROOT . "/util/iexception.php";
+
+class LanderNotFoundException extends CustomException {};
 
 
 class LanderHtml
@@ -34,6 +38,10 @@ class LanderFunctions
     public static function fetch($db, $id) {
         $q = LanderFunctions::query($id);
         $res = $db->query($q)->fetch(PDO::FETCH_ASSOC);
+        if ($res == false) {
+            throw new LanderNotFoundException("Lander id: {$id} does not exist!", $id);
+        }
+
         $tracking = new Tracking($res['tracking_tags']);
         $products = [];
 
@@ -67,3 +75,5 @@ SQL;
         return $sql;
     }
 }
+
+
