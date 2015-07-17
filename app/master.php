@@ -32,7 +32,7 @@ $app->plates->addFolder('admin', BULLET_WEB_ROOT. 'admin');
 
 $app->plates->addFolder('healthsource', BULLET_WEB_ROOT. 'landers/healthsource');
 $app->plates->addFolder('good_housekeeping', BULLET_WEB_ROOT. 'landers/good_housekeeping');
-$app->plates->loadExtension(new VariantExtension('healthsource'));
+$app->plates->loadExtension(new VariantExtension);
 // $app->plates->addFolder('admin', '/admin/');
 $app['PRODUCT_ROOT'] = '/products/';
 $app['LANDER_ROOT'] = '/landers';
