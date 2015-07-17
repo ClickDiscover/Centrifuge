@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/config.php';
+require_once __DIR__ . '/util/variant.php';
 // Setup defaults...
 // error_reporting(-1); // Display ALL errors
 // ini_set('display_errors', '1');
@@ -25,7 +26,9 @@ set_error_handler("exception_error_handler");
 // Start user session
 // session_start();
 
-$app->plates = new League\Plates\Engine(BULLET_WEB_ROOT . "/landers/");
+$app->plates = new League\Plates\Engine(BULLET_WEB_ROOT . "/landers");
+$app->plates->addFolder('healthsource', BULLET_WEB_ROOT. 'landers/healthsource');
+$app->plates->loadExtension(new VariantExtension('healthsource'));
 // $app->plates->addFolder('admin', '/admin/');
 $app['PRODUCT_ROOT'] = '/products/';
 $app['LANDER_ROOT'] = '/landers/';

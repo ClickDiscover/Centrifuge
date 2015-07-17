@@ -20,7 +20,6 @@ include dirname(__DIR__) . "/vars.php";
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
 		<![endif]-->
 </head>
-
     <body>
     <div class="facebook-exclusive">
 	<p>Exclusive Free Offer for  Facebook Visitors Below</p>
@@ -51,8 +50,7 @@ include dirname(__DIR__) . "/vars.php";
       <div class="clearfix"></div>
 
       <div class="headline">
-        <h1><span>Breaking:</span> Controversial 'Skinny Pill' Hits The American Market</h1>
-        <h2>Think Diet Pills Don't Work? Here's One That Doctors Say May Actually Deliver...</h2>
+        <?= $this->variant('headlines', 'canada') ?>
       </div>
 
       <div class="hero">
