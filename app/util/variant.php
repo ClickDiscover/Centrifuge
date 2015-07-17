@@ -21,6 +21,10 @@ class VariantExtension implements ExtensionInterface
     }
 
     public function variant($kind, $item = null) {
+        return '<pre>' . $kind . ' | ' . print_r($this->template->path(), true) . '</pre>';
+    }
+
+    public function variantfoo($kind, $item = null) {
         $path = $this->namespace . '::variants/' . $kind . '/';
         if (isset($item)) {
             $path .= $item;
@@ -30,4 +34,6 @@ class VariantExtension implements ExtensionInterface
 
         return $this->engine->render($path);
     }
+
+    // public function variant
 }

@@ -27,6 +27,9 @@ set_error_handler("exception_error_handler");
 // session_start();
 
 $app->plates = new League\Plates\Engine(BULLET_WEB_ROOT . "/landers");
+$app->plates->addFolder('admin', BULLET_WEB_ROOT. 'admin');
+// $app->plates->loadExtension(new VariantExtension('admin'));
+
 $app->plates->addFolder('healthsource', BULLET_WEB_ROOT. 'landers/healthsource');
 $app->plates->loadExtension(new VariantExtension('healthsource'));
 // $app->plates->addFolder('admin', '/admin/');

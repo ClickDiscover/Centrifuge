@@ -37,5 +37,14 @@ $app->path('admin', function($req) use ($app) {
         }
         return $out;
     });
+
+    $app->path('landers', function ($req) use ($app) {
+        $app->param('int', function ($req, $id) use ($app) {
+            $lander = LanderFunctions::fetch($app, $id);
+            $app->get(function () use ($app, $lander)  {
+                return $app->plates->render('admin::testing', $lander->toArray());
+            });
+        });
+    });
 });
 
