@@ -30,9 +30,23 @@ It only works if you buy some more shit! <a href="<?= $step2_link ?>"><?= $step2
 Damn... Im jelly!
 </div>
 
+<div>
+<h4>Assets</h4>
+<img src="<?= $assets ?>/facebook.png">
+</div>
+
 <?= $this->variant('admin'); ?>
 
 
 <?= $tracking->getTrackingHTML() ?>
+
+
+
+<pre>
+<?= print_r($steps, true) ?>
+<?= $assets ?>
+</pre>
+
+
 </body>
 </html>

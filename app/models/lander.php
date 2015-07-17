@@ -33,6 +33,31 @@ class LanderHtml
 }
 
 
+class VariantLanderHtml
+{
+    public $steps;
+    public $template;
+    public $assetDirectory;
+    public $tracking;
+
+    public function __construct($template, $assetDir, $steps, $tracking) {
+        $this->template = $template;
+        $this->assetDirectory = $assetDir;
+        $this->steps = $steps;
+        $this->tracking = $tracking;
+    }
+
+    public function toArray() {
+        return array(
+            'steps' => $this->steps,
+            'tracking' => $this->tracking,
+            'assets' => $this->assetDirectory
+        );
+    }
+}
+
+
+
 class LanderFunctions
 {
     public static function fetch($app, $id) {
@@ -57,15 +82,17 @@ class LanderFunctions
         }
 
         $steps = Step::fromProducts($products);
-        $template = substr($res['template'], 0, -4);
-        $assets = $app['LANDER_ROOT'] . $res['assets'];
+
+        $template = $res['namespace'] . '::' . $res['template_file'];
+        $assets   = $app['LANDER_ROOT'] . $res['namespace'] . '/' . $res['asset_dir'];
+        // $assets = $app['LANDER_ROOT'] . $res['assets'];
         return new LanderHtml($template, $assets, $steps, $tracking);
     }
 
 
     public static function query($id) {
         $sql = <<<SQL
-SELECT l.*, w.template, w.assets FROM landers l
+SELECT l.*, w.namespace, w.template_file, w.asset_dir FROM landers l
 INNER JOIN websites w ON (w.id = l.website_id)
 WHERE l.id = {$id};
 SQL;
