@@ -12,8 +12,8 @@ include dirname(__DIR__) . "/vars.php";
     <link rel="canonical" href="<?= $step1_link ?>">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="http://womenshousekeepingmag.com/wh/css/main.css">
-    <link rel="stylesheet" href="http://womenshousekeepingmag.com/wh/css/overrides.css">
+    <link rel="stylesheet" href="<?= $assets ?>/main.css">
+    <link rel="stylesheet" href="<?= $assets ?>/overrides.css">
     <link href="<?= $assets ?>/extra.css" rel="stylesheet" type="text/css">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
@@ -323,8 +323,7 @@ include dirname(__DIR__) . "/vars.php";
 			    </div>
 				<div class="right-container">
 					<span class="name">Laura Kelch Miranda</span>
-					<span class="comment-body"><p>I have tried so much of this kind of stuff, in one sense I want to try it but in the back of my mind I am thinking, yeah right!! Someone please reassure me it works.</p>
-</span>
+					<span class="comment-body"><p>I have tried so much of this kind of stuff, in one sense I want to try it but in the back of my mind I am thinking, yeah right!! Someone please reassure me it works.</p> </span>
 					<div class="comment-social">
 						<a href="<?= $step1_link ?>" target="_blank">Like</a> · <a href="<?= $step1_link ?>" target="_blank">Reply</a> · <a href="<?= $step1_link ?>" class="likes" target="_blank">6</a> · <span class="time">a few minutes ago</span>
 				    </div>
@@ -371,7 +370,7 @@ include dirname(__DIR__) . "/vars.php";
 							<a href="<?= $step1_link ?>" target="_blank">Like</a> · <a href="<?= $step1_link ?>" target="_blank">Reply</a> · <a href="<?= $step1_link ?>" class="likes" target="_blank">9</a> · <span class="time">a few minutes ago</span>
 						</div>
 					</div>
-				</li><li class="comment">                        <a href="http://womenshousekeepingmag.com/wh/slimming.html#" class="more-comments">View <span id="number-of-comments">14</span> more comments</a>                      </li>
+				</li>
 			
 				<li class="comment hidden">
 					<div class="profile-image">
