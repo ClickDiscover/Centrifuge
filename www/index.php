@@ -8,8 +8,8 @@ if(php_sapi_name() === 'cli-server') {
 
 
 require_once dirname(__DIR__) . '/config.php';
-require BULLET_ROOT . '/vendor/autoload.php';
-$app = new Bullet\App(require BULLET_APP_ROOT . 'bullet.conf.php');
+require CENTRIFUGE_ROOT . '/vendor/autoload.php';
+$app = new Bullet\App(require CENTRIFUGE_APP_ROOT . 'bullet.conf.php');
 $request = new Bullet\Request();
 
 
@@ -24,8 +24,8 @@ $app->path('test', function() use ($app) {
 
 
 
-require BULLET_APP_ROOT . '/master.php';
-$routesDir = BULLET_APP_ROOT . '/routes/';
+require CENTRIFUGE_APP_ROOT . '/master.php';
+$routesDir = CENTRIFUGE_APP_ROOT . '/routes/';
 require $routesDir . 'landers.php';
 require $routesDir . 'admin.php';
 

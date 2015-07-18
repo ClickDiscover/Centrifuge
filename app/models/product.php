@@ -1,9 +1,9 @@
 <?php
 
 require_once dirname(dirname(__DIR__)) . '/config.php';
-require BULLET_ROOT . '/vendor/autoload.php';
-require_once BULLET_APP_ROOT . '/util/adexchange.php';
-require_once BULLET_APP_ROOT . '/util/identify.php';
+require CENTRIFUGE_ROOT . '/vendor/autoload.php';
+require_once CENTRIFUGE_APP_ROOT . '/util/adexchange.php';
+require_once CENTRIFUGE_APP_ROOT . '/util/identify.php';
 use League\Url\Url;
 
 

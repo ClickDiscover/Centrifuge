@@ -4,8 +4,8 @@ require_once dirname(dirname(__DIR__)) . '/config.php';
 require_once __DIR__ . "/product.php";
 require_once __DIR__ . "/step.php";
 require_once __DIR__ . "/tracking.php";
-require_once BULLET_APP_ROOT . "/util/iexception.php";
-require_once BULLET_APP_ROOT . "/util/variant.php";
+require_once CENTRIFUGE_APP_ROOT . "/util/iexception.php";
+require_once CENTRIFUGE_APP_ROOT . "/util/variant.php";
 
 class LanderNotFoundException extends CustomException {};
 

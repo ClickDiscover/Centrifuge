@@ -1,7 +1,7 @@
 <?php
 require_once dirname(dirname(__DIR__)) . '/config.php';
-require BULLET_ROOT . '/vendor/autoload.php';
-require_once BULLET_MODELS_ROOT . "/product.php";
+require CENTRIFUGE_ROOT . '/vendor/autoload.php';
+require_once CENTRIFUGE_MODELS_ROOT . "/product.php";
 
 
 

@@ -1,7 +1,7 @@
 <?php
 
 require_once dirname(dirname(__DIR__)) . '/config.php';
-require BULLET_ROOT . '/vendor/autoload.php';
+require CENTRIFUGE_ROOT . '/vendor/autoload.php';
 use League\Url\Url;
 
 

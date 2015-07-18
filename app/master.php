@@ -29,12 +29,12 @@ set_error_handler("exception_error_handler");
 $app['PRODUCT_ROOT'] = '/static/products/';
 $app['LANDER_ROOT'] = '/static';
 $app->db = new PDO(PDO_URL);
-$app->plates = new League\Plates\Engine(BULLET_WEB_ROOT . "/landers");
+$app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
 $app->plates->loadExtension(new VariantExtension);
-$app->plates->addFolder('admin', BULLET_WEB_ROOT. 'admin');
+$app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. 'admin');
 
 foreach ($app->db->query('SELECT distinct namespace from websites', PDO::FETCH_COLUMN, 0) as $ns) {
-    $app->plates->addFolder($ns, BULLET_WEB_ROOT . '/landers/' . $ns);
+    $app->plates->addFolder($ns, CENTRIFUGE_WEB_ROOT . '/landers/' . $ns);
 }
 
 
