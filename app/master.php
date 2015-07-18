@@ -77,7 +77,7 @@ $app->on('LanderNotFoundException', function ($req, $res, \Exception $e) use($ap
 // Custom 404 Error Page
 $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use($app) {
     $message = "Whoa! " . $request->url() . " wasn't found!";
-    $response->content($message);
+    $app->response(200, $message);
 });
 
 
