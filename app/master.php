@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__) . '/config.php';
+require_once __DIR__ . '/instruments.php';
 require_once __DIR__ . '/util/variant.php';
 // Setup defaults...
 // error_reporting(-1); // Display ALL errors
@@ -25,50 +25,38 @@ set_error_handler("exception_error_handler");
 // Start user session
 // session_start();
 
+function distinctSites($app) {
+    $item = $app->cache->getItem('distinct', 'websites');
+    $result = $item->get();
+    if($item->isMiss()) {
+        $app->log->info("Cache miss distinct");
+        $app->metrics->increment("cache_miss");
+        $result = $app->db->query('SELECT distinct namespace from websites')->fetchAll(PDO::FETCH_COLUMN, 0);
+        $item->set($result, OBJ_TTL);
+    }
+    return $result;
+}
+
 $app['LANDER_ROOT'] = CENTRIFUGE_STATIC_ROOT;
 $app['PRODUCT_ROOT'] = CENTRIFUGE_PRODUCT_ROOT;
 
 
-$app->log = new Monolog\Logger('centrifuge');
-$app->log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT, Monolog\Logger::INFO));
-
-
-$app->db = new PDO(PDO_URL);
-
-
-$connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
-$app->metrics = new \Domnikl\Statsd\Client($connection, 'centrifuge');
+$app->log     = $log;
+$app->db      = $db;
+$app->cache   = $cache;
+$app->metrics = $metrics;
 $app->metrics->increment("num_requests");
-
-// $app->metrics = new Metrics\Client('patrick@flagshippromotions.com', '5c4e32ae950c2d8c09280b6e060a8a46294c4865d65be68317ebc7c047e2b62f');
-// $librato_source = 'centrifuge.laptop';
-// $librato_metric = array('name' => 'testing.app.centrifuge.fluxinator', 'value' => (rand(1, 100) / 13.0) + rand(0, 30));
-// $librato_counter  = array('name' => 'testing.app.centrifuge.num_requests', 'value' => 1);
-// $librato_res = $app->metrics->post('/metrics', array(
-//     'source' => $librato_source,
-//     'gauges' => array($librato_metric),
-//     'counters' => array($librato_counter)
-// ));
-
-// echo '<pre>';
-// echo "Librato counter:";
-// print_r($librato_counter);
-// echo "Librato metric:";
-// print_r($librato_metric);
-// echo "Librato result:";
-// print_r($librato_res);
-// echo '</pre>';
 
 $app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
 $app->plates->loadExtension(new VariantExtension);
 $app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
-foreach ($app->db->query('SELECT distinct namespace from websites', PDO::FETCH_COLUMN, 0) as $ns) {
+foreach (distinctSites($app) as $ns) {
     $app->plates->addFolder($ns, CENTRIFUGE_WEB_ROOT . '/landers/' . $ns);
 }
 
 
 
-// Display exceptions with error and 500 status
+// Error handling
 $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $response, \Exception $e) use($app) {
     $data = array(
         // 'error' => str_replace('Exception', '', get_class($e)),
@@ -78,39 +66,35 @@ $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $respo
         'line' => $e->getLine(),
         'code' => $e->getCode()
     );
-    // $data['trace'] = $e->getTrace();
 
-    $out = '<strong>'. get_class($e). '</strong><pre>' . print_r($data, true) . '</pre>';
-    $response->content($out);
-    if(BULLET_ENV === 'production') {
-        // An error happened in production. You should really let yourself know about it.
-        // TODO: Email, log to file, or send to error-logging service like Sentry, Airbrake, etc.
+    if(CENTRIFUGE_ENV  === 'production') {
+        $app->log->error((string) $e);
+        $app->metrics->increment("errors");
+        $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
+    } elseif(CENTRIFUGE_ENV === 'dev') {
+        $out = '<strong>'. get_class($e). '</strong><pre>' . print_r($data, true) . '</pre>';
+        $response->content($out);
     }
 });
 
-$app->on('LanderNotFoundException', function ($req, $res, \Exception $e) use($app) {
-    $data = array(
-        // 'error' => str_replace('Exception', '', get_class($e)),
-        'error' => get_class($e),
-        'message' => $e->getMessage(),
-        'file' => $e->getFile(),
-        'line' => $e->getLine(),
-        'code' => $e->getCode()
-    );
-    // $data['trace'] = $e->getTrace();
 
-    $out = '<strong>'. get_class($e). '</strong><pre>' . print_r($data, true) . '</pre>';
-    $res->status(200);
-    $res->content($out);
-});
-
-// Custom 404 Error Page
 $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use($app) {
-    $message = "Whoa! " . $request->url() . " wasn't found!";
-    $response->content($message);
+    if(CENTRIFUGE_ENV  === 'production') {
+        $reqData = array(
+            'query' => $request->query(),
+            'server' => $request->server()
+        );
+        $app->log->error('404', $reqData);
+        $app->metrics->increment("errors");
+        $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
+    } elseif(CENTRIFUGE_ENV === 'dev') {
+        $message = "Whoa! " . $request->url() . " wasn't found!";
+        $response->content($message);
+    }
 });
 
 
+// Route to custom URLs
 $app->on('before', function ($request, $response) use ($app) {
     $routes = $app->db->query("SELECT * FROM routes", PDO::FETCH_ASSOC);
     foreach ($routes as $r) {

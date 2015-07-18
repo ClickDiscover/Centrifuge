@@ -50,8 +50,7 @@ class VariantLanderHtml
 class LanderFunctions
 {
     public static function fetch($app, $id, $root = null) {
-        $q = LanderFunctions::query($id);
-        $res = $app->db->query($q)->fetch(PDO::FETCH_ASSOC);
+        $res = LanderFunctions::cachedQuery('lander', $app, $id, LanderFunctions::landerSql());
         if ($res == false) {
             throw new LanderNotFoundException("Lander id: {$id} does not exist!", $id);
         }
@@ -60,13 +59,11 @@ class LanderFunctions
         $products = [];
 
         if ($res['offer'] == 'adexchange') {
-            $sql = "SELECT affiliate_id, vertical, country FROM ae_parameters WHERE id = ".$res['param_id'];
-            $params = $app->db->query($sql)->fetch(PDO::FETCH_ASSOC);
-            $products = AdExchangeProduct::fetchFromAdExchange($params['affiliate_id'], $params['vertical'], $params['country']);
+            $params = LanderFunctions::cachedQuery('ae_parameters', $app, $res['param_id'], LanderFunctions::$adExchangeSql);
+            $products = AdExchangeProduct::fetchFromAdExchange($app, $params['affiliate_id'], $params['vertical'], $params['country']);
         } elseif ($res['offer'] == 'network') {
-            // $sql = "SELECT id, name, image_url FROM products WHERE id IN (".implode(',', [$res['product1_id'], $res['product2_id']]).")";
-            $p1 = $app->db->query("SELECT id, name, image_url FROM products WHERE id = " . $res['product1_id'])->fetch(PDO::FETCH_ASSOC);
-            $p2 = $app->db->query("SELECT id, name, image_url FROM products WHERE id = " . $res['product2_id'])->fetch(PDO::FETCH_ASSOC);
+            $p1 = LanderFunctions::cachedQuery('product', $app, $res['product1_id'], LanderFunctions::$productSql);
+            $p2 = LanderFunctions::cachedQuery('product', $app, $res['product2_id'], LanderFunctions::$productSql);
             $products[] = NetworkProduct::fromArray($p1, $app['PRODUCT_ROOT']);
             $products[] = NetworkProduct::fromArray($p2, $app['PRODUCT_ROOT']);
         }
@@ -74,20 +71,33 @@ class LanderFunctions
         $steps = Step::fromProducts($products);
         $rootPath = isset($root) ? $root : $app['LANDER_ROOT'];
         $variants = json_decode($res['variants'], true);
-
-        // $template = $res['namespace'] . '::' . $res['template_file'];
-        // $assets   = $app['LANDER_ROOT'] . $res['namespace'] . '/' . $res['asset_dir'];
-        // $assets = $app['LANDER_ROOT'] . $res['assets'];
-        // return new LanderHtml($template, $assets, $steps, $tracking);
         return new VariantLanderHtml($res['namespace'], $rootPath, $res['template_file'], $res['asset_dir'], $variants, $steps, $tracking);
     }
 
+    public static function cachedQuery($type, $app, $id, $sql) {
+        $pool = $app->cache;
+        $item = $pool->getItem($type, $id);
+        $lander = $item->get();
+        if ($item->isMiss()) {
+            $app->log->info("Cache miss: ", array($type.'_id' => $id));
+            $app->metrics->increment("cache_miss");
+            $stmt = $app->db->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $stmt->execute(array($id));
+            $lander = $stmt->fetch(PDO::FETCH_ASSOC);
+            $item->set($lander, OBJ_TTL);
+        }
+        return $lander;
+    }
 
-    public static function query($id) {
+    public static $adExchangeSql = "SELECT affiliate_id, vertical, country FROM ae_parameters WHERE id = ?";
+
+    public static $productSql = "SELECT id, name, image_url FROM products WHERE id = ?";
+
+    public static function landerSql() {
         $sql = <<<SQL
 SELECT l.*, w.namespace, w.template_file, w.asset_dir FROM landers l
 INNER JOIN websites w ON (w.id = l.website_id)
-WHERE l.id = {$id};
+WHERE l.id = ?
 SQL;
         return $sql;
     }

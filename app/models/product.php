@@ -23,11 +23,21 @@ class AdExchangeProduct implements Product
         $this->name = $name;
     }
 
-    public static function fetchFromAdExchange($affiliate_id, $vert, $country)
+    public static function fetchFromAdExchange($app, $affiliate_id, $vert, $country)
     {
-        $res = ad_exchange_request($affiliate_id, $vert, $country, $_SERVER["HTTP_USER_AGENT"]);
-        $s1 = new AdExchangeProduct($res['step1'], $res['step1_name']);
-        $s2 = new AdExchangeProduct($res['step2'], $res['step2_name']);
+        $pool = $app->cache;
+        $item = $pool->getItem('adexchange', $affiliate_id, $vert, $country);
+        $result = $item->get();
+
+        if ($item->isMiss()) {
+            $app->log->info("Cache miss adexchange: ", array($affiliate_id, $vert, $country));
+            $app->metrics->increment("ae_cache_miss");
+            $result = ad_exchange_request($affiliate_id, $vert, $country, $_SERVER["HTTP_USER_AGENT"]);
+            $item->set($result, OBJ_TTL);
+        }
+
+        $s1 = new AdExchangeProduct($result['step1'], $result['step1_name']);
+        $s2 = new AdExchangeProduct($result['step2'], $result['step2_name']);
         return array($s1, $s2);
     }
 
