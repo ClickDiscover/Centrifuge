@@ -22,21 +22,21 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
       throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
 }
 set_error_handler("exception_error_handler");
-
 // Start user session
 // session_start();
 
-$app->plates = new League\Plates\Engine(BULLET_WEB_ROOT . "/landers");
-$app->plates->addFolder('admin', BULLET_WEB_ROOT. 'admin');
-// $app->plates->loadExtension(new VariantExtension('admin'));
 
-$app->plates->addFolder('healthsource', BULLET_WEB_ROOT. 'landers/healthsource');
-$app->plates->addFolder('good_housekeeping', BULLET_WEB_ROOT. 'landers/good_housekeeping');
-$app->plates->loadExtension(new VariantExtension);
-// $app->plates->addFolder('admin', '/admin/');
 $app['PRODUCT_ROOT'] = '/static/products/';
 $app['LANDER_ROOT'] = '/static';
 $app->db = new PDO(PDO_URL);
+$app->plates = new League\Plates\Engine(BULLET_WEB_ROOT . "/landers");
+$app->plates->loadExtension(new VariantExtension);
+$app->plates->addFolder('admin', BULLET_WEB_ROOT. 'admin');
+
+foreach ($app->db->query('SELECT distinct namespace from websites', PDO::FETCH_COLUMN, 0) as $ns) {
+    $app->plates->addFolder($ns, BULLET_WEB_ROOT . '/landers/' . $ns);
+}
+
 
 
 // Display exceptions with error and 500 status

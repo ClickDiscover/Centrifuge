@@ -34,7 +34,7 @@ class VariantLanderHtml
     }
 
     public function toArray() {
-        $assets   = $this->rootPath . '/' . $this->namespace;
+        $assets = $this->rootPath . '/' . $this->namespace;
 
         return array(
             'steps' => $this->steps,
@@ -64,10 +64,11 @@ class LanderFunctions
             $params = $app->db->query($sql)->fetch(PDO::FETCH_ASSOC);
             $products = AdExchangeProduct::fetchFromAdExchange($params['affiliate_id'], $params['vertical'], $params['country']);
         } elseif ($res['offer'] == 'network') {
-            $sql = "SELECT id, name, image_url FROM products WHERE id IN (".implode(',', [$res['product1_id'], $res['product2_id']]).")";
-            foreach ($app->db->query($sql)->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                $products[] = NetworkProduct::fromArray($row, $app['PRODUCT_ROOT']);
-            }
+            // $sql = "SELECT id, name, image_url FROM products WHERE id IN (".implode(',', [$res['product1_id'], $res['product2_id']]).")";
+            $p1 = $app->db->query("SELECT id, name, image_url FROM products WHERE id = " . $res['product1_id'])->fetch(PDO::FETCH_ASSOC);
+            $p2 = $app->db->query("SELECT id, name, image_url FROM products WHERE id = " . $res['product2_id'])->fetch(PDO::FETCH_ASSOC);
+            $products[] = NetworkProduct::fromArray($p1, $app['PRODUCT_ROOT']);
+            $products[] = NetworkProduct::fromArray($p2, $app['PRODUCT_ROOT']);
         }
 
         $steps = Step::fromProducts($products);
