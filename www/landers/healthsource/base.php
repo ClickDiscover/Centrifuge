@@ -13,8 +13,6 @@ include dirname(__DIR__) . "/vars.php";
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= $assets ?>/main.css">
-    <link rel="stylesheet" href="<?= $assets ?>/overrides.css">
-    <link href="<?= $assets ?>/extra.css" rel="stylesheet" type="text/css">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>

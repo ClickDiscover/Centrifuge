@@ -9,7 +9,7 @@ if(php_sapi_name() === 'cli-server') {
 
 require_once dirname(__DIR__) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-$app = new Bullet\App(require CENTRIFUGE_APP_ROOT . 'bullet.conf.php');
+$app = new Bullet\App(require CENTRIFUGE_APP_ROOT . '/bullet.conf.php');
 $request = new Bullet\Request();
 
 

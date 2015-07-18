@@ -4,6 +4,8 @@
         "league/plates": "^3.1",
         "symfony/http-foundation": "^2.7",
         "hashids/hashids": "^1.0",
-        "vlucas/bulletphp": "^1.4"
+        "vlucas/bulletphp": "^1.4",
+        "nesQuick/Metrics": "^1.0",
+        "monolog/monolog": "^1.15"
     }
 }

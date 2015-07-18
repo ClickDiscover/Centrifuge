@@ -25,13 +25,20 @@ set_error_handler("exception_error_handler");
 // Start user session
 // session_start();
 
+$app['LANDER_ROOT'] = CENTRIFUGE_STATIC_ROOT;
+$app['PRODUCT_ROOT'] = CENTRIFUGE_PRODUCT_ROOT;
 
-$app['PRODUCT_ROOT'] = '/static/products/';
-$app['LANDER_ROOT'] = '/static';
 $app->db = new PDO(PDO_URL);
+
 $app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
 $app->plates->loadExtension(new VariantExtension);
-$app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. 'admin');
+$app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
+
+$app->metrics = new Metrics\Client('patrick@flagshippromotions.com', '5c4e32ae950c2d8c09280b6e060a8a46294c4865d65be68317ebc7c047e2b62f');
+// $app->metrics->post('/metrics', array( 'counters' => array( array('testing.app.centrifuge.num_requests' => 1)));
+
+$app->log = new Monolog\Logger('centrifuge');
+$app->log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT, Monolog\Logger::INFO));
 
 foreach ($app->db->query('SELECT distinct namespace from websites', PDO::FETCH_COLUMN, 0) as $ns) {
     $app->plates->addFolder($ns, CENTRIFUGE_WEB_ROOT . '/landers/' . $ns);
@@ -51,7 +58,7 @@ $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $respo
     );
     // $data['trace'] = $e->getTrace();
 
-    $out = '<pre>' . print_r($data, true) . '</pre>';
+    $out = '<strong>'. get_class($e). '</strong><pre>' . print_r($data, true) . '</pre>';
     $response->content($out);
     if(BULLET_ENV === 'production') {
         // An error happened in production. You should really let yourself know about it.
@@ -70,14 +77,15 @@ $app->on('LanderNotFoundException', function ($req, $res, \Exception $e) use($ap
     );
     // $data['trace'] = $e->getTrace();
 
-    $out = '<pre>' . print_r($data, true) . '</pre>';
+    $out = '<strong>'. get_class($e). '</strong><pre>' . print_r($data, true) . '</pre>';
+    $res->status(200);
     $res->content($out);
 });
 
 // Custom 404 Error Page
 $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use($app) {
     $message = "Whoa! " . $request->url() . " wasn't found!";
-    $app->response(200, $message);
+    $response->content($message);
 });
 
 
