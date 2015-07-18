@@ -28,18 +28,40 @@ set_error_handler("exception_error_handler");
 $app['LANDER_ROOT'] = CENTRIFUGE_STATIC_ROOT;
 $app['PRODUCT_ROOT'] = CENTRIFUGE_PRODUCT_ROOT;
 
-$app->db = new PDO(PDO_URL);
-
-$app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
-$app->plates->loadExtension(new VariantExtension);
-$app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
-
-$app->metrics = new Metrics\Client('patrick@flagshippromotions.com', '5c4e32ae950c2d8c09280b6e060a8a46294c4865d65be68317ebc7c047e2b62f');
-// $app->metrics->post('/metrics', array( 'counters' => array( array('testing.app.centrifuge.num_requests' => 1)));
 
 $app->log = new Monolog\Logger('centrifuge');
 $app->log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT, Monolog\Logger::INFO));
 
+
+$app->db = new PDO(PDO_URL);
+
+
+$connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
+$app->metrics = new \Domnikl\Statsd\Client($connection, 'centrifuge');
+$app->metrics->increment("num_requests");
+
+// $app->metrics = new Metrics\Client('patrick@flagshippromotions.com', '5c4e32ae950c2d8c09280b6e060a8a46294c4865d65be68317ebc7c047e2b62f');
+// $librato_source = 'centrifuge.laptop';
+// $librato_metric = array('name' => 'testing.app.centrifuge.fluxinator', 'value' => (rand(1, 100) / 13.0) + rand(0, 30));
+// $librato_counter  = array('name' => 'testing.app.centrifuge.num_requests', 'value' => 1);
+// $librato_res = $app->metrics->post('/metrics', array(
+//     'source' => $librato_source,
+//     'gauges' => array($librato_metric),
+//     'counters' => array($librato_counter)
+// ));
+
+// echo '<pre>';
+// echo "Librato counter:";
+// print_r($librato_counter);
+// echo "Librato metric:";
+// print_r($librato_metric);
+// echo "Librato result:";
+// print_r($librato_res);
+// echo '</pre>';
+
+$app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
+$app->plates->loadExtension(new VariantExtension);
+$app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
 foreach ($app->db->query('SELECT distinct namespace from websites', PDO::FETCH_COLUMN, 0) as $ns) {
     $app->plates->addFolder($ns, CENTRIFUGE_WEB_ROOT . '/landers/' . $ns);
 }
