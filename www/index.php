@@ -13,7 +13,7 @@ $app = new Bullet\App(require CENTRIFUGE_APP_ROOT . '/bullet.conf.php');
 $request = new Bullet\Request();
 require CENTRIFUGE_APP_ROOT . '/master.php';
 
-echo "<pre>Request Timing</pre>";
+// echo "<pre>Request Timing</pre>";
 $app->metrics->startTiming("request_time");
 
 $app->path('ping', function ($req) use ($app) {
@@ -33,4 +33,4 @@ require $routesDir . 'admin.php';
 
 echo $app->run($request);
 $time = $app->metrics->endTiming("request_time");
-echo "<pre>End timing {$time}</pre>";
+// echo "<pre>End timing {$time}</pre>";
