@@ -34,7 +34,7 @@ class VariantLanderHtml
     }
 
     public function toArray() {
-        $assets   = $this->rootPath . '/' . $this->namespace . '/' . $this->assetDirectory;
+        $assets   = $this->rootPath . '/' . $this->namespace;
 
         return array(
             'steps' => $this->steps,

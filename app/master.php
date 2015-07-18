@@ -34,8 +34,8 @@ $app->plates->addFolder('healthsource', BULLET_WEB_ROOT. 'landers/healthsource')
 $app->plates->addFolder('good_housekeeping', BULLET_WEB_ROOT. 'landers/good_housekeeping');
 $app->plates->loadExtension(new VariantExtension);
 // $app->plates->addFolder('admin', '/admin/');
-$app['PRODUCT_ROOT'] = '/products/';
-$app['LANDER_ROOT'] = '/landers';
+$app['PRODUCT_ROOT'] = '/static/products/';
+$app['LANDER_ROOT'] = '/static';
 $app->db = new PDO(PDO_URL);
 
 
