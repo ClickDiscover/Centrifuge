@@ -37,6 +37,18 @@ function distinctSites($app) {
     return $result;
 }
 
+function cachedQuery($app, $type, $sql) {
+    $item = $app->cache->getItem($type);
+    $result = $item->get();
+    if($item->isMiss()) {
+        $app->log->info("Cache miss " . $type);
+        $app->metrics->increment("cache_miss");
+        $result = $app->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $item->set($result, OBJ_TTL);
+    }
+    return $result;
+}
+
 $app['LANDER_ROOT'] = CENTRIFUGE_STATIC_ROOT;
 $app['PRODUCT_ROOT'] = CENTRIFUGE_PRODUCT_ROOT;
 
@@ -96,7 +108,7 @@ $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use
 
 // Route to custom URLs
 $app->on('before', function ($request, $response) use ($app) {
-    $routes = $app->db->query("SELECT * FROM routes", PDO::FETCH_ASSOC);
+    $routes = cachedQuery($app, 'routes', "SELECT * FROM routes");
     foreach ($routes as $r) {
         if ($request->url() == $r['url']) {
             $matched_id = $r['lander_id'];
