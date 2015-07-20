@@ -16,5 +16,5 @@ require_once CENTRIFUGE_ROOT . '/vendor/autoload.php';
 define('OBJ_TTL', 300);
 define('PDO_URL', 'pgsql:host=localhost;dbname=rotator;port=5432;user=patrick');
 define('CENTRIFUGE_LOG_LEVEL', Monolog\Logger::INFO);
-define('CENTRIFUGE_ENV', 'production');
+define('CENTRIFUGE_ENV', 'dev');
 define('FALLBACK_LANDER', 1);
