@@ -46,5 +46,14 @@ $app->path('admin', function($req) use ($app) {
             });
         });
     });
+
+    $app->path('ping', function ($req) use ($app) {
+        return "pong!";
+    });
+    $app->path('test', function() use ($app) {
+        $s = print_r($_SERVER, true);
+        return "<pre>{$s}</pre>";
+    });
+
 });
 

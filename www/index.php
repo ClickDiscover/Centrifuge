@@ -16,15 +16,6 @@ require CENTRIFUGE_APP_ROOT . '/master.php';
 // echo "<pre>Request Timing</pre>";
 $app->metrics->startTiming("request_time");
 
-$app->path('ping', function ($req) use ($app) {
-    return "pong!";
-});
-$app->path('test', function() use ($app) {
-    $s = print_r($_SERVER, true);
-    return "<pre>{$s}</pre>";
-});
-
-
 
 
 $routesDir = CENTRIFUGE_APP_ROOT . '/routes/';
