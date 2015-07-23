@@ -13,4 +13,4 @@ $cacheDriver->setOptions(array('path' => CENTRIFUGE_CACHE_ROOT));
 $cache = new Stash\Pool($cacheDriver);
 
 $connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
-$metrics = new \Domnikl\Statsd\Client($connection, 'statsd.centrifuge');
+$metrics = new \Domnikl\Statsd\Client($connection, 'centrifuge');

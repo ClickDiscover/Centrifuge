@@ -80,7 +80,7 @@ $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $respo
     );
 
     if(CENTRIFUGE_ENV  === 'production') {
-        $app->log->error((string) $e);
+        $app->log->warning((string) $e);
         $app->metrics->increment("errors");
         $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
     } elseif(CENTRIFUGE_ENV === 'dev') {
@@ -96,7 +96,7 @@ $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use
             'query' => $request->query(),
             'server' => $request->server()
         );
-        $app->log->error('404', $reqData);
+        $app->log->warning('404', $reqData);
         $app->metrics->increment("errors");
         $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
     } elseif(CENTRIFUGE_ENV === 'dev') {
