@@ -16,7 +16,14 @@ $app->path('click', function () use ($app) {
                 unset($currentQuery['lander']);
             }
 
-            $url = Url::createFromUrl(CLICK_URL);
+            $url = null;
+            if (CLICK_METHOD == 'direct') {
+                $url = Url::createFromServer($_SERVER);
+                $url->setPath(CLICK_URL);
+            } elseif (CLICK_METHOD == 'redirect') {
+                $url = Url::createFromUrl(CLICK_URL);
+            }
+
             $currentQuery['id'] = $stepId;
             $url->getQuery()->modify($currentQuery);
             return $app->response()->redirect($url);
