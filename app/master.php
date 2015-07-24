@@ -25,25 +25,13 @@ set_error_handler("exception_error_handler");
 // Start user session
 // session_start();
 
-function distinctSites($app) {
-    $item = $app->cache->getItem('distinct', 'websites');
-    $result = $item->get();
-    if($item->isMiss()) {
-        $app->log->info("Cache miss distinct");
-        $app->metrics->increment("cache_miss");
-        $result = $app->db->query('SELECT distinct namespace from websites')->fetchAll(PDO::FETCH_COLUMN, 0);
-        $item->set($result, OBJ_TTL);
-    }
-    return $result;
-}
-
 function cachedQuery($app, $type, $sql) {
     $item = $app->cache->getItem($type);
     $result = $item->get();
     if($item->isMiss()) {
         $app->log->info("Cache miss " . $type);
         $app->metrics->increment("cache_miss");
-        $result = $app->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $result = $app->db()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $item->set($result, OBJ_TTL);
     }
     return $result;
@@ -54,7 +42,8 @@ $app['PRODUCT_ROOT'] = CENTRIFUGE_PRODUCT_ROOT;
 
 
 $app->log     = $log;
-$app->db      = $db;
+// $app->db      = $db;
+$app->addMethod('db', $db);
 $app->cache   = $cache;
 $app->metrics = $metrics;
 $app->metrics->increment("num_requests");
@@ -62,7 +51,7 @@ $app->metrics->increment("num_requests");
 $app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
 $app->plates->loadExtension(new VariantExtension);
 $app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
-foreach (distinctSites($app) as $ns) {
+foreach (cachedQuery($app, "distinct/websites", "SELECT distinct namespace from websites") as $ns) {
     $app->plates->addFolder($ns, CENTRIFUGE_WEB_ROOT . '/landers/' . $ns);
 }
 
@@ -80,8 +69,10 @@ $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $respo
     );
 
     if(CENTRIFUGE_ENV  === 'production') {
-        $app->log->warning((string) $e);
-        $app->metrics->increment("errors");
+        if (get_class($e) != "LanderNotFoundException") {
+            $app->log->error((string) $e);
+            $app->metrics->increment("errors");
+        }
         $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
     } elseif(CENTRIFUGE_ENV === 'dev') {
         $out = '<strong>'. get_class($e). '</strong><pre>' . print_r($data, true) . '</pre>';
@@ -97,7 +88,7 @@ $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use
             'server' => $request->server()
         );
         $app->log->warning('404', $reqData);
-        $app->metrics->increment("errors");
+        // $app->metrics->increment("errors");
         $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
     } elseif(CENTRIFUGE_ENV === 'dev') {
         $message = "Whoa! " . $request->url() . " wasn't found!";

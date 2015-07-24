@@ -9,10 +9,13 @@ $app->path('landers', function ($req) use ($app) {
 
     $app->param('int', function ($req, $id) use ($app)  {
         $lander = LanderFunctions::fetch($app, $id);
-        $app->metrics->increment('lander.' . $lander->id . '.views');
-        if ($req->isBot()) {
-            $app->metrics->increment('bot_hits');
-            $app->log->warning("Bot Error", $_SERVER);
+
+        if (ENABLE_LANDER_TRACKING) {
+            $app->metrics->increment('lander.' . $lander->id . '.views');
+            if ($req->isBot()) {
+                $app->metrics->increment('bot_hits');
+                $app->log->warning("Bot Error", $_SERVER);
+            }
         }
 
         $app->get(function () use ($app, $lander)  {

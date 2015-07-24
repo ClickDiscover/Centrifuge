@@ -30,6 +30,20 @@ It only works if you buy some more shit! <a href="<?= $step2_link ?>"><?= $step2
 Damn... Im jelly!
 </div>
 
+<h4>Var dump</h4>
+<pre>
+<?php
+print_r(array(
+    'step1_name' => $step1_name,
+    'step1_image' => $step1_image,
+    'step1_link' => $step1_link,
+    'step2_name' => $step2_name,
+    'step2_image' => $step2_image,
+    'step2_link' => $step2_link
+));
+?>
+</pre>
+
 <div>
 <h4>Assets</h4>
 <img src="<?= $assets ?>/facebook.png">

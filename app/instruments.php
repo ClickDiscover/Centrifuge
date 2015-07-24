@@ -5,7 +5,11 @@ $log = new Monolog\Logger('centrifuge');
 $log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT, CENTRIFUGE_LOG_LEVEL));
 
 
-$db = new PDO(PDO_URL);
+// $db = new PDO(PDO_URL);
+
+$db = function () {
+    return new PDO(PDO_URL);
+};
 
 
 $cacheDriver = new Stash\Driver\FileSystem();

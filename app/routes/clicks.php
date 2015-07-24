@@ -11,7 +11,7 @@ $app->path('click', function () use ($app) {
         $app->get(function ($req) use ($app, $stepId) {
             $currentQuery = Url::createFromServer($_SERVER)->getQuery()->toArray();
             $app->metrics->increment("clicks");
-            if (isset($currentQuery['lander'])) {
+            if (ENABLE_LANDER_TRACKING && isset($currentQuery['lander'])) {
                 $app->metrics->increment('lander.' . $currentQuery['lander'] . '.clicks');
                 unset($currentQuery['lander']);
             }

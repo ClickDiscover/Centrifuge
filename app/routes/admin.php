@@ -24,7 +24,7 @@ $app->path('admin', function($req) use ($app) {
     });
 
     $app->path('products', function() use ($app) {
-        $results = $app->db->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
+        $results = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
         $out = '<table>';
         foreach ($results as $prod) {
             $p = NetworkProduct::fromArray($prod, $app['PRODUCT_ROOT']);
