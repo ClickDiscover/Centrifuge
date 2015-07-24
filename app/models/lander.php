@@ -68,7 +68,7 @@ class LanderFunctions
             $products[] = NetworkProduct::fromArray($p2, $app['PRODUCT_ROOT']);
         }
 
-        $steps = Step::fromProducts($products);
+        $steps = Step::fromProducts($products, $id);
         $rootPath = isset($root) ? $root : $app['LANDER_ROOT'];
         $variants = json_decode($res['variants'], true);
         return new VariantLanderHtml($res['namespace'], $rootPath, $res['template_file'], $res['asset_dir'], $variants, $steps, $tracking);
