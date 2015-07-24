@@ -20,6 +20,7 @@ $app->metrics->startTiming("request_time");
 
 $routesDir = CENTRIFUGE_APP_ROOT . '/routes/';
 require $routesDir . 'landers.php';
+require $routesDir . 'clicks.php';
 require $routesDir . 'admin.php';
 
 echo $app->run($request);

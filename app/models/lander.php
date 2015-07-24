@@ -18,8 +18,10 @@ class VariantLanderHtml
     public $assetDirectory;
     public $rootPath;
     public $tracking;
+    public $id;
 
-    public function __construct($namespace, $rootPath, $templateFile, $assetDir, $variants, $steps, $tracking) {
+    public function __construct($id, $namespace, $rootPath, $templateFile, $assetDir, $variants, $steps, $tracking) {
+        $this->id = $id;
         $this->namespace = $namespace;
         $this->templateFile = $templateFile;
         $this->assetDirectory = $assetDir;
@@ -71,7 +73,7 @@ class LanderFunctions
         $steps = Step::fromProducts($products, $id);
         $rootPath = isset($root) ? $root : $app['LANDER_ROOT'];
         $variants = json_decode($res['variants'], true);
-        return new VariantLanderHtml($res['namespace'], $rootPath, $res['template_file'], $res['asset_dir'], $variants, $steps, $tracking);
+        return new VariantLanderHtml($id, $res['namespace'], $rootPath, $res['template_file'], $res['asset_dir'], $variants, $steps, $tracking);
     }
 
     public static function cachedQuery($type, $app, $id, $sql) {
