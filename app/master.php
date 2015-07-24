@@ -51,7 +51,8 @@ $app->metrics->increment("num_requests");
 $app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
 $app->plates->loadExtension(new VariantExtension);
 $app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
-foreach (cachedQuery($app, "distinct/websites", "SELECT distinct namespace from websites") as $ns) {
+foreach (cachedQuery($app, "distinct/websites", "SELECT distinct namespace from websites") as $namespace) {
+    $ns = $namespace['namespace'];
     $app->plates->addFolder($ns, CENTRIFUGE_WEB_ROOT . '/landers/' . $ns);
 }
 
