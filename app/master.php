@@ -90,6 +90,7 @@ $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use
         );
         $app->log->warning('404', $reqData);
         // $app->metrics->increment("errors");
+        $app->metrics->increment("4xx");
         $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
     } elseif(CENTRIFUGE_ENV === 'dev') {
         $message = "Whoa! " . $request->url() . " wasn't found!";
