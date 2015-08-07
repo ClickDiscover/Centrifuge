@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/instruments.php';
 require_once __DIR__ . '/util/variant.php';
+require_once __DIR__ . '/util/html.php';
 // Setup defaults...
 // error_reporting(-1); // Display ALL errors
 // ini_set('display_errors', '1');
@@ -50,6 +51,10 @@ $app->metrics->increment("num_requests");
 
 $app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
 $app->plates->loadExtension(new VariantExtension);
+$app->plates->registerFunction('table', function ($x) {
+    return Html::table($x);
+});
+
 $app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
 foreach (cachedQuery($app, "distinct/websites", "SELECT distinct namespace from websites") as $namespace) {
     $ns = $namespace['namespace'];
