@@ -46,7 +46,7 @@ print_r(array(
 
 <div>
 <h4>Assets</h4>
-<img src="<?= $assets ?>/facebook.png">
+<img src="<?= $assets ?>/button.png">
 </div>
 
 
