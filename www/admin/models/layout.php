@@ -10,11 +10,16 @@
           margin-right: 50px;
         }
 
-        #menu-container {
+        .menu {
+            // position: relative;
             display: inline-block;
-            height: 33px;
-            padding-bottom: 20px;
+            padding-bottom: 40px;
         }
+
+        .menu ul {
+            height: 20px;
+        }
+
     </style>
 
 </head>
