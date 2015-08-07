@@ -44,6 +44,10 @@ $app->path('admin', function($req) use ($app) {
             "landers" => $landers
         );
 
+        $app->get(function () use ($app, $allModels) {
+            return $app->plates->render('admin::models/all', $allModels);
+        });
+
 
         $app->path('products', function() use ($app, $products) {
             $app->get(function () use ($app, $products) {
