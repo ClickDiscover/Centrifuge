@@ -8,6 +8,7 @@ require_once CENTRIFUGE_APP_ROOT . "/util/iexception.php";
 require_once CENTRIFUGE_APP_ROOT . "/util/variant.php";
 
 class LanderNotFoundException extends CustomException {};
+class InvalidLanderFormatException extends CustomException {};
 
 
 class VariantLanderHtml
@@ -102,6 +103,59 @@ INNER JOIN websites w ON (w.id = l.website_id)
 WHERE l.id = ?
 SQL;
         return $sql;
+    }
+
+    // public static $insertTypes = array(
+    //     'website_id' => PDO::PARAM_INT,
+    //     'product1_id' => PDO::PARAM_INT,
+    //     'product2_id' => PDO::PARAM_INT,
+    //     'param_id' => PDO::PARAM_INT
+    // )
+
+    // Inserting
+    public static function insertQuery($app, $arr) {
+        // Remove data from different offers
+        if ($arr['notes'] == '') {
+            unset($arr['notes']);
+        }
+
+        if($arr['offer'] == 'adexchange') {
+            unset($arr['product1_id']);
+            unset($arr['product2_id']);
+        } elseif ($arr['offer'] == 'network') {
+            unset($arr['param_id']);
+        }
+        $arr['tracking'] = '[' . implode(',', array_map(function ($x) use ($app) {
+            return '"' . $x . '"';
+        }, $arr['tracking'])) . ']';
+
+        $keys = array_keys($arr);
+        $pdoKeys = array_map(function ($x) {
+            return ':' . $x;
+        }, $keys);
+        // $values = array_map(function ($x) use ($app) {
+        //     return $app->db()->quote($x);
+        // }, array_values($arr));
+
+        $query  = 'INSERT INTO landers ';
+        $query .= ' (' . implode(', ', $keys) . ') ';
+        $query .= ' VALUES ';
+        $query .= ' (' . implode(',', $pdoKeys) . ') ';
+        $query .= 'RETURNING id ';
+
+        $values = array();
+        foreach($keys as $k) {
+            $values[':' . $k] = $arr[$k];
+        }
+
+        return array($app->db()->prepare($query), $values);
+    }
+
+    public static function insert($app, $arr) {
+        $query = LanderFunctions::insertQuery($app, $arr);
+        $result = $query[0]->execute($query[1]);
+        $id = $query[0]->fetch()[0];
+        return $id;
     }
 }
 
