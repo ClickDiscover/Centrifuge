@@ -76,8 +76,17 @@ $(function() {
             </div>
         </div>
 
+        <br>
 
-        <legend>Defaults</legend>
+        <legend>Custom URL (Optional)</legend>
+        <div class="pure-control-group">
+            <label for="route">URL</label>
+            <input name="route" id="route" class="pure-input-1-4" type="text" placeholder="Example: /blog/wow-weight-loss">
+        </div>
+
+        <br>
+
+        <legend>Defaults (Optional)</legend>
         <div class="pure-control-group">
             <label for="variants">Variants</label>
             <input name="variants" id="variants" type="text" value="{}">
@@ -88,6 +97,7 @@ $(function() {
             <input type="checkbox" name="tracking[]" value="googleAnalytics" checked> Google Analytics
             <input type="checkbox" name="tracking[]" value="perfectAudience" checked> Perfect Audience
         </div>
+
 
         <div class="pure-controls">
             <input type="submit" class="pure-button pure-button-primary">

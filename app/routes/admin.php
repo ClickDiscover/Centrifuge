@@ -2,6 +2,8 @@
 require_once dirname(dirname(__DIR__)) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
 require_once CENTRIFUGE_MODELS_ROOT . "/product.php";
+require_once CENTRIFUGE_MODELS_ROOT . "/lander.php";
+require_once CENTRIFUGE_MODELS_ROOT . "/route.php";
 
 
 function cleanAeParams($aeParams) {
@@ -64,8 +66,25 @@ $app->path('admin', function($req) use ($app) {
             });
 
             $app->post(function ($req) use ($app) {
-                $result = LanderFunctions::insert($app, $req->post());
-                return $app->response()->redirect('admin/models/landers');
+                $post = $req->post();
+                // Extract Route
+                $route = null;
+                if ($post['route'] != '') {
+                    $route = $post['route'];
+                }
+                unset($post['route']);
+
+                // Insert lander
+                $landerId = LanderFunctions::insert($app, $post);
+
+                // Insert route
+                if (isset($route)) {
+                    $routeRes = RouteFunctions::insert($app, $route, $landerId);
+                    $app->cache->getItem('routes')->clear();
+                }
+
+                // Redirect to admin page
+                return $app->response()->redirect('/admin/models/landers');
             });
         });
     });
