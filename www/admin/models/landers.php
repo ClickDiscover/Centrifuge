@@ -103,14 +103,14 @@ $(function() {
 
 <div>
 <h3>Existing Landers</h3>
-<?= $this->table($landers) ?>
+<?= $this->linkTable($landers, 'id', '/landers/') ?>
 </div>
 <br>
 <br>
 
 <div>
 <h3>Existing Routes</h3>
-<?= $this->table($routes) ?>
+<?= $this->linkTable($routes, 'url', '') ?>
 </div>
 <br>
 <br>

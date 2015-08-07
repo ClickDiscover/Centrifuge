@@ -54,6 +54,12 @@ $app->plates->loadExtension(new VariantExtension);
 $app->plates->registerFunction('table', function ($x) {
     return Html::table($x);
 });
+$app->plates->registerFunction('linkTable', function ($x, $y, $z) {
+    return Html::linkTable($x, $y, $z);
+});
+$app->plates->registerFunction('vardump', function ($x) {
+    return Html::vardump($x);
+});
 
 $app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
 foreach (cachedQuery($app, "distinct/websites", "SELECT distinct namespace from websites") as $namespace) {
