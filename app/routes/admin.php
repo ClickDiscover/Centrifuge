@@ -5,37 +5,22 @@ require_once CENTRIFUGE_MODELS_ROOT . "/product.php";
 
 
 
-function array_to_html($arr) {
-    $out = '<table>';
-    foreach ($arr as $row) {
-        $out .= '<tr>';
-        foreach ($row as $v) {
-            $out .= "<td>{$v}</td>";
-        }
-        $out .= '</tr>';
-    }
-    return $out . '</table>';
-}
-
 
 $app->path('admin', function($req) use ($app) {
-    $app->path('info', function() {
+    $app->path('phpinfo', function() {
         return phpinfo();
+    });
+    $app->path('ping', function ($req) use ($app) {
+        return "pong!";
     });
 
     $app->path('products', function() use ($app) {
-        $results = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
-        $out = '<table>';
-        foreach ($results as $prod) {
-            $p = NetworkProduct::fromArray($prod, $app['PRODUCT_ROOT']);
-            $out .= '<tr>';
-            $out .= "<td>{$p->getId()}</td>";
-            $out .= "<td>{$p->getName()}</td>";
-            $out .= "<td>{$p->getImageUrl()}</td>";
-            $out .= "<td><img src=\"{$p->getImageUrl()}\"/></td>";
-            $out .= '</tr>';
-        }
-        return $out;
+        $app->get(function () use ($app) {
+            $results = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
+            return $app->plates->render('admin::products', array(
+                'products' => $results
+            ));
+        });
     });
 
     $app->path('landers', function ($req) use ($app) {
@@ -45,7 +30,6 @@ $app->path('admin', function($req) use ($app) {
                 return $app->plates->render('admin::testing', $lander->toArray());
             });
         });
-
     });
 
 
@@ -53,8 +37,8 @@ $app->path('admin', function($req) use ($app) {
         $app->get(function () use ($app) {
             $websites = $app->db()->query('SELECT * FROM websites')->fetchAll(PDO::FETCH_ASSOC);;
             $products = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);;
-            $routes = $app->db()->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);;
-            $landers = $app->db()->query('SELECT * FROM landers')->fetchAll(PDO::FETCH_ASSOC);;
+            $routes   = $app->db()->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);;
+            $landers  = $app->db()->query('SELECT * FROM landers')->fetchAll(PDO::FETCH_ASSOC);;
             $aeParams = $app->db()->query('SELECT * FROM ae_parameters')->fetchAll(PDO::FETCH_ASSOC);;
 
             foreach ($aeParams as $i => $ae) {
@@ -76,21 +60,16 @@ $app->path('admin', function($req) use ($app) {
             ));
         });
 
-        $app->post(function ($req) {
+        $app->post(function ($req) use ($app) {
+            $result = LanderFunctions::insert($app, $req->post());
             $out = "<pre>";
-            $out .= print_r($req->post(), true);
+            $out .= "LanderFunctions::insert" . PHP_EOL;
+            $out .= print_r($result, true);
             $out .= "</pre>";
             return $out;
         });
     });
 
-    $app->path('ping', function ($req) use ($app) {
-        return "pong!";
-    });
-    $app->path('test', function() use ($app) {
-        $s = print_r($_SERVER, true);
-        return "<pre>{$s}</pre>";
-    });
 
 });
 

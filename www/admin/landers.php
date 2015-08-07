@@ -8,9 +8,10 @@
 <title>Lander Creator</title>
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
 <script>
 $(function() {
-    $('#network-type').change(function () {
+    function toggleNetworkOptions() {
         var ntype = $('#network-type').val();
         if(ntype == "adexchange") {
             $('#ae-params').show();
@@ -19,9 +20,12 @@ $(function() {
             $('#ae-params').hide();
             $('#network-params').show();
         }
-    });
+    };
+    $('#network-type').change(toggleNetworkOptions);
+    toggleNetworkOptions();
 });
 </script>
+
 </head>
 <body>
 
@@ -37,7 +41,7 @@ $(function() {
 
         <div class="pure-control-group">
             <label for="website">Website</label>
-            <select name="website" id="website">
+            <select name="website_id" id="website">
                 <?php foreach($websites as $w): ?>
                     <option value="<?= $w['id'] ?>"><?= $w['name'] ?></option>
                 <?php endforeach ?>
@@ -58,7 +62,7 @@ $(function() {
 
         <div class="pure-control-group">
             <label for="network-type">Network Type</label>
-            <select name="type" id="network-type">
+            <select name="offer" id="network-type">
                 <option value="adexchange">Ad Exchange</option>
                 <option value="network">Other Network</option>
             </select>
@@ -75,7 +79,7 @@ $(function() {
             </div>
         </div>
 
-        <div id="network-params" style="display: none;">
+        <div id="network-params">
             <div class="pure-control-group">
                 <label for="step-1">Step 1</label>
                 <select name="product1_id" id="step-1">
