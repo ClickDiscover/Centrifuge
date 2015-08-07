@@ -43,16 +43,15 @@ $app->path('admin', function($req) use ($app) {
         );
 
 
-        $app->path('products', function() use ($app) {
-            $app->get(function () use ($app) {
-                $results = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
-                return $app->plates->render('admin::products', array(
-                    'products' => $results
+        $app->path('products', function() use ($app, $products) {
+            $app->get(function () use ($app, $products) {
+                return $app->plates->render('admin::models/products', array(
+                    'products' => $products
                 ));
             });
         });
 
-        $app->path('landers', function ($req) use ($app) {
+        $app->path('landers', function ($req) use ($app, $allModels) {
             $app->param('int', function ($req, $id) use ($app) {
                 $lander = LanderFunctions::fetch($app, $id);
                 $app->get(function () use ($app, $lander)  {
@@ -60,19 +59,14 @@ $app->path('admin', function($req) use ($app) {
                 });
             });
 
+            $app->get(function () use ($app, $allModels) {
+                return $app->plates->render('admin::models/landers', $allModels);
+            });
+
             $app->post(function ($req) use ($app) {
                 $result = LanderFunctions::insert($app, $req->post());
-                $out = "<pre>";
-                $out .= "LanderFunctions::insert" . PHP_EOL;
-                $out .= print_r($result, true);
-                $out .= "</pre>";
-                return $out;
+                return $app->response()->redirect('admin/models/landers');
             });
-        });
-
-
-        $app->get(function () use ($app, $allModels) {
-            return $app->plates->render('admin::landers', $allModels);
         });
     });
 });
