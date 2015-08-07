@@ -45,6 +45,43 @@ $app->path('admin', function($req) use ($app) {
                 return $app->plates->render('admin::testing', $lander->toArray());
             });
         });
+
+    });
+
+
+    $app->path('create', function ($req) use ($app) {
+        $app->get(function () use ($app) {
+            $websites = $app->db()->query('SELECT * FROM websites')->fetchAll(PDO::FETCH_ASSOC);;
+            $products = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);;
+            $routes = $app->db()->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);;
+            $landers = $app->db()->query('SELECT * FROM landers')->fetchAll(PDO::FETCH_ASSOC);;
+            $aeParams = $app->db()->query('SELECT * FROM ae_parameters')->fetchAll(PDO::FETCH_ASSOC);;
+
+            foreach ($aeParams as $i => $ae) {
+                if(!isset($ae['name'])) {
+                    $aeParams[$i]['name'] = implode(' | ', array(
+                        $ae['affiliate_id'],
+                        $ae['country'],
+                        $ae['vertical']
+                    ));
+                }
+            }
+
+            return $app->plates->render('admin::landers', array(
+                "websites" => $websites,
+                "products" => $products,
+                "routes" => $routes,
+                "aeParams" => $aeParams,
+                "landers" => $landers
+            ));
+        });
+
+        $app->post(function ($req) {
+            $out = "<pre>";
+            $out .= print_r($req->post(), true);
+            $out .= "</pre>";
+            return $out;
+        });
     });
 
     $app->path('ping', function ($req) use ($app) {
