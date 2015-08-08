@@ -1,12 +1,6 @@
-<?php
-include dirname(dirname(__DIR__)) . "/landers/vars.php";
-?>
-
-<html>
-<head>
-    <title>Womens Dumb Mag</title>
-</head>
-<body>
+<?php include dirname(dirname(__DIR__)) . "/landers/vars.php"; ?>
+<?php $this->layout('admin::models/layout', ['title' => 'Womens Dumb Mag']) ?>
+<?php $this->start('page') ?>
 
 <div>
 <h4>Variable dump</h4>
@@ -74,6 +68,5 @@ print_r(array(
     Damn... Im jelly!
     </div>
 </div>
+<?php $this->stop() ?>
 
-</body>
-</html>

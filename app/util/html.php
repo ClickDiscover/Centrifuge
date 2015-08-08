@@ -21,10 +21,22 @@ class Html {
         return $html;
     }
 
-    public static function linkTable($array, $key, $basePath) {
+    public static function linkTableCol($array, $key, $basePath, $name = 'link') {
         foreach($array as $i => $row) {
             $url = $basePath . $row[$key];
-            $array[$i]['link'] = "<a href=\"{$url}\">{$url}</a>";
+            $array[$i][$name] = "<a href=\"{$url}\">{$url}</a>";
+        }
+        return $array;
+    }
+
+    public static function linkTable($array, $key, $basePath) {
+        $array =  Html::linkTableCol($array, $key, $basePath);
+        return Html::table($array);
+    }
+
+    public static function multiLinkTable($array, $links) {
+        foreach($links as $name => $pair) {
+            $array =  Html::linkTableCol($array, $pair[0], $pair[1], $name);
         }
         return Html::table($array);
     }

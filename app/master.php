@@ -57,6 +57,9 @@ $app->plates->registerFunction('table', function ($x) {
 $app->plates->registerFunction('linkTable', function ($x, $y, $z) {
     return Html::linkTable($x, $y, $z);
 });
+$app->plates->registerFunction('multiLinkTable', function ($x, $y) {
+    return Html::multiLinkTable($x, $y);
+});
 $app->plates->registerFunction('vardump', function ($x) {
     return Html::vardump($x);
 });

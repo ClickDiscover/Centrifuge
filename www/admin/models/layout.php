@@ -20,6 +20,7 @@
             height: 20px;
         }
 
+        pre { font-family: monospace; }
     </style>
 
 </head>

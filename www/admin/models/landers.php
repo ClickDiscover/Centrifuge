@@ -113,7 +113,10 @@ $(function() {
 
 <div>
 <h3>Existing Landers</h3>
-<?= $this->linkTable($landers, 'id', '/landers/') ?>
+<?= $this->multiLinkTable($landers, array(
+    'admin' => array('id', '/admin/models/landers/'),
+    'link' => array('id', '/landers/')
+)) ?>
 </div>
 <br>
 <br>
