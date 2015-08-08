@@ -38,6 +38,14 @@
 
 
 
+<div>
+<h3>Config</h3>
+<?= $this->vardump($config) ?>
+</div>
+<br>
+<br>
+<br>
+<br>
 
 
 <?php $this->stop() ?>
