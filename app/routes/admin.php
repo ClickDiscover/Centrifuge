@@ -5,6 +5,9 @@ require_once CENTRIFUGE_MODELS_ROOT . "/product.php";
 require_once CENTRIFUGE_MODELS_ROOT . "/lander.php";
 require_once CENTRIFUGE_MODELS_ROOT . "/route.php";
 
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
+
 
 function cleanAeParams($aeParams) {
     $clean = array();
@@ -52,17 +55,30 @@ $app->path('admin', function($req) use ($app) {
                 "CLICK_URL" => CLICK_URL,
                 "CLICK_METHOD" => CLICK_METHOD,
                 "FALLBACK_LANDER" => FALLBACK_LANDER,
-                "ENABLE_LANDER_TRACKING" => ENABLE_LANDER_TRACKING
+                "ENABLE_LANDER_TRACKING" => ENABLE_LANDER_TRACKING,
+                "CENTRIFUGE_STATIC_ROOT" => CENTRIFUGE_STATIC_ROOT,
+                "CENTRIFUGE_PRODUCT_ROOT" => CENTRIFUGE_PRODUCT_ROOT
             );
             $allModels['config'] = $config;
-            return $app->plates->render('admin::models/all', $allModels);
+            return $app->plates->render('admin::models/base', $allModels);
         });
 
 
         $app->path('products', function() use ($app, $products) {
             $app->get(function () use ($app, $products) {
+                $adapter = new Local(CENTRIFUGE_WEB_ROOT . CENTRIFUGE_PRODUCT_ROOT);
+                $fs = new Filesystem($adapter);
+                $fs->addPlugin(new League\Flysystem\Plugin\ListWith);
+                $files = $fs->listWith(['mimetype', 'timestamp']);
+                $files = array_filter($files, function ($x) { return(strpos($x['mimetype'], 'image') !== false); });
+                $files = array_map(function ($x) { return CENTRIFUGE_PRODUCT_ROOT . $x['path']; }, $files);
+                $existing = array_map(function ($x) { return CENTRIFUGE_PRODUCT_ROOT . $x['image_url']; }, $products);
+                $unused = array_diff($files, $existing);
+
                 return $app->plates->render('admin::models/products', array(
-                    'products' => $products
+                    'products' => $products,
+                    'existing' => $existing,
+                    'unused' => $unused
                 ));
             });
         });
