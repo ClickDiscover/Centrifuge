@@ -48,6 +48,11 @@ class AdExchangeProduct implements Product
     public function getImageUrl() {
         return "http://www.img2srv.com/".$this->id.".png";
     }
+
+    public static function insert($app, $arr) {
+        $sql = "INSERT INTO ae_parameters (affiliate_id, vertical, country, name) VALUES (:affiliate_id, :vertical, :country, :name)";
+        return $app->db()->prepare($sql)->execute($arr);
+    }
 }
 
 class NetworkProduct implements Product

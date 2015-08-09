@@ -124,6 +124,13 @@ $app->path('admin', function($req) use ($app) {
                 return $app->response()->redirect('/admin/models/landers');
             });
         });
+
+        $app->path('adexchange', function () use ($app) {
+            $app->post(function ($req) use ($app) {
+                AdExchangeProduct::insert($app, $req->post());
+                return $app->response()->redirect('/admin/models');
+            });
+        });
     });
 });
 

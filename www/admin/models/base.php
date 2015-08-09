@@ -1,6 +1,16 @@
 <?php $this->layout('admin::models/layout', ['title' => 'All Data']) ?>
 <?php $this->start('page') ?>
 
+<?= $this->fetch('admin::partials/adexchange') ?>
+
+<div>
+<h3>Ad Exchange Parameters</h3>
+<?= $this->table($aeParams) ?>
+</div>
+<br>
+<br>
+
+
 <div>
 <h3>Landers</h3>
 <?= $this->multiLinkTable($landers, array(
@@ -23,14 +33,6 @@
 </div>
 <br>
 <br>
-
-<div>
-<h3>Ad Exchange Parameters</h3>
-<?= $this->table($aeParams) ?>
-</div>
-<br>
-<br>
-
 
 <div>
 <h3>Routes</h3>
