@@ -65,15 +65,20 @@ class NetworkProduct implements Product
         $this->imageUrl = $imageUrl;
     }
 
-    public static function fromArray($arr, $productRoot = null) {
-        return new NetworkProduct($arr['id'], $arr['name'], $arr['image_url'], $productRoot);
-    }
-
     public function getName() {
         return $this->name;
     }
 
     public function getImageUrl() {
         return $this->imageUrl;
+    }
+
+    public static function fromArray($arr, $productRoot = null) {
+        return new NetworkProduct($arr['id'], $arr['name'], $arr['image_url'], $productRoot);
+    }
+
+    public static function insert($app, $name, $imageUrl) {
+        $stmt = $app->db()->prepare("INSERT INTO products (name, image_url) VALUES (?, ?)");
+        return $stmt->execute(array($name, $imageUrl));
     }
 }

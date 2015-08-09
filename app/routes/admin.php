@@ -81,6 +81,13 @@ $app->path('admin', function($req) use ($app) {
                     'unused' => $unused
                 ));
             });
+
+            $app->post(function ($req) use ($app) {
+                $n = $req->post()['name'];
+                $url = $req->post()['image_url'];
+                NetworkProduct::insert($app, $n, $url);
+                return $app->response()->redirect('/admin/models/products');
+            });
         });
 
         $app->path('landers', function ($req) use ($app, $allModels) {
