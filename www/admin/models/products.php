@@ -10,6 +10,7 @@
     max-height: 28em;
     border: 1px solid black;
     display: inline-block;
+    cursor: pointer;
 }
 
 .l-box img {
@@ -34,10 +35,9 @@ $(function() {
 <h3>Add product</h3>
 <form action="/admin/models/products" method="POST" class="pure-form pure-form-aligned">
     <fieldset>
-        <legend>Add a new product</legend>
         <div class="pure-control-group">
             <label for="name">Name</label>
-            <input name="name" id="name" type="text">
+            <input name="name" id="name" type="text" autofocus>
         </div>
         <div class="pure-control-group">
             <label for="image_url">Image File</label>
