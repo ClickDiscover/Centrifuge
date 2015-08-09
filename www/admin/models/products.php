@@ -54,16 +54,8 @@ $(function() {
     </fieldset>
 </form>
 </div>
-
-
-
 <br><br>
 
-<div>
-<h3>Existing Products</h3>
-<?= $this->table($products) ?>
-</div>
-<br><br>
 
 <div>
 <?= $this->fetch('admin::partials/imagegrid', [
@@ -86,5 +78,12 @@ $(function() {
     'data' => $existing
 ]);?>
 </div>
+<br><br>
+
+<div>
+<h3>Existing Products</h3>
+<?= $this->table($products) ?>
+</div>
+<br><br>
 
 <?php $this->stop() ?>
