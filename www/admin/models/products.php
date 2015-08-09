@@ -18,12 +18,16 @@
     max-height: 75%;
 }
 
+.existing-products .l-box {
+    background-color: #aaa;
+}
+
 <?php $this->stop() ?>
 <?php $this->start('page') ?>
 
 <script>
 $(function() {
-    $('.unused-products').click(function () {
+    $('.new-products').click(function () {
         var url = $(this).text().trim();
         var url = url.split('/').reverse()[0];
         $('#image_url').val(url);
@@ -37,7 +41,7 @@ $(function() {
     <fieldset>
         <div class="pure-control-group">
             <label for="name">Name</label>
-            <input name="name" id="name" type="text" autofocus>
+            <input name="name" id="name" type="text" >
         </div>
         <div class="pure-control-group">
             <label for="image_url">Image File</label>
@@ -63,7 +67,7 @@ $(function() {
 
 <div>
 <?= $this->fetch('admin::partials/imagegrid', [
-    'title' => 'Unused Products',
+    'title' => 'New Products',
     'width' => 5,
     'data' => $unused
 ]);?>
@@ -77,7 +81,7 @@ $(function() {
 
 <div>
 <?= $this->fetch('admin::partials/imagegrid', [
-    'title' => 'Used Products',
+    'title' => 'Existing Products',
     'width' => 5,
     'data' => $existing
 ]);?>
