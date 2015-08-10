@@ -33,7 +33,7 @@ class AdExchangeProduct implements Product
             $app->log->info("Cache miss adexchange: ", array($affiliate_id, $vert, $country));
             $app->metrics->increment("ae_cache_miss");
             $result = ad_exchange_request($affiliate_id, $vert, $country, $_SERVER["HTTP_USER_AGENT"]);
-            $item->set($result, OBJ_TTL);
+            $item->set($result, AE_TTL);
         }
 
         $s1 = new AdExchangeProduct($result['step1'], $result['step1_name']);
