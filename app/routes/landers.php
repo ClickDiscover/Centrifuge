@@ -11,9 +11,9 @@ $app->path('landers', function ($req) use ($app) {
         $lander = LanderFunctions::fetch($app, $id);
 
         if (ENABLE_LANDER_TRACKING) {
-            $app->metrics->increment('lander.' . $lander->id . '.views');
+            $app->metrics->increment('lander.' . $lander->id . '-centrifuge.views');
             if ($req->isBot()) {
-                $app->metrics->increment('bot_hits');
+                $app->metrics->increment('centrifuge.bot_hits');
                 $app->log->warning("Bot Error", $_SERVER);
             }
         }

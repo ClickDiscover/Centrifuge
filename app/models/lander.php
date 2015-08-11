@@ -83,7 +83,7 @@ class LanderFunctions
         $lander = $item->get();
         if ($item->isMiss()) {
             $app->log->info("Cache miss: ", array($type.'_id' => $id));
-            $app->metrics->increment("cache_miss");
+            $app->metrics->increment("centrifuge.cache_miss");
             $stmt = $app->db()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $stmt->execute(array($id));
             $lander = $stmt->fetch(PDO::FETCH_ASSOC);

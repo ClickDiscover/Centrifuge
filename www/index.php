@@ -13,7 +13,7 @@ $app = new Bullet\App(require CENTRIFUGE_APP_ROOT . '/bullet.conf.php');
 $request = new Bullet\Request();
 require CENTRIFUGE_APP_ROOT . '/master.php';
 
-$app->metrics->startTiming("request_time");
+$app->metrics->startTiming("centrifuge.request_time");
 
 
 
@@ -24,4 +24,4 @@ require $routesDir . 'admin.php';
 require $routesDir . 'conversions.php';
 
 echo $app->run($request);
-$time = $app->metrics->endTiming("request_time");
+$time = $app->metrics->endTiming("centrifuge.request_time");
