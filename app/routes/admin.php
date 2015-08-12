@@ -48,17 +48,7 @@ $app->path('admin', function($req) use ($app) {
         );
 
         $app->get(function () use ($app, $allModels) {
-            $config = array(
-                "OBJ_TTL" => OBJ_TTL,
-                "CENTRIFUGE_ENV" => CENTRIFUGE_ENV,
-                "FALLBACK_LANDER" => FALLBACK_LANDER,
-                "CLICK_URL" => CLICK_URL,
-                "CLICK_METHOD" => CLICK_METHOD,
-                "FALLBACK_LANDER" => FALLBACK_LANDER,
-                "ENABLE_LANDER_TRACKING" => ENABLE_LANDER_TRACKING,
-                "CENTRIFUGE_STATIC_ROOT" => CENTRIFUGE_STATIC_ROOT,
-                "CENTRIFUGE_PRODUCT_ROOT" => CENTRIFUGE_PRODUCT_ROOT
-            );
+            $config = get_defined_constants(true)['user'];
             $allModels['config'] = $config;
             return $app->plates->render('admin::models/base', $allModels);
         });
