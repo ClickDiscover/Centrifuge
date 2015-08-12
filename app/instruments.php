@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/config.php';
+require_once __DIR__ . '/util/librato.php';
 
 $log = new Monolog\Logger('centrifuge');
 $log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT, CENTRIFUGE_LOG_LEVEL));
@@ -20,3 +21,6 @@ $connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
 // $source = HOSTNAME . '.' . LIBRATO_ENV;
 $source = LIBRATO_ENV;
 $metrics = new \Domnikl\Statsd\Client($connection, $source);
+$performanceMetrics = new LibratoMetrics($metrics, [LIBRATO_ENV], ['centrifuge', 'performance']);
+$systemMetrics = new LibratoMetrics($metrics, [LIBRATO_ENV, HOSTNAME], ['centrifuge', 'system']);
+

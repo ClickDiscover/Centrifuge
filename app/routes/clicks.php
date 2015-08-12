@@ -10,9 +10,9 @@ $app->path('click', function () use ($app) {
 
         $app->get(function ($req) use ($app, $stepId) {
             $currentQuery = Url::createFromServer($_SERVER)->getQuery()->toArray();
-            $app->metrics->increment("-centrifuge.clicks");
+            $app->performance->total("clicks");
             if (ENABLE_LANDER_TRACKING && isset($currentQuery['lander'])) {
-                $app->metrics->increment('lander.' . $currentQuery['lander'] . '-lander.clicks');
+                $app->performance->breakout('lander', $currentQuery['lander'], 'clicks');
                 unset($currentQuery['lander']);
             }
 

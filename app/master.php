@@ -31,7 +31,7 @@ function cachedQuery($app, $type, $sql) {
     $result = $item->get();
     if($item->isMiss()) {
         $app->log->info("Cache miss " . $type);
-        $app->metrics->increment("-centrifuge.cache_miss");
+        $app->system->total("cache_miss");
         $result = $app->db()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $item->set($result, OBJ_TTL);
     }
@@ -47,7 +47,9 @@ $app->log     = $log;
 $app->addMethod('db', $db);
 $app->cache   = $cache;
 $app->metrics = $metrics;
-$app->metrics->increment("-centrifuge.num_requests");
+$app->system = $systemMetrics;
+$app->performance = $performanceMetrics;
+$app->system->total("num_requests");
 
 $app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
 $app->plates->loadExtension(new VariantExtension);
@@ -86,7 +88,7 @@ $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $respo
     if(CENTRIFUGE_ENV  === 'production') {
         if (get_class($e) != "LanderNotFoundException") {
             $app->log->error((string) $e);
-            $app->metrics->increment("-centrifuge.errors");
+            $app->system->total("errors");
         }
         $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
     } elseif(CENTRIFUGE_ENV === 'dev') {
@@ -103,8 +105,7 @@ $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use
             'server' => $request->server()
         );
         $app->log->warning('404', $reqData);
-        // $app->metrics->increment("errors");
-        $app->metrics->increment("-centrifuge.4xx");
+        $app->system->total("4xx");
         $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
     } elseif(CENTRIFUGE_ENV === 'dev') {
         $message = "Whoa! " . $request->url() . " wasn't found!";

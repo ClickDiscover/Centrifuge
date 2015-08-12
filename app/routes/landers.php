@@ -9,11 +9,12 @@ $app->path('landers', function ($req) use ($app) {
 
     $app->param('int', function ($req, $id) use ($app)  {
         $lander = LanderFunctions::fetch($app, $id);
+        $app->performance->total("views");
 
         if (ENABLE_LANDER_TRACKING) {
-            $app->metrics->increment('lander.' . $lander->id . '-lander.views');
+            $app->performance->breakout('lander', $lander->id, 'views');
             if ($req->isBot()) {
-                $app->metrics->increment('-centrifuge.bot_hits');
+                $app->system->total('bot_hits');
                 $app->log->warning("Bot Error", $_SERVER);
             }
         }
