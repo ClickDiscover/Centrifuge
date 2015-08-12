@@ -10,7 +10,7 @@ $app->path('conversions', function() use ($app) {
 
     $app->get(function ($req) use ($app, $redis) {
         $total = $redis->get('interceptor:conversions:totals');
-        $app->metrics->gauge('centrifuge.conversions', $total);
+        $app->metrics->gauge('-centrifuge.conversions', $total);
 
         $keys = $redis->keys('interceptor:conversions:keywords:*');
         $data = array();

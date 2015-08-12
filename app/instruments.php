@@ -17,5 +17,6 @@ $cacheDriver->setOptions(array('path' => CENTRIFUGE_CACHE_ROOT));
 $cache = new Stash\Pool($cacheDriver);
 
 $connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
-$source = HOSTNAME . '.' . LIBRATO_ENV;
+// $source = HOSTNAME . '.' . LIBRATO_ENV;
+$source = LIBRATO_ENV;
 $metrics = new \Domnikl\Statsd\Client($connection, $source);

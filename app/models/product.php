@@ -31,7 +31,7 @@ class AdExchangeProduct implements Product
 
         if ($item->isMiss()) {
             $app->log->info("Cache miss adexchange: ", array($affiliate_id, $vert, $country));
-            $app->metrics->increment("centrifuge.ae_cache_miss");
+            $app->metrics->increment("-centrifuge.ae_cache_miss");
             $result = ad_exchange_request($affiliate_id, $vert, $country, $_SERVER["HTTP_USER_AGENT"]);
             $item->set($result, AE_TTL);
         }
