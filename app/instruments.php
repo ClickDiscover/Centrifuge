@@ -20,7 +20,7 @@ $cache = new Stash\Pool($cacheDriver);
 $connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
 // $source = HOSTNAME . '.' . LIBRATO_ENV;
 $source = LIBRATO_ENV;
-$metrics = new \Domnikl\Statsd\Client($connection, $source);
+$metrics = new \Domnikl\Statsd\Client($connection);
 $performanceMetrics = new LibratoMetrics($metrics, [LIBRATO_ENV], ['centrifuge', 'performance']);
 $systemMetrics = new LibratoMetrics($metrics, [LIBRATO_ENV, HOSTNAME], ['centrifuge', 'system']);
 
