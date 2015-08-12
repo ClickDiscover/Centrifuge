@@ -18,6 +18,7 @@ print_r(array(
 </pre>
 </div>
 
+
 <div>
 <h4>Steps</h4>
 <pre>
@@ -39,6 +40,8 @@ print_r(array(
 <h5>Display</h5>
 <?= $this->variant($v, 'headlines') ?>
 </div>
+
+
 
 <br>
 <br>
@@ -68,5 +71,20 @@ print_r(array(
     Damn... Im jelly!
     </div>
 </div>
+
+
+
+<div>
+<h4>Request Shit</h4>
+<pre>
+_SERVER
+<?php print_r($_SERVER); ?>
+_GET
+<?php print_r($_GET); ?>
+</pre>
+</div>
+
+
+
 <?php $this->stop() ?>
 
