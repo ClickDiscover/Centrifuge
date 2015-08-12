@@ -41,9 +41,9 @@ class Step
         $url->setPath($this->baseUri);
         $url->getPath()->append("" . $this->id);
 
-        if (isset($this->landerId)) {
-            $url->getQuery()->modify(array('lander' => $this->landerId));
-        }
+        // if (isset($this->landerId)) {
+        //     $url->getQuery()->modify(array('lander' => $this->landerId));
+        // }
         return $url;
     }
 
