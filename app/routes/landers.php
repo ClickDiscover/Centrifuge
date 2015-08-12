@@ -11,6 +11,7 @@ $app->path('landers', function ($req) use ($app) {
         $lander = LanderFunctions::fetch($app, $id);
         $app->performance->total("views");
 
+        // View tracking
         if (ENABLE_LANDER_TRACKING) {
             $app->performance->breakout('lander', $lander->id, 'views');
             if ($req->isBot()) {
@@ -18,6 +19,13 @@ $app->path('landers', function ($req) use ($app) {
                 $app->log->warning("Bot Error", $_SERVER);
             }
         }
+
+        // Keyword Tracking
+        $keyword = $req->query('keyword');
+        if (isset($keyword)) {
+            $app->performance->breakout('keyword', $keyword, 'views');
+        }
+
 
         $app->get(function () use ($app, $lander)  {
             return $app->plates->render($lander->getTemplate(), $lander->toArray());
