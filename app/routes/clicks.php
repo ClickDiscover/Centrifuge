@@ -7,7 +7,7 @@ use League\Url\Url;
 function extractLanderFromRequest($req) {
     $refer = $req->server('HTTP_REFERER');
     $qs = $req->query('fp_lid');
-    if (isset($refer)) {
+    if ($refer != "") {
         $refer = Url::createFromUrl($refer);
         $path = $refer->getPath()->toArray();
         $id = array_pop($path);
@@ -28,8 +28,8 @@ $app->path('click', function () use ($app) {
             $app->performance->total("clicks");
 
             // Lander Tracking
-            if (ENABLE_LANDER_TRACKING) {
-                $landerId = extractLanderFromRequest($req);
+            $landerId = extractLanderFromRequest($req);
+            if (ENABLE_LANDER_TRACKING && isset($landerId)) {
                 $app->performance->breakout('lander', $landerId, 'clicks');
             }
 
