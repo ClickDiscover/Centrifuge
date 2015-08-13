@@ -6,7 +6,7 @@
 <h4>Variable dump</h4>
 <pre>
 <?php
-print_r(array(
+$this->vardump(array(
     'step1_name' => $step1_name,
     'step1_image' => $step1_image,
     'step1_link' => $step1_link,
@@ -18,11 +18,10 @@ print_r(array(
 </pre>
 </div>
 
-
 <div>
 <h4>Steps</h4>
 <pre>
-<?= print_r($steps, true) ?>
+<?= $this->vardump($steps, true) ?>
 </pre>
 </div>
 
@@ -35,7 +34,7 @@ print_r(array(
 <h4>Variants</h4>
 <h5>Data</h5>
 <pre>
-<?= print_r($v, true) ?>
+<?= $this->vardump($v, true) ?>
 </pre>
 <h5>Display</h5>
 <?= $this->variant($v, 'headlines') ?>
@@ -78,9 +77,9 @@ print_r(array(
 <h4>Request Shit</h4>
 <pre>
 _SERVER
-<?php print_r($_SERVER); ?>
+<?php $this->vardump($_SERVER); ?>
 _GET
-<?php print_r($_GET); ?>
+<?php $this->vardump($_GET); ?>
 </pre>
 </div>
 

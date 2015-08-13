@@ -2,29 +2,10 @@
 require_once __DIR__ . '/instruments.php';
 require_once __DIR__ . '/util/variant.php';
 require_once __DIR__ . '/util/html.php';
-// Setup defaults...
-// error_reporting(-1); // Display ALL errors
-// ini_set('display_errors', '1');
-// ini_set("session.cookie_httponly", '1'); // Mitigate XSS javascript cookie attacks for browers that support it
-// ini_set("session.use_only_cookies", '1'); // Don't allow session_id in URLs
 
-// ENV globals
-define('BULLET_ENV', $request->env('BULLET_ENV', 'development'));
-
-// Production setting switch
-// if(BULLET_ENV == 'production') {
-//     // Hide errors in production
-//     error_reporting(0);
-//     ini_set('display_errors', '0');
-// }
-
-// Throw Exceptions for everything so we can see the errors
-function exception_error_handler($errno, $errstr, $errfile, $errline ) {
-      throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+if (CENTRIFUGE_ENV == 'dev') {
+    Symfony\Component\Debug\Debug::enable();
 }
-set_error_handler("exception_error_handler");
-// Start user session
-// session_start();
 
 function cachedQuery($app, $type, $sql) {
     $item = $app->cache->getItem($type);
@@ -38,33 +19,18 @@ function cachedQuery($app, $type, $sql) {
     return $result;
 }
 
-$app['LANDER_ROOT'] = CENTRIFUGE_STATIC_ROOT;
-$app['PRODUCT_ROOT'] = CENTRIFUGE_PRODUCT_ROOT;
 
-
-$app->log     = $log;
-// $app->db      = $db;
-$app->addMethod('db', $db);
-$app->cache   = $cache;
-$app->metrics = $metrics;
-$app->system = $systemMetrics;
+$app->log         = $log;
+$app->cache       = $cache;
+$app->metrics     = $metrics;
+$app->system      = $systemMetrics;
 $app->performance = $performanceMetrics;
+$app->addMethod('db', $db);
 $app->system->total("num_requests");
 
 $app->plates = new League\Plates\Engine(CENTRIFUGE_WEB_ROOT . "/landers");
 $app->plates->loadExtension(new VariantExtension);
-$app->plates->registerFunction('table', function ($x) {
-    return Html::table($x);
-});
-$app->plates->registerFunction('linkTable', function ($x, $y, $z) {
-    return Html::linkTable($x, $y, $z);
-});
-$app->plates->registerFunction('multiLinkTable', function ($x, $y) {
-    return Html::multiLinkTable($x, $y);
-});
-$app->plates->registerFunction('vardump', function ($x) {
-    return Html::vardump($x);
-});
+$app->plates->loadExtension(new HtmlExtension);
 
 $app->plates->addFolder('admin', CENTRIFUGE_WEB_ROOT. '/admin');
 foreach (cachedQuery($app, "distinct/websites", "SELECT distinct namespace from websites") as $namespace) {

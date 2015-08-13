@@ -67,12 +67,12 @@ class LanderFunctions
         } elseif ($res['offer'] == 'network') {
             $p1 = LanderFunctions::cachedQuery('product', $app, $res['product1_id'], LanderFunctions::$productSql);
             $p2 = LanderFunctions::cachedQuery('product', $app, $res['product2_id'], LanderFunctions::$productSql);
-            $products[] = NetworkProduct::fromArray($p1, $app['PRODUCT_ROOT']);
-            $products[] = NetworkProduct::fromArray($p2, $app['PRODUCT_ROOT']);
+            $products[] = NetworkProduct::fromArray($p1, CENTRIFUGE_PRODUCT_ROOT);
+            $products[] = NetworkProduct::fromArray($p2, CENTRIFUGE_PRODUCT_ROOT);
         }
 
         $steps = Step::fromProducts($products, $id);
-        $rootPath = isset($root) ? $root : $app['LANDER_ROOT'];
+        $rootPath = isset($root) ? $root : CENTRIFUGE_STATIC_ROOT;
         $variants = json_decode($res['variants'], true);
         return new VariantLanderHtml($id, $res['namespace'], $rootPath, $res['template_file'], $res['asset_dir'], $variants, $steps, $tracking);
     }

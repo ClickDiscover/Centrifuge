@@ -6,16 +6,16 @@ if(php_sapi_name() === 'cli-server') {
     }
 }
 
-
 require_once dirname(__DIR__) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-$app = new Bullet\App(require CENTRIFUGE_APP_ROOT . '/bullet.conf.php');
+
+$app = new Bullet\App();
 $request = new Bullet\Request();
 require CENTRIFUGE_APP_ROOT . '/master.php';
 
+
 $timerMetric = $app->system->totalName('request_time');
 $app->metrics->startTiming($timerMetric);
-
 
 
 $routesDir = CENTRIFUGE_APP_ROOT . '/routes/';
@@ -23,6 +23,7 @@ require $routesDir . 'landers.php';
 require $routesDir . 'clicks.php';
 require $routesDir . 'admin.php';
 require $routesDir . 'conversions.php';
+
 
 echo $app->run($request);
 $time = $app->metrics->endTiming($timerMetric);

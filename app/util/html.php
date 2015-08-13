@@ -1,6 +1,19 @@
 <?php
 
-class Html {
+require_once dirname(dirname(__DIR__)) . '/config.php';
+require_once CENTRIFUGE_ROOT . '/vendor/autoload.php';
+
+use League\Plates\Engine;
+use League\Plates\Extension\ExtensionInterface;
+
+class HtmlExtension implements ExtensionInterface {
+
+    public function register(Engine $engine) {
+        $engine->registerFunction('table', [$this, 'table']);
+        $engine->registerFunction('linkTable', [$this, 'linkTable']);
+        $engine->registerFunction('multiLinkTable', [$this, 'multiLinkTable']);
+        $engine->registerFunction('vardump', [$this, 'vardump']);
+    }
 
     public static function table($array){
         $html = '<table class="pure-table">';
@@ -30,15 +43,15 @@ class Html {
     }
 
     public static function linkTable($array, $key, $basePath) {
-        $array =  Html::linkTableCol($array, $key, $basePath);
-        return Html::table($array);
+        $array =  HtmlExtension::linkTableCol($array, $key, $basePath);
+        return HtmlExtension::table($array);
     }
 
     public static function multiLinkTable($array, $links) {
         foreach($links as $name => $pair) {
-            $array =  Html::linkTableCol($array, $pair[0], $pair[1], $name);
+            $array =  HtmlExtension::linkTableCol($array, $pair[0], $pair[1], $name);
         }
-        return Html::table($array);
+        return HtmlExtension::table($array);
     }
 
     public static function vardump($x) {

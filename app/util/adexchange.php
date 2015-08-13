@@ -26,19 +26,3 @@ function ad_exchange_request($affiliate_id, $vertical, $country, $user_agent)
     $return = curl_exec($ch);
     return json_decode($return, true);
 }
-
-
-function click_url($step_id)
-{
-    $url = Url::createFromServer($_SERVER);
-    $url->setPath("base2.php");
-    $url->getQuery()->modify(array("id" => $step_id));
-    return $url;
-}
-
-
-// function ad_exchange_url($affiliate_id, $vertical, $country)
-// {
-//     $res = ad_exchange_request($affiliate_id, $vertical, $country, $_SERVER["HTTP_USER_AGENT"]);
-//     return $res;
-// }
