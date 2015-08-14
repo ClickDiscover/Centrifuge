@@ -24,6 +24,36 @@ function cleanAeParams($aeParams) {
     return $clean;
 }
 
+function set_alt(&$arr, &$alt, $key) {
+    $arr[$key] = $value;
+    unset($arr[$key]);
+}
+
+function landersServedAllTheWay($db, $products, $aeParams) {
+    $pns     = array_column($products, 'name', 'id');
+    $adex    = array_column($aeParams, 'name', 'id');
+    $sql     = "SELECT l.*, w.name AS website_name FROM landers l INNER JOIN websites w ON (w.id = l.website_id) ORDER BY id DESC";
+    $landers = array();
+    foreach($db->query($sql, PDO::FETCH_ASSOC) as $row) {
+        $row['website_id'] = $row['website_name'];
+        unset($row['website_name']);
+
+        if ($row['offer'] === 'network') {
+            $row['product1_id'] = $pns[$row['product1_id']];
+            $row['product2_id'] = $pns[$row['product2_id']];
+        } elseif ($row['offer'] === 'adexchange') {
+            $row['param_id'] = $adex[$row['param_id']];
+        }
+
+        // Put notes at end...
+        $notes = $row['notes'];
+        unset($row['notes']);
+        $row['notes'] = $notes;
+        $landers[] = $row;
+    }
+    return $landers;
+}
+
 
 $app->path('admin', function($req) use ($app) {
     $app->path('phpinfo', function() {
@@ -40,8 +70,8 @@ $app->path('admin', function($req) use ($app) {
         $websites = $app->db()->query('SELECT * FROM websites')->fetchAll(PDO::FETCH_ASSOC);
         $products = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
         $routes   = $app->db()->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);
-        $landers  = $app->db()->query('SELECT * FROM landers ORDER BY id DESC')->fetchAll(PDO::FETCH_ASSOC);
         $aeParams = cleanAEParams($app->db()->query('SELECT * FROM ae_parameters')->fetchAll(PDO::FETCH_ASSOC));
+        $landers = landersServedAllTheWay($app->db(), $products, $aeParams);
         $allModels = array(
             "websites" => $websites,
             "products" => $products,
@@ -62,7 +92,7 @@ $app->path('admin', function($req) use ($app) {
                 $files = $fs->listWith(['mimetype', 'timestamp'], CENTRIFUGE_PRODUCT_ROOT);
                 $files = array_filter($files, function ($x) { return(strpos($x['mimetype'], 'image') !== false); });
                 $files = array_map(function ($x) { return "/" . $x['path']; }, $files);
-                $existing = array_map(function ($x) { return "/" . $x['image_url']; }, $products);
+                $existing = array_map(function ($x) { return CENTRIFUGE_PRODUCT_ROOT . $x['image_url']; }, $products);
                 $unused = array_diff($files, $existing);
 
                 return $app->plates->render('admin::models/products', array(
