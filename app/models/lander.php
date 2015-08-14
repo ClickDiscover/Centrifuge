@@ -112,11 +112,22 @@ SQL;
     //     'param_id' => PDO::PARAM_INT
     // )
 
+
     // Inserting
     public static function insertQuery($app, $arr) {
         // Remove data from different offers
         if ($arr['notes'] == '') {
             unset($arr['notes']);
+        }
+
+        if (isset($arr['variants'])) {
+            $vars = array_flip($arr['variants']);
+            unset($vars['default']);
+            if (count($vars) > 0) {
+                $arr['variants'] = json_encode(array_flip($vars));
+            } else {
+                unset($arr['variants']);
+            }
         }
 
         if($arr['offer'] == 'adexchange') {

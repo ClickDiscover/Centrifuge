@@ -5,6 +5,9 @@ require_once __DIR__ . '/util/html.php';
 
 if (CENTRIFUGE_ENV == 'dev') {
     Symfony\Component\Debug\Debug::enable();
+    // $whoops = new \Whoops\Run;
+    // $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+    // $whoops->register();
 }
 
 function cachedQuery($app, $type, $sql) {
@@ -58,8 +61,10 @@ $app->on('Exception', function(\Bullet\Request $request, \Bullet\Response $respo
         }
         $response->content($app->run('get', '/landers/' . FALLBACK_LANDER));
     } elseif(CENTRIFUGE_ENV === 'dev') {
-        $out = '<strong>'. get_class($e). '</strong><pre>' . print_r($data, true) . '</pre>';
-        $response->content($out);
+        $whoops = new \Whoops\Run;
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
+        $whoops->handleException($e);
     }
 });
 

@@ -34,6 +34,9 @@ $app->path('admin', function($req) use ($app) {
     });
 
     $app->path('models', function() use ($app) {
+        $adapter = new Local(CENTRIFUGE_WEB_ROOT);
+        $fs = new Filesystem($adapter);
+        $fs->addPlugin(new League\Flysystem\Plugin\ListWith);
         $websites = $app->db()->query('SELECT * FROM websites')->fetchAll(PDO::FETCH_ASSOC);
         $products = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
         $routes   = $app->db()->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);
@@ -54,15 +57,12 @@ $app->path('admin', function($req) use ($app) {
         });
 
 
-        $app->path('products', function() use ($app, $products) {
-            $app->get(function () use ($app, $products) {
-                $adapter = new Local(CENTRIFUGE_WEB_ROOT . CENTRIFUGE_PRODUCT_ROOT);
-                $fs = new Filesystem($adapter);
-                $fs->addPlugin(new League\Flysystem\Plugin\ListWith);
-                $files = $fs->listWith(['mimetype', 'timestamp']);
+        $app->path('products', function() use ($app, $products, $fs) {
+            $app->get(function () use ($app, $products, $fs) {
+                $files = $fs->listWith(['mimetype', 'timestamp'], CENTRIFUGE_PRODUCT_ROOT);
                 $files = array_filter($files, function ($x) { return(strpos($x['mimetype'], 'image') !== false); });
-                $files = array_map(function ($x) { return CENTRIFUGE_PRODUCT_ROOT . $x['path']; }, $files);
-                $existing = array_map(function ($x) { return CENTRIFUGE_PRODUCT_ROOT . $x['image_url']; }, $products);
+                $files = array_map(function ($x) { return "/" . $x['path']; }, $files);
+                $existing = array_map(function ($x) { return "/" . $x['image_url']; }, $products);
                 $unused = array_diff($files, $existing);
 
                 return $app->plates->render('admin::models/products', array(
@@ -80,7 +80,7 @@ $app->path('admin', function($req) use ($app) {
             });
         });
 
-        $app->path('landers', function ($req) use ($app, $allModels) {
+        $app->path('landers', function ($req) use ($app, $allModels, $fs) {
             $app->param('int', function ($req, $id) use ($app) {
                 $lander = LanderFunctions::fetch($app, $id);
                 $app->get(function () use ($app, $lander)  {
@@ -88,7 +88,24 @@ $app->path('admin', function($req) use ($app) {
                 });
             });
 
-            $app->get(function () use ($app, $allModels) {
+            $app->get(function () use ($app, $allModels, $fs) {
+                $variants = [];
+                foreach ($allModels['websites'] as $ws) {
+                    $path =  'landers/' . $ws['namespace'] . '/variants';
+
+                    if ($fs->has($path)) {
+                        $contents = $fs->listContents($path, true);
+                        $values = array();
+                        foreach ($contents as $c) {
+                            if ($c['type'] === 'file' && $c['filename'] !== 'default') {
+                                $base = array_slice(explode('/', $c['dirname']), -1)[0];
+                                $values[$base][] = $c['filename'];
+                            }
+                        }
+                        $variants[$ws['id']] = $values;
+                    }
+                }
+                $allModels['variants'] = $variants;
                 return $app->plates->render('admin::models/landers', $allModels);
             });
 
@@ -103,6 +120,7 @@ $app->path('admin', function($req) use ($app) {
 
                 // Insert lander
                 $landerId = LanderFunctions::insert($app, $post);
+                // return '<pre>' . print_r($landerId, true) . '</pre>';
 
                 // Insert route
                 if (isset($route)) {

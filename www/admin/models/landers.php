@@ -15,6 +15,16 @@ $(function() {
     };
     $('#network-type').change(toggleNetworkOptions);
     toggleNetworkOptions();
+
+    function variationChange () {
+        var wid = $('#website').val();
+        $('#smart-variations').find('select').each(function () { $(this).prop('disabled', true) });
+        $('.variation-container').hide();
+        $('#website-variation-' + wid).show();
+        $('.variation-select-' + wid).prop('disabled', false);
+    };
+    $('#website').change(variationChange);
+    variationChange();
 });
 </script>
 
@@ -86,18 +96,34 @@ $(function() {
 
         <br>
 
-        <legend>Defaults (Optional)</legend>
-        <div class="pure-control-group">
-            <label for="variants">Variants</label>
-            <input name="variants" id="variants" type="text" value="{}">
+        <legend>Variations</legend>
+        <div id="smart-variations">
+            <?php foreach($variants as $wid => $vs): ?>
+                <div id="website-variation-<?= $wid ?>" class="variation-container" style="display: none;">
+                    <?php foreach($vs as $name => $versions): ?>
+                        <div class="pure-control-group">
+                            <label for="variation-select-<?= $wid ?>"><?= $name ?></label>
+                            <select name="variants[<?= $name ?>]" class="variation-select-<?= $wid ?>" disabled>
+                                    <option value="default">Default</option>
+                                <?php foreach($versions as $value): ?>
+                                    <option value="<?= $value ?>"><?= $value ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+            <?php endforeach ?>
         </div>
 
+        <br>
+        <legend>Tracking Tags</legend>
         <div class="pure-control-group">
             <label>Tracking</label>
             <input type="checkbox" name="tracking[]" value="googleAnalytics" checked> Google Analytics
             <input type="checkbox" name="tracking[]" value="perfectAudience" checked> Perfect Audience
         </div>
 
+        <br>
 
         <div class="pure-controls">
             <input type="submit" class="pure-button pure-button-primary">
@@ -123,6 +149,13 @@ $(function() {
 <div>
 <h3>Existing Routes</h3>
 <?= $this->linkTable($routes, 'url', '') ?>
+</div>
+<br>
+<br>
+
+<div>
+    <h3>Variations</h3>
+    <?= $this->vardump($variants) ?>
 </div>
 <br>
 <br>
