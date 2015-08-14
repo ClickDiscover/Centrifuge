@@ -40,7 +40,7 @@ $app->path('admin', function($req) use ($app) {
         $websites = $app->db()->query('SELECT * FROM websites')->fetchAll(PDO::FETCH_ASSOC);
         $products = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
         $routes   = $app->db()->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);
-        $landers  = $app->db()->query('SELECT * FROM landers')->fetchAll(PDO::FETCH_ASSOC);
+        $landers  = $app->db()->query('SELECT * FROM landers ORDER BY id DESC')->fetchAll(PDO::FETCH_ASSOC);
         $aeParams = cleanAEParams($app->db()->query('SELECT * FROM ae_parameters')->fetchAll(PDO::FETCH_ASSOC));
         $allModels = array(
             "websites" => $websites,
