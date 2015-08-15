@@ -3,7 +3,7 @@ require_once dirname(__DIR__) . '/config.php';
 require_once __DIR__ . '/util/librato.php';
 
 $log = new Monolog\Logger('centrifuge');
-$log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT, CENTRIFUGE_LOG_LEVEL));
+$log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT . 'centrifuge.log', CENTRIFUGE_LOG_LEVEL));
 
 
 $db = function () {
