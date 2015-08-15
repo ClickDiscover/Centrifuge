@@ -17,7 +17,9 @@ class VariantExtension implements ExtensionInterface
 
     public function variant($variants, $kind, $item = null) {
         $path = $variants->get($kind, $item);
-        return $this->engine->render($path);
+        if ($this->engine->exists($path)) {
+            return $this->engine->render($path);
+        }
     }
 }
 
