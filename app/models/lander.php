@@ -49,6 +49,17 @@ class VariantLanderHtml
 }
 
 
+class LanderView {
+    public $id;
+    public $userId;
+
+    public $websiteName;
+    public $variations;
+
+    public $numSteps;
+    public $vertical;
+}
+
 
 class LanderFunctions
 {

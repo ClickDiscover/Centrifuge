@@ -2,6 +2,7 @@
 require_once __DIR__ . '/instruments.php';
 require_once __DIR__ . '/util/variant.php';
 require_once __DIR__ . '/util/html.php';
+require_once __DIR__ . '/models/listener.php';
 
 if (CENTRIFUGE_ENV == 'dev') {
     Symfony\Component\Debug\Debug::enable();
@@ -41,6 +42,8 @@ foreach (cachedQuery($app, "distinct/websites", "SELECT distinct namespace from 
     $app->plates->addFolder($ns, CENTRIFUGE_WEB_ROOT . '/landers/' . $ns);
 }
 
+$app->events = new League\Event\Emitter;
+$app->events->addListener('foo', new TotalsListener);
 
 
 // Error handling

@@ -1,31 +1,33 @@
 <?php
+require_once dirname(dirname(__DIR__)) . '/config.php';
 
 class Tracking
 {
 
-    protected $enableGoogleAnalytics;
-    protected $enablePerfectAudience;
-    protected $enable = array();
-    protected $html = array();
+    public $enable = array();
+    public $html = array();
 
-    public function __construct($enableGA = true, $enablePA = true)
+    public function __construct($enable)
     {
-        $this->enable['googleAnalytics'] = $enableGA;
-        $this->enable['perfectAudience'] = $enablePA;
         $this->initTracking();
+        $this->enable = $enable;
     }
 
     public static function fromPGArray($arr) {
         $tags = explode(',', trim($arr, '[]'));
-        $ga = in_array('googleAnalytics', $tags);
-        $pa = in_array('perfectAudience', $tags);
-        return new Tracking($ga, $pa);
+        $tags = array_map(function ($x) {
+            return preg_replace('/("|\'|\s+)/', '', $x);;
+        }, $tags);
+        return new Tracking($tags);
+    }
+
+    public function getEnabled() {
+        return $this->enable;
     }
 
     public function getTrackingHTML() {
         $out = "";
-        $enabled = array_keys(array_filter($this->enable));
-        foreach ($enabled as $e) {
+        foreach ($this->enable as $e) {
             $out .= $this->html[$e];
         }
         return $out;
@@ -51,6 +53,15 @@ HTML;
     pa.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + "//tag.marinsm.com/serve/55976935923b8a9f2000001d.js";
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(pa, s);
   })();
+</script>
+HTML;
+
+        $segmentKey = SEGMENT_KEY;
+        $this->html['segment'] = <<<HTML
+<script type="text/javascript">
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.0.1";
+  analytics.load("$segmentKey");
+  }}();
 </script>
 HTML;
     }

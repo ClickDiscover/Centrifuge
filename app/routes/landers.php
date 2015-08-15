@@ -10,6 +10,7 @@ $app->path('landers', function ($req) use ($app) {
     $app->param('int', function ($req, $id) use ($app)  {
         $lander = LanderFunctions::fetch($app, $id);
         $app->performance->total("views");
+        $app->events->emit('foo', [1,2,3]);
 
         // View tracking
         if (ENABLE_LANDER_TRACKING) {
@@ -18,13 +19,17 @@ $app->path('landers', function ($req) use ($app) {
                 $app->system->total('bot_hits');
                 $app->log->warning("Bot Error", $_SERVER);
             }
-            Segment::page(array(
-                "anonymousId" => session_id(),
+            $seg = array(
+                "anonymousId" => str_replace('"', '', $_COOKIE['ajs_anonymous_id']),
                 "name" => "Landing Page",
                 "properties" => array(
                     "url" => "/landers/" . $id
                 )
-            ));
+            );
+            echo '<pre>';
+            print_r($_COOKIE); echo '</pre>';
+            print_r($seg);
+            Segment::page($seg);
         }
 
         // Keyword Tracking

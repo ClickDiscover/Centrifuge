@@ -6,7 +6,15 @@ use League\Event\ListenerInterface;
 use League\Event\EventInterface;
 
 
-class CentrifugeListener extends AbstractEvent {
-    public function handle ($event, $params = null) {
+class TotalsListener implements ListenerInterface {
+
+    public function isListener($listener) {
+        return $listener === $this;
+    }
+
+    public function handle (EventInterface $event, $params = null) {
+        echo "Events" . PHP_EOL;
+        echo  $event->getName() . PHP_EOL;
+        print_r($params);
     }
 }

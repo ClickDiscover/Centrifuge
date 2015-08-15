@@ -2,6 +2,7 @@
 <?php $this->layout('admin::models/layout', ['title' => 'Womens Dumb Mag']) ?>
 <?php $this->start('page') ?>
 
+
 <div>
 <h4>Variable dump</h4>
 <pre>
@@ -28,6 +29,13 @@ $this->vardump(array(
 <div>
 <h4>Assets</h4>
 <p>path: <?= $assets ?></p>
+</div>
+
+
+<div>
+<h4>Tracking</h4>
+<p>Enabled <?= $this->vardump($tracking->getEnabled()) ?></p>
+<?= $tracking->getTrackingHTML() ?>
 </div>
 
 <div>
