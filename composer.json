@@ -12,6 +12,7 @@
         "league/flysystem": "^1.0",
         "predis/predis": "^1.0",
         "symfony/debug": "^2.7",
-        "filp/whoops": "^1.1"
+        "filp/whoops": "^1.1",
+        "segmentio/analytics-php": "^1.2"
     }
 }

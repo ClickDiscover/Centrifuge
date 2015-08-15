@@ -2,6 +2,9 @@
 require_once dirname(__DIR__) . '/config.php';
 require_once __DIR__ . '/util/librato.php';
 
+use Stash\Session;
+
+
 $log = new Monolog\Logger('centrifuge');
 $log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT, CENTRIFUGE_LOG_LEVEL));
 
@@ -14,9 +17,26 @@ $db = function () {
 $cacheDriver = new Stash\Driver\FileSystem();
 $cacheDriver->setOptions(array('path' => CENTRIFUGE_CACHE_ROOT));
 $cache = new Stash\Pool($cacheDriver);
+$cache->setNamespace('centrifuge');
+$cache->setLogger($log);
+$sessionCache= new Stash\Pool($cacheDriver);
+$sessionCache->setNamespace('session');
+$sessionCache->setLogger($log);
+Session::registerHandler(new Session($sessionCache));
+
 
 $connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
 $source = LIBRATO_ENV;
 $metrics = new \Domnikl\Statsd\Client($connection);
 $performanceMetrics = new LibratoMetrics($metrics, [LIBRATO_ENV], ['centrifuge', 'performance']);
 $systemMetrics = new LibratoMetrics($metrics, [LIBRATO_ENV, HOSTNAME], ['centrifuge', 'system']);
+
+
+session_start();
+if (!isset($_SESSION['count'])) {
+    $_SESSION['count'] = 0;
+} else {
+    $_SESSION['count']++;
+}
+// setcookie("FP-SessionId", session_id());
+Segment::init(SEGMENT_KEY);

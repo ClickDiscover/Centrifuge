@@ -18,6 +18,13 @@ $app->path('landers', function ($req) use ($app) {
                 $app->system->total('bot_hits');
                 $app->log->warning("Bot Error", $_SERVER);
             }
+            Segment::page(array(
+                "anonymousId" => session_id(),
+                "name" => "Landing Page",
+                "properties" => array(
+                    "url" => "/landers/" . $id
+                )
+            ));
         }
 
         // Keyword Tracking

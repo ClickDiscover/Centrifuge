@@ -82,6 +82,7 @@ $app->path('admin', function($req) use ($app) {
 
         $app->get(function () use ($app, $allModels) {
             $config = get_defined_constants(true)['user'];
+            $config['SESSION_ID'] = session_id();
             $allModels['config'] = $config;
             return $app->plates->render('admin::models/base', $allModels);
         });
