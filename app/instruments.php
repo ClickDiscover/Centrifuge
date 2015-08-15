@@ -6,7 +6,12 @@ use Stash\Session;
 
 
 $log = new Monolog\Logger('centrifuge');
-$log->pushHandler(new Monolog\Handler\StreamHandler(CENTRIFUGE_LOG_ROOT, CENTRIFUGE_LOG_LEVEL));
+$log->pushHandler(new Monolog\Handler\StreamHandler(
+    CENTRIFUGE_LOG_ROOT . 'centrifuge.log',
+    CENTRIFUGE_LOG_LEVEL
+));
+$log->pushProcessor(new Monolog\Processor\WebProcessor);
+$log->pushProcessor(new Monolog\Processor\MemoryUsageProcessor);
 
 
 $db = function () {
@@ -23,6 +28,7 @@ $sessionCache= new Stash\Pool($cacheDriver);
 $sessionCache->setNamespace('session');
 $sessionCache->setLogger($log);
 Session::registerHandler(new Session($sessionCache));
+
 
 
 $connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
