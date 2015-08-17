@@ -24,13 +24,13 @@ class PlatesView extends View {
     }
 
     public static function fromConfig($config) {
-        $templateRoot = $config['paths']['web'] . $config['paths']['relative_landers'];
+        $templateRoot = $config['templates.path'] . $config['paths']['relative_landers'];
 
         $plates = new League\Plates\Engine($templateRoot);
         $plates->loadExtension(new VariantExtension);
         $plates->loadExtension(new HtmlExtension);
         $view = new PlatesView($plates);
-        return $view->addFolder('admin', $config['paths']['web'] . '/admin');
+        return $view->addFolder('admin', $config['paths']['template'] . '/admin');
     }
 
     public function addFolder($namespace, $folder) {

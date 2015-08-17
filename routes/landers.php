@@ -1,7 +1,7 @@
 <?php
 require_once dirname(dirname(__DIR__)) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-include CENTRIFUGE_MODELS_ROOT . "/lander.php";
+include CENTRIFUGE_SRC_ROOT . "/models/lander.php";
 
 
 $app->get('/landers/:id', function ($id) use ($app) {

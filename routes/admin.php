@@ -1,10 +1,10 @@
 <?php
 require_once dirname(dirname(__DIR__)) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-require_once CENTRIFUGE_MODELS_ROOT . "/product.php";
-require_once CENTRIFUGE_MODELS_ROOT . "/lander.php";
-require_once CENTRIFUGE_MODELS_ROOT . "/route.php";
-require_once CENTRIFUGE_MODELS_ROOT . "/event.php";
+require_once CENTRIFUGE_SRC_ROOT . "/models/product.php";
+require_once CENTRIFUGE_SRC_ROOT . "/models/lander.php";
+require_once CENTRIFUGE_SRC_ROOT . "/models/route.php";
+require_once CENTRIFUGE_SRC_ROOT . "/models/event.php";
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
