@@ -28,8 +28,6 @@
 
 </head>
 <body>
-<pre>Session ID: <?= session_id() ?></pre>
-<pre>Count: <?= $_SESSION[ 'count' ] ?></pre>
 
 <div id="menu-container">
     <?= $this->fetch('admin::models/menu') ?>
