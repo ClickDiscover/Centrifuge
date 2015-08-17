@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5c73c05267b815cef5cca3cce70bf1e2",
+    "hash": "dbc8c70df9bbd45e3d67fd5b7a783275",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -175,6 +175,55 @@
                 "udp"
             ],
             "time": "2015-04-14 07:00:57"
+        },
+        {
+            "name": "f3ath/lazypdo",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/f3ath/lazypdo.git",
+                "reference": "1a65c8f99779d296e428a5aefa01ce80f2a213dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/f3ath/lazypdo/zipball/1a65c8f99779d296e428a5aefa01ce80f2a213dc",
+                "reference": "1a65c8f99779d296e428a5aefa01ce80f2a213dc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "F3\\LazyPDO\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Karapetov",
+                    "email": "karapetov@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "LazyPDO is a wrapper over PHP's standard PDO class. It postpones instantiating original PDO class until one is really needed. Also it can be (un)serialized. The main goal of this class is to allow you to mock PDO instances in your unit tests.",
+            "homepage": "https://github.com/f3ath/LazyPDO",
+            "keywords": [
+                "lazy load",
+                "lazyload",
+                "mock",
+                "pdo",
+                "phpunit",
+                "serializable",
+                "serialize",
+                "test",
+                "unit test"
+            ],
+            "time": "2014-02-16 23:14:12"
         },
         {
             "name": "filp/whoops",
@@ -391,12 +440,12 @@
             "version": "v2.1.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jenssegers/laravel-agent.git",
+                "url": "https://github.com/jenssegers/agent.git",
                 "reference": "7a4326f18855aa8686a2885c235b8a8138a7333c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-agent/zipball/7a4326f18855aa8686a2885c235b8a8138a7333c",
+                "url": "https://api.github.com/repos/jenssegers/agent/zipball/7a4326f18855aa8686a2885c235b8a8138a7333c",
                 "reference": "7a4326f18855aa8686a2885c235b8a8138a7333c",
                 "shasum": ""
             },

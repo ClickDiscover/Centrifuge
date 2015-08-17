@@ -67,11 +67,11 @@ $app->path('admin', function($req) use ($app) {
         $adapter = new Local(CENTRIFUGE_WEB_ROOT);
         $fs = new Filesystem($adapter);
         $fs->addPlugin(new League\Flysystem\Plugin\ListWith);
-        $websites = $app->db()->query('SELECT * FROM websites')->fetchAll(PDO::FETCH_ASSOC);
-        $products = $app->db()->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
-        $routes   = $app->db()->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);
-        $aeParams = cleanAEParams($app->db()->query('SELECT * FROM ae_parameters')->fetchAll(PDO::FETCH_ASSOC));
-        $landers = landersServedAllTheWay($app->db(), $products, $aeParams);
+        $websites = $app->db->query('SELECT * FROM websites')->fetchAll(PDO::FETCH_ASSOC);
+        $products = $app->db->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
+        $routes   = $app->db->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);
+        $aeParams = cleanAEParams($app->db->query('SELECT * FROM ae_parameters')->fetchAll(PDO::FETCH_ASSOC));
+        $landers = landersServedAllTheWay($app->db, $products, $aeParams);
         $allModels = array(
             "websites" => $websites,
             "products" => $products,

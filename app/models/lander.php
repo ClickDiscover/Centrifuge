@@ -95,7 +95,7 @@ class LanderFunctions
         if ($item->isMiss()) {
             $app->log->info("Cache miss: ", array($type.'_id' => $id));
             $app->system->total("cache_miss");
-            $stmt = $app->db()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $stmt = $app->db->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $stmt->execute(array($id));
             $lander = $stmt->fetch(PDO::FETCH_ASSOC);
             $item->set($lander, OBJ_TTL);
@@ -156,7 +156,7 @@ SQL;
             return ':' . $x;
         }, $keys);
         // $values = array_map(function ($x) use ($app) {
-        //     return $app->db()->quote($x);
+        //     return $app->db->quote($x);
         // }, array_values($arr));
 
         $query  = 'INSERT INTO landers ';
@@ -170,7 +170,7 @@ SQL;
             $values[':' . $k] = $arr[$k];
         }
 
-        return array($app->db()->prepare($query), $values);
+        return array($app->db->prepare($query), $values);
     }
 
     public static function insert($app, $arr) {

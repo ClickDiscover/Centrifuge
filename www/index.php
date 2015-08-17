@@ -10,7 +10,6 @@ require_once dirname(__DIR__) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
 
 $app = new Bullet\App();
-$request = new Bullet\Request();
 require CENTRIFUGE_APP_ROOT . '/master.php';
 
 
@@ -25,5 +24,6 @@ require $routesDir . 'admin.php';
 require $routesDir . 'conversions.php';
 
 
+$request = new Bullet\Request();
 echo $app->run($request);
 $time = $app->metrics->endTiming($timerMetric);

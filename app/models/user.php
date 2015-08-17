@@ -11,4 +11,7 @@ class User {
         $this->id = $id;
     }
 
+    public static function fromRequest($req) {
+    }
+
 }

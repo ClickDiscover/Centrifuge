@@ -51,7 +51,7 @@ class AdExchangeProduct implements Product
 
     public static function insert($app, $arr) {
         $sql = "INSERT INTO ae_parameters (affiliate_id, vertical, country, name) VALUES (:affiliate_id, :vertical, :country, :name)";
-        return $app->db()->prepare($sql)->execute($arr);
+        return $app->db->prepare($sql)->execute($arr);
     }
 }
 
@@ -83,7 +83,7 @@ class NetworkProduct implements Product
     }
 
     public static function insert($app, $name, $imageUrl) {
-        $stmt = $app->db()->prepare("INSERT INTO products (name, image_url) VALUES (?, ?)");
+        $stmt = $app->db->prepare("INSERT INTO products (name, image_url) VALUES (?, ?)");
         return $stmt->execute(array($name, $imageUrl));
     }
 }

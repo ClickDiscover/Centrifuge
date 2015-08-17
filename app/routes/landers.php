@@ -19,17 +19,17 @@ $app->path('landers', function ($req) use ($app) {
                 $app->system->total('bot_hits');
                 $app->log->warning("Bot Error", $_SERVER);
             }
-            $seg = array(
-                "anonymousId" => str_replace('"', '', $_COOKIE['ajs_anonymous_id']),
-                "name" => "Landing Page",
-                "properties" => array(
-                    "url" => "/landers/" . $id
-                )
-            );
-            echo '<pre>';
-            print_r($_COOKIE); echo '</pre>';
-            print_r($seg);
-            Segment::page($seg);
+            // $seg = array(
+            //     "anonymousId" => str_replace('"', '', $_COOKIE['ajs_anonymous_id']),
+            //     "name" => "Landing Page",
+            //     "properties" => array(
+            //         "url" => "/landers/" . $id
+            //     )
+            // );
+            // echo '<pre>';
+            // print_r($_COOKIE); echo '</pre>';
+            // print_r($seg);
+            // Segment::page($seg);
         }
 
         // Keyword Tracking

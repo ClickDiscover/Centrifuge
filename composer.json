@@ -15,6 +15,7 @@
         "filp/whoops": "^1.1",
         "segmentio/analytics-php": "^1.2",
         "league/event": "^2.1",
-        "jenssegers/agent": "^2.1"
+        "jenssegers/agent": "^2.1",
+        "f3ath/lazypdo": "^0.0.1"
     }
 }

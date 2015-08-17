@@ -2,6 +2,9 @@
 require_once dirname(__DIR__) . '/config.php';
 require_once __DIR__ . '/util/librato.php';
 
+// use Symfony\Component\HttpFoundation\Session\Session;
+// use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+
 use Stash\Session;
 
 
@@ -14,9 +17,10 @@ $log->pushProcessor(new Monolog\Processor\WebProcessor);
 $log->pushProcessor(new Monolog\Processor\MemoryUsageProcessor);
 
 
-$db = function () {
-    return new PDO(PDO_URL);
-};
+// $db = function () {
+//     return new PDO(PDO_URL);
+// };
+$db = new F3\LazyPDO\LazyPDO(PDO_URL);
 
 
 $cacheDriver = new Stash\Driver\FileSystem();
@@ -44,5 +48,5 @@ if (!isset($_SESSION['count'])) {
 } else {
     $_SESSION['count']++;
 }
-// setcookie("FP-SessionId", session_id());
+setcookie("FP_SessionId", session_id());
 Segment::init(SEGMENT_KEY);
