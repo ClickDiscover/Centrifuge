@@ -1,7 +1,7 @@
 <?php
 
-require_once dirname(dirname(__DIR__)) . '/config.php';
-require_once CENTRIFUGE_ROOT . '/vendor/autoload.php';
+namespace Flagship\Plates;
+
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 

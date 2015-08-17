@@ -11,22 +11,33 @@ if(php_sapi_name() === 'cli-server') {
 
 require_once dirname(__DIR__) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-require CENTRIFUGE_APP_ROOT . '/centrifuge.php';
 
-$centrifuge =  new SlimBootstrap($config);
-$app = new Slim\Slim($config);
+$centrifuge =  new Flagship\Container($config);
+$app = new Slim\Slim($config['application']);
 $app->setName($config['name']);
+$bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
+$app = $bootstrap->bootstrap();
 // $centrifuge->instrumentSlim($app);
 
-$app->get('/hello/:name', function ($name) use ($app) {
+$app->hook('slim.before', function () use ($app) {
+    echo "Before";
+    $app->log->info("Here");
+});
+
+// $app->hook('slim.after', function () {
+//     echo '</pre>';
+// });
+
+$app->get('/hello/:name', function ($name) use ($app, $config) {
+    // print_r($config);
     $sites = $app->container['db']->query("SELECT distinct namespace from websites")->fetchAll();
     $app->render('admin::models/test', array('sites' => $sites, 'name' => $name));
 });
 
-require_once $config['paths']['routes'] . 'landers.php';
+
+// require_once $config['paths']['routes'] . 'landers.php';
 require_once $config['paths']['routes'] . 'clicks.php';
 require_once $config['paths']['routes'] . 'conversions.php';
 
-?><pre><?php
 $app->run();
-?></pre>
+?>

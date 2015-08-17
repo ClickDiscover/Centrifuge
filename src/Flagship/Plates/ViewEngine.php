@@ -1,14 +1,12 @@
 <?php
-require_once dirname(dirname(__DIR__)) . '/config.php';
-require_once CENTRIFUGE_ROOT . '/vendor/autoload.php';
-require_once CENTRIFUGE_APP_ROOT . '/util/variant.php';
-require_once CENTRIFUGE_APP_ROOT . '/util/html.php';
+
+namespace Flagship\Plates;
 
 use League\Plates\Engine;
-use Slim\View;
+use \Slim\View as SlimView;
 
 
-class PlatesView extends View {
+class ViewEngine extends SlimView {
 
     private $engine;
 
@@ -26,7 +24,7 @@ class PlatesView extends View {
     public static function fromConfig($config) {
         $templateRoot = $config['templates.path'] . $config['paths']['relative_landers'];
 
-        $plates = new League\Plates\Engine($templateRoot);
+        $plates = new Engine($templateRoot);
         $plates->loadExtension(new VariantExtension);
         $plates->loadExtension(new HtmlExtension);
         $view = new PlatesView($plates);

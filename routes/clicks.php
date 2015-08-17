@@ -1,6 +1,4 @@
 <?php
-require_once dirname(dirname(__DIR__)) . '/config.php';
-require CENTRIFUGE_ROOT . '/vendor/autoload.php';
 use League\Url\Url;
 
 
@@ -40,7 +38,8 @@ $app->get('/click/:stepId', function ($stepId) use ($app) {
     // Now we redirect to cpv.flagshippromotions.com/base2.php
     // Eventually it will go to our campaign managment system
     $url = null;
-    $conf = $app->config('application');
+    $centrifuge = $app->container['centrifuge'];
+    $conf = $centrifuge['application'];
     if ($conf['click_method'] === 'direct') {
         $url = Url::createFromServer($_SERVER);
         $url->setPath($conf['click_url']);
@@ -50,7 +49,8 @@ $app->get('/click/:stepId', function ($stepId) use ($app) {
     $currentQuery = Url::createFromServer($_SERVER)->getQuery()->toArray();
     $currentQuery['id'] = $stepId;
     $url->getQuery()->modify($currentQuery);
-    // $app->redirect($url);
+    echo $url;
+    $app->redirect($url);
 
 })->conditions(array(
     'stepId' => '[0-9]+'
