@@ -16,6 +16,7 @@ use League\Plates\Engine;
 use Flagship\Plates\VariantExtension;
 use Flagship\Plates\HtmlExtension;
 use Flagship\Plates\ViewEngine;
+use Flagship\Storage\QueryCache;
 
 class Container extends \Pimple\Container {
 
@@ -30,7 +31,7 @@ class Container extends \Pimple\Container {
         $c = $this;
 
         // Database
-        $this['db'] = function () use ($c) {
+        $this['pdo'] = function () use ($c) {
             return new \PDO($c['config']['database']['pdo'], null, null, array(
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
             ));
@@ -60,6 +61,14 @@ class Container extends \Pimple\Container {
             $cache = new Pool($this['cacheDriver']);
             $cache->setNamespace($c['config']['name']);
             return $cache;
+        };
+
+        $this['db'] = function () use ($c) {
+            return new QueryCache(
+                $c['pdo'],
+                $c['cache'],
+                $c['config']['cache']['expiration']
+            );
         };
 
         // Session

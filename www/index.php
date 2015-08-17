@@ -17,20 +17,16 @@ $app = new Slim\Slim($config['application']);
 $app->setName($config['name']);
 $bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
 $app = $bootstrap->bootstrap();
-// $centrifuge->instrumentSlim($app);
+
 
 $app->hook('slim.before', function () use ($app) {
     echo "Before";
     $app->log->info("Here");
 });
 
-// $app->hook('slim.after', function () {
-//     echo '</pre>';
-// });
 
 $app->get('/hello/:name', function ($name) use ($app, $config) {
-    // print_r($config);
-    $sites = $app->container['db']->query("SELECT distinct namespace from websites")->fetchAll();
+    $sites = $app->container['db']->fetchAll("distinct/websites", "SELECT distinct namespace from websites");
     $app->render('admin::models/test', array('sites' => $sites, 'name' => $name));
 });
 
