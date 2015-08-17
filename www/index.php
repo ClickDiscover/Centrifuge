@@ -8,17 +8,20 @@ if(php_sapi_name() === 'cli-server') {
 
 require_once dirname(__DIR__) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-require CENTRIFUGE_APP_ROOT . '/util/slimplates.php';
+require CENTRIFUGE_APP_ROOT . '/centrifuge.php';
 
-
+$centrifuge =  new Centrifuge($config);
 $app = new Slim\Slim($config);
 $app->setName(APPLICATION_NAME);
-$app->view(PlatesView::fromConfig($config));
+$centrifuge->instrumentSlim($app);
+
 
 
 
 $app->get('/hello/:name', function ($name) use ($app) {
-    $app->render('admin::models/test', array('name' => $name));
+    $app->log->info("Testing");
+    $sites = $app->container['db']->query("SELECT distinct namespace from websites")->fetchAll(PDO::FETCH_ASSOC);
+    $app->render('admin::models/test', array('sites' => $sites, 'name' => $name));
 });
 
 
