@@ -8,22 +8,18 @@ if(php_sapi_name() === 'cli-server') {
 
 require_once dirname(__DIR__) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-
-$app = new Bullet\App();
-require CENTRIFUGE_APP_ROOT . '/master.php';
+require CENTRIFUGE_APP_ROOT . '/util/slimplates.php';
 
 
-$timerMetric = $app->system->totalName('request_time');
-$app->metrics->startTiming($timerMetric);
+$app = new Slim\Slim($config);
+$app->setName(APPLICATION_NAME);
+$app->view(PlatesView::fromConfig($config));
 
 
-$routesDir = CENTRIFUGE_APP_ROOT . '/routes/';
-require $routesDir . 'landers.php';
-require $routesDir . 'clicks.php';
-require $routesDir . 'admin.php';
-require $routesDir . 'conversions.php';
+
+$app->get('/hello/:name', function ($name) use ($app) {
+    $app->render('admin::models/test', array('name' => $name));
+});
 
 
-$request = new Bullet\Request();
-echo $app->run($request);
-$time = $app->metrics->endTiming($timerMetric);
+$app->run();
