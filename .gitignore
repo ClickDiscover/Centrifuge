@@ -4,7 +4,5 @@ vendor/*
 **DS_Store*
 *png
 *jpg
-www/landers
+templates/landers
 www/static
-**/static/*
-**/index_files/*
