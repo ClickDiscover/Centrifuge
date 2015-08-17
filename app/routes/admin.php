@@ -4,6 +4,7 @@ require CENTRIFUGE_ROOT . '/vendor/autoload.php';
 require_once CENTRIFUGE_MODELS_ROOT . "/product.php";
 require_once CENTRIFUGE_MODELS_ROOT . "/lander.php";
 require_once CENTRIFUGE_MODELS_ROOT . "/route.php";
+require_once CENTRIFUGE_MODELS_ROOT . "/event.php";
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
@@ -63,7 +64,7 @@ $app->path('admin', function($req) use ($app) {
         return "pong!";
     });
 
-    $app->path('models', function() use ($app) {
+    $app->path('models', function($req) use ($app) {
         $adapter = new Local(CENTRIFUGE_WEB_ROOT);
         $fs = new Filesystem($adapter);
         $fs->addPlugin(new League\Flysystem\Plugin\ListWith);

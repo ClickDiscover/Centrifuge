@@ -35,12 +35,12 @@ Session::registerHandler(new Session($sessionCache));
 
 
 
+
 $connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
 $source = LIBRATO_ENV;
 $metrics = new \Domnikl\Statsd\Client($connection);
 $performanceMetrics = new LibratoMetrics($metrics, [LIBRATO_ENV], ['centrifuge', 'performance']);
 $systemMetrics = new LibratoMetrics($metrics, [LIBRATO_ENV, HOSTNAME], ['centrifuge', 'system']);
-
 
 session_start();
 if (!isset($_SESSION['count'])) {
@@ -48,5 +48,5 @@ if (!isset($_SESSION['count'])) {
 } else {
     $_SESSION['count']++;
 }
-setcookie("FP_SessionId", session_id());
+// setcookie("FP_SessionId", session_id());
 Segment::init(SEGMENT_KEY);

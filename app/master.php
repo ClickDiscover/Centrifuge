@@ -3,6 +3,8 @@ require_once __DIR__ . '/instruments.php';
 require_once __DIR__ . '/util/variant.php';
 require_once __DIR__ . '/util/html.php';
 require_once __DIR__ . '/models/listener.php';
+require_once __DIR__ . '/models/event.php';
+require_once __DIR__ . '/util/cookies.php';
 
 // use Symfony\Component\HttpFoundation\Request;
 if (CENTRIFUGE_ENV == 'dev') {
@@ -32,6 +34,7 @@ $app->system      = $systemMetrics;
 $app->performance = $performanceMetrics;
 // $app->addMethod('db', $db);
 $app->system->total("num_requests");
+
 
 // $app->session = $session;
 // $app->session->set('count', 1 + $app->session->get('count', 0));
@@ -96,6 +99,14 @@ $app->on(404, function(\Bullet\Request $request, \Bullet\Response $response) use
 
 // Route to custom URLs
 $app->on('before', function ($request, $response) use ($app) {
+    print_r(array("BEFORE"));
+    $app->context['url'] = UrlContext::fromRequest($request);
+    $app->context['user'] = UserContext::fromRequest($request);
+
+    $app->cookies = new CookieJar($request->cookie());
+    $app->cookies->add("count", 1 +  $app->cookies->get("count", 0));
+    $app->cookies->set();
+
     $routes = cachedQuery($app, 'routes', "SELECT * FROM routes");
     foreach ($routes as $r) {
         if ($request->url() == $r['url']) {
@@ -107,4 +118,20 @@ $app->on('before', function ($request, $response) use ($app) {
         $response->send();
         exit;
     }
+});
+
+$app->on('after', function ($request, $response) use ($app) {
+    echo "<pre>AFTER";
+    // var_dump($request);
+    var_dump($app->cookies);
+    var_dump($app->context);
+    echo "Session: ";
+    var_dump(session_id());
+    $files = get_included_files();
+    print_r(array(
+        "app" => array_filter($files, function ($x) { return strpos($x, 'centrifuge/app'); }),
+        "vendor" => array_filter($files, function ($x) { return strpos($x, 'vendor'); })
+
+    ));
+    echo "</pre>";
 });

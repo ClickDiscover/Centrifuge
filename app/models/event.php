@@ -13,7 +13,8 @@ trait PropertyAccessTrait {
     // private $accessor = PropertyAccess::createPropertyAccessor(true);
 
     public function __get($name) {
-        return $this->accessor->getValue($this->data, "[{$name}]");
+        // return $this->accessor->getValue($this->data, "[{$name}]");
+        return $this->data[$name];
     }
 
     public function __set($name, $value) {

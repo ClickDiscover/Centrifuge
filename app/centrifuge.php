@@ -48,6 +48,8 @@ class Centrifuge {
         return new \Flynsarmy\SlimMonolog\Log\MonologWriter($logConfig);
     }
 
+    // protected static function addCustomUrls($app)
+
     public function instrumentSlim(&$app) {
         $app->log->setWriter(self::setupSlimMonolog($this->config));
         $app->view(PlatesView::fromConfig($this->config));
