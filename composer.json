@@ -25,7 +25,8 @@
         "slim/slim": "^2.6",
         "zeuxisoo/slim-whoops": "^0.3.0",
         "Flynsarmy/Slim-Monolog": "^1.0",
-        "pimple/pimple": "^3.0"
+        "pimple/pimple": "^3.0",
+        "wilmoore/attributes.php": "^0.1.4"
     },
     "autoload": {
         "psr-4": {

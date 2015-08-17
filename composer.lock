@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "126d84bf64772dde4b72af8dbf44286d",
+    "hash": "664245cc7cc45feb7a7e3d1a97229d0d",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -1539,6 +1539,61 @@
                 "routing"
             ],
             "time": "2014-10-22 16:56:15"
+        },
+        {
+            "name": "wilmoore/attributes.php",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wilmoore/attributes.php.git",
+                "reference": "d36de26a0d28c35d64ce9b3fc868572e39911ee7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wilmoore/attributes.php/zipball/d36de26a0d28c35d64ce9b3fc868572e39911ee7",
+                "reference": "d36de26a0d28c35d64ce9b3fc868572e39911ee7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Metaphp\\": "./src/",
+                    "Test\\": "test/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Wil Moore III",
+                    "email": "wil.moore@wilmoore.com",
+                    "homepage": "http://wilmoore.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "minimal object attributes for PHP.",
+            "homepage": "https://github.com/wilmoore/attributes.php",
+            "keywords": [
+                "accessor",
+                "attributes",
+                "changetracking",
+                "defaults",
+                "events",
+                "json",
+                "mutator",
+                "properties",
+                "serialization",
+                "validation"
+            ],
+            "time": "2014-03-30 16:51:10"
         },
         {
             "name": "zeuxisoo/slim-whoops",
