@@ -1,5 +1,12 @@
 {
+    "name": "flagship/centrifuge",
+    "license": "proprietary",
+    "description": "Landing page templates with rotating offers and tracking",
     "require": {
+        "php": ">=5.5",
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "ext-pgsql": "*",
         "league/url": "^3.3",
         "league/plates": "^3.1",
         "symfony/http-foundation": "^2.7",
@@ -22,5 +29,15 @@
         "zeuxisoo/slim-whoops": "^0.3.0",
         "Flynsarmy/Slim-Monolog": "^1.0",
         "pimple/pimple": "^3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Flagship": "src/"
+        }
+    },
+    "scripts": {
+        "flush-cache": [
+            "php scripts/flush_cache.php"
+        ]
     }
 }
