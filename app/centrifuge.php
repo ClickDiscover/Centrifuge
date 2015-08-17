@@ -5,31 +5,48 @@ require_once CENTRIFUGE_APP_ROOT . '/util/slimplates.php';
 
 
 
-class Centrifuge {
+class DataLayer {
 
     public $log;
-    public $db;
-    public $cacheDriver;
-    public $statsd;
     public $view;
-
     public $context;
+
     public $cookies;
-    public $events;
     public $config;
 
+    public $cacheDriver;
+    public $statsdSocket;
+    public $db;
+    public $statsd;
+    public $events;
+
     public function __construct($config) {
-        $this->db = new F3\LazyPDO\LazyPDO($config['database']['pdo']);
-
-        $this->cacheDriver = new Stash\Driver\FileSystem();
-        $this->cacheDriver->setOptions(array('path' => CENTRIFUGE_CACHE_ROOT));
-
-        $this->statsd = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
-
-        // $this->setupLogging($config);
         $this->config = $config;
+
+        // Database
+        $this->db = new F3\LazyPDO\LazyPDO($config['database']['pdo'], null, null, array(
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ));
+
+        // Cache
+        $this->cacheDriver = new Stash\Driver\FileSystem();
+        $this->cacheDriver->setOptions(array('path' => $config['cache']['root']));
+        $cache = new Stash\Pool($this->cacheDriver);
+        $cache->setNamespace($config['name']);
+        // Session
+        $sessionCache= new Stash\Pool($this->cacheDriver);
+        $sessionCache->setNamespace('session');
+        // Session::registerHandler(new Stash\Session($sessionCache));
+
+
+        // Statsd
+        $this->statsdSocket = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
+        $this->statsd = new \Domnikl\Statds\Client($connection);
     }
 
+}
+
+class SlimBootstrap {
 
     protected static function setupSlimMonolog($config) {
         $logConfig = array(
@@ -50,7 +67,7 @@ class Centrifuge {
 
     // protected static function addCustomUrls($app)
 
-    public function instrumentSlim(&$app) {
+    public static function instrumentSlim(&$app) {
         $app->log->setWriter(self::setupSlimMonolog($this->config));
         $app->view(PlatesView::fromConfig($this->config));
         $app->container->set('db', $this->db);
