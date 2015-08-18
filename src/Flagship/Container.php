@@ -17,6 +17,7 @@ use Flagship\Plates\VariantExtension;
 use Flagship\Plates\HtmlExtension;
 use Flagship\Plates\ViewEngine;
 use Flagship\Storage\QueryCache;
+use Flagship\Service\NetworkOfferService;
 
 class Container extends \Pimple\Container {
 
@@ -62,15 +63,6 @@ class Container extends \Pimple\Container {
             $cache->setNamespace($c['config']['name']);
             return $cache;
         };
-
-        $this['db'] = function () use ($c) {
-            return new QueryCache(
-                $c['pdo'],
-                $c['cache'],
-                $c['config']['cache']['expiration']
-            );
-        };
-
         // Session
         $this['sessionCache'] = function () use ($c) {
             $sessionCache= new Pool($this['cacheDriver']);
@@ -97,6 +89,17 @@ class Container extends \Pimple\Container {
             return $view;
         };
 
+        $this['db'] = function () use ($c) {
+            return new QueryCache(
+                $c['pdo'],
+                $c['cache'],
+                $c['config']['cache']['expiration']
+            );
+        };
+
+        $this['offer.network'] = function () use ($c) {
+            return new NetworkOfferService($c['db'], $c['config']['cache']['expiration']);
+        };
 
     }
 }

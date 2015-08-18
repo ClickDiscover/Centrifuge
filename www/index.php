@@ -19,14 +19,15 @@ $bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
 $app = $bootstrap->bootstrap();
 
 
-$app->hook('slim.before', function () use ($app) {
-    echo "Before";
-    $app->log->info("Here");
-});
+// $app->hook('slim.before', function () use ($app) {
+//     echo "Before";
+//     $app->log->info("Here");
+// });
 
 
-$app->get('/hello/:name', function ($name) use ($app, $config) {
-    $sites = $app->container['db']->fetchAll("distinct/websites", "SELECT distinct namespace from websites");
+$app->get('/hello/:name', function ($name) use ($app, $centrifuge) {
+    // $sites = $app->container['db']->fetchAll("distinct/websites", "SELECT distinct namespace from websites");
+    $sites = [$centrifuge['offer.network']->fetch($name)];
     $app->render('admin::models/test', array('sites' => $sites, 'name' => $name));
 });
 

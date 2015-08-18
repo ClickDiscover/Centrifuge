@@ -27,16 +27,27 @@ class QueryCache {
     }
 
     public function fetchAll($namespace, $sql) {
-        return $this->cachedQuery($namespace, function ($db) use ($sql) {
+        $ns = implode('/', [$namespace, '*']);
+        return $this->cachedQuery($ns, function ($db) use ($sql) {
             return $db->query($sql)->fetchAll();
         });
     }
 
     public function fetch($namespace, $id, $sql) {
-        return $this->cachedQuery($namespace, function ($db) use ($sql, $id) {
-            $s = $db->prepare($sql);
-            $s->execute(array($id));
-            return $s->fetch();
+        $ns = implode('/', [$namespace, $id]);
+        return $this->cachedQuery($ns, function ($db) use ($sql, $id) {
+            return $this->prepared($sql, [$id]);
         });
+    }
+
+    public function insert($sql, $params) {
+        $sql .= ' RETURNING id ';
+        return $this->prepared($sql, $params);
+    }
+
+    public function prepared($sql, $params = []) {
+        $s = $this->db->prepare($sql);
+        $s->execute($params);
+        return $s->fetch();
     }
 }

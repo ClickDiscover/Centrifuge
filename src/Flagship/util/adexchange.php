@@ -1,10 +1,7 @@
 <?php
 
-require_once dirname(dirname(__DIR__)) . '/config.php';
-require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-use League\Url\Url;
 
-function ad_exchange_request($affiliate_id, $vertical, $country, $user_agent)
+function ad_exchange_request($affiliate_id, $vertical, $country, $user_agent = null)
 {
     $ch = curl_init();
     curl_setopt($ch,CURLOPT_URL,"http://hits2sales.com/api/current_campaigns.php");
