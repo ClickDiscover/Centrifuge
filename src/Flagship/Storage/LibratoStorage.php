@@ -1,9 +1,9 @@
 <?php
-require_once dirname(dirname(__DIR__)) . '/config.php';
-require CENTRIFUGE_ROOT . '/vendor/autoload.php';
+namespace Flagship\Metrics;
 
 
-class LibratoMetrics {
+
+class LibratoStorage {
     protected $statsd;
     protected $source;
     protected $metric;

@@ -4,6 +4,11 @@
 $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
 
     $lander = $centrifuge['landers']->fetch($id);
+
+    if (!$lander) {
+        $app->notFound();
+    }
+
     $template = $centrifuge['plates']->landerTemplate($lander);
     $app->render($template->getFile(), $template->getData());
 
@@ -43,3 +48,6 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
 ));
 
 
+$app->get('/landers/:id', function ($id) use ($app) {
+    $app->redirect($app->urlFor('landers', array('id' => $id)));
+});
