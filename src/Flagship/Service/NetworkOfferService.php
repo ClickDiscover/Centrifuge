@@ -17,9 +17,7 @@ class NetworkOfferService {
 
     public function fetch($id) {
         $sql = "SELECT id, name, image_url FROM products WHERE id = ?";
-        echo "Fetch " . $id . PHP_EOL;
         $row = $this->db->fetch($this->namespace, $id, $sql);
-
         return $row;
     }
 

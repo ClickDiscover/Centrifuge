@@ -5,22 +5,27 @@ namespace Flagship\Service;
 
 class OfferService {
 
-    public $namespace = "product";
-    public $adexNamespace = "ae_parameters";
+    const NETWORK_TYPE = 'network';
+    const ADEX_TYPE = 'adexchange';
 
-    protected $db;
+    protected $network;
+    protected $adex;
 
-    public function __construct($db) {
-        $this->db = $db;
+    public function __construct($network, $adex) {
+        $this->network = $network;
+        $this->adex = $adex;
     }
 
-    public function fetch($id) {
-        $sql = "SELECT id, name, image_url FROM products WHERE id = ?";
-        $row = $db->fetch($this->namespace, $id, $sql));
-    }
-
-    public function adexParamFetch($paramId) {
-        $sql = "SELECT affiliate_id, vertical, country FROM ae_parameters WHERE id = ?";
-        return $db->fetch($this->adExchangeNamespace, $paramId, $sql);
+    public function fetch($type, $paramId = null, $product1Id = null, $product2Id = null) {
+        $offers = [];
+        if ($type === self::NETWORK_TYPE) {
+            $offers[] = $this->network->fetch($product1Id);
+            if (isset($product2Id)) {
+                $offers[] = $this->network->fetch($product2Id);
+            }
+        } elseif ($type === self::ADEX_TYPE) {
+            $offers[] = $this->adex->fetch($paramId);
+        }
+        return $offers;
     }
 }

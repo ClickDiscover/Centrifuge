@@ -8,9 +8,11 @@ class LanderService {
     public $namespace = "lander";
 
     protected $db;
+    protected $offers;
 
-    public function __construct($db) {
+    public function __construct($db, $offers) {
         $this->db = $db;
+        $this->offers = $offers;
     }
 
     public function fetch($id) {
@@ -20,7 +22,13 @@ class LanderService {
             WHERE l.id = ?
 SQL;
 
-        $row = $db->fetch($this->namespace, $id, $sql));
+        $row = $this->db->fetch($this->namespace, $id, $sql);
+        return $this->offers->fetch(
+            $row['offer'],
+            $row['param_id'],
+            $row['product1_id'],
+            $row['product2_id']
+        );
     }
 
 }

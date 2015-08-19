@@ -18,6 +18,7 @@ use Flagship\Plates\HtmlExtension;
 use Flagship\Plates\ViewEngine;
 use Flagship\Storage\QueryCache;
 use Flagship\Service\NetworkOfferService;
+use Flagship\Service\AdexOfferService;
 
 class Container extends \Pimple\Container {
 
@@ -101,5 +102,16 @@ class Container extends \Pimple\Container {
             return new NetworkOfferService($c['db'], $c['config']['cache']['expiration']);
         };
 
+        $this['offer.adex'] = function () use ($c) {
+            return new AdexOfferService($c['db'], $c['cache'], $c['config']['cache']['adex.expiration']);
+        };
+
+        $this['offers'] = function () use ($c) {
+            return new \Flagship\Service\OfferService($c['offer.network'], $c['offer.adex']);
+        };
+
+        $this['landers'] = function () use ($c) {
+            return new \Flagship\Service\LanderService($c['db'], $c['offers']);
+        };
     }
 }
