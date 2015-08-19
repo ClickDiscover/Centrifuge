@@ -47,6 +47,7 @@ class Container extends \Pimple\Container {
             $debug->addCollector(new \DebugBar\DataCollector\PDO\PDOCollector(
                 new \DebugBar\DataCollector\PDO\TraceablePDO($c['pdo'])
             ));
+            $debug->addCollector(new \DebugBar\Bridge\MonologCollector($c['logger']));
             return $debug;
         };
 
@@ -59,8 +60,6 @@ class Container extends \Pimple\Container {
                 $c['logger.path'],
                 Logger::toMonologLevel($c['config']['logging']['level'])
             ));
-            $log->pushProcessor(new \Monolog\Processor\WebProcessor);
-            $log->pushProcessor(new \Monolog\Processor\MemoryUsageProcessor);
             return $log;
         };
 
@@ -103,11 +102,13 @@ class Container extends \Pimple\Container {
         };
 
         $this['db'] = function () use ($c) {
-            return new QueryCache(
+            $db = new QueryCache(
                 $c['pdo'],
                 $c['cache'],
                 $c['config']['cache']['expiration']
             );
+            $db->setLogger($c['logger']);
+            return $db;
         };
 
         $this['offer.network'] = function () use ($c) {
@@ -115,7 +116,9 @@ class Container extends \Pimple\Container {
         };
 
         $this['offer.adex'] = function () use ($c) {
-            return new AdexOfferService($c['db'], $c['cache'], $c['config']['cache']['adex.expiration']);
+            $service = new AdexOfferService($c['db'], $c['cache'], $c['config']['cache']['adex.expiration']);
+            $service->setLogger($c['logger']);
+            return $service;
         };
 
         $this['offers'] = function () use ($c) {

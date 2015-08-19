@@ -18,8 +18,7 @@ $app = new Slim\Slim($config['application']);
 $app->setName($config['name']);
 $bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
 $app = $bootstrap->bootstrap();
-
-
+$app->log->info("test");
 // $app->hook('slim.before', function () use ($app) {
 //     echo "Before";
 //     $app->log->info("Here");

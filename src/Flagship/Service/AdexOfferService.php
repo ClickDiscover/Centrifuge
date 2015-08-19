@@ -6,6 +6,7 @@ use Flagship\Model\Product;
 require_once CENTRIFUGE_ROOT . '/src/Flagship/Util/adexchange.php';
 
 class AdexOfferService {
+    use \Flagship\Util\Logging;
 
     public $namespace = "ae_parameters";
 
@@ -48,7 +49,7 @@ class AdexOfferService {
         $result = $item->get();
 
         if ($item->isMiss()) {
-            // $app->log->info("Cache miss adexchange: ", array($affiliate_id, $vert, $country));
+            $this->log->info("Cache miss adexchange: ", array($affiliateId, $vertical, $country));
             // $app->system->total("ae_cache_miss");
             $result = ad_exchange_request($affiliateId, $vertical, $country);
             $item->set($result, $this->expires);

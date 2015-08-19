@@ -31,7 +31,7 @@ class OfferService {
                 $offers[] = $this->network->fetch($product2Id);
             }
         } elseif ($type === self::ADEX_TYPE) {
-            $offers[] = $this->adex->fetch($paramId);
+            $offers = $this->adex->fetch($paramId);
         }
 
         $steps = [];

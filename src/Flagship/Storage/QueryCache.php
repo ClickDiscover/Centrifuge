@@ -6,6 +6,8 @@ use Flagship\Container;
 
 
 class QueryCache {
+    use \Flagship\Util\Logging;
+
     protected $db;
     protected $cache;
     protected $expiration;
@@ -20,6 +22,7 @@ class QueryCache {
         $item = $this->cache->getItem($namespace);
         $result = $item->get();
         if($item->isMiss()) {
+            $this->log->info("Cache miss", array($namespace));
             $result = $callback($this->db);
             $item->set($result, $this->expiration);
         }
