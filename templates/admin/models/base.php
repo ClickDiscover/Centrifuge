@@ -5,6 +5,7 @@
 
 <div>
 <h3>Ad Exchange Parameters</h3>
+<?php var_dump($aeParams) ?>
 <?= $this->table($aeParams) ?>
 </div>
 <br>

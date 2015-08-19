@@ -22,7 +22,6 @@
 <pre>
 <?php
 // $web = $lander->website->toArray();
-print_r($lander);
 
 
 ?>
