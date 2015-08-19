@@ -50,6 +50,10 @@ $app->group('/admin', function() use ($app, $centrifuge) {
                 $data['lander'] = $lander;
                 $app->render('admin::testing/base', $data);
             })->conditions(['id' => '[0-9]+']);
+
+            $app->get('/', function () use ($app, $centrifuge) {
+                $variants = [];
+            });
         });
     });
 });

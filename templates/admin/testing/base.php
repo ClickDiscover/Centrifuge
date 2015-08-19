@@ -5,9 +5,7 @@
 
 <div>
 <h4>Variable dump</h4>
-<pre>
-<?php
-$this->vardump(array(
+<?= $this->vardump(array(
     'step1_name' => $step1_name,
     'step1_image' => $step1_image,
     'step1_link' => $step1_link,
@@ -16,7 +14,6 @@ $this->vardump(array(
     'step2_link' => $step2_link
 ));
 ?>
-</pre>
 </div>
 
 
@@ -24,7 +21,20 @@ $this->vardump(array(
 <h4>Lander dump</h4>
 <pre>
 <?php
-print_r($lander);
+$web = $lander->website->toArray();
+print_r($web);
+
+$arr = ['id' => 1,
+    'name' => 'foo',
+    'namespace' => 'bar',
+    'asset_root' => 'baz',
+    'template_file' => 'buzz'
+];
+echo "FROM" . PHP_EOL;
+$w = new Flagship\Model\Website;
+$w->fromArray($web);
+print_r($w);
+
 ?>
 </pre>
 </div>
@@ -80,12 +90,10 @@ print_r($lander);
 
 <div>
 <h4>Request Shit</h4>
-<pre>
 _SERVER
-<?php $this->vardump($_SERVER); ?>
+<?= $this->vardump($_SERVER); ?>
 _GET
-<?php $this->vardump($_GET); ?>
-</pre>
+<?= $this->vardump($_GET); ?>
 </div>
 
 

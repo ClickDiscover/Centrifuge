@@ -23,12 +23,6 @@ $app = $bootstrap->bootstrap();
 //     $app->log->info("We are after");
 // });
 
-$app->get('/hello/:name', function ($name) use ($app, $centrifuge) {
-    // $sites = $app->container['db']->fetchAll("distinct/websites", "SELECT distinct namespace from websites");
-    $sites = $centrifuge['landers']->fetch($name);
-    $app->render('admin::models/test', array('sites' => $sites, 'name' => $name));
-});
-
 
 require_once $config['paths']['routes'] . 'admin2.php';
 require_once $config['paths']['routes'] . 'landers.php';

@@ -19,7 +19,7 @@ class LanderService {
 
     public function fetch($id) {
         $row = $this->db->fetch($this->namespace, $id, $this->sql);
-        $website = $this->createWebsite($row);
+        $website = $this->websiteFromArray($row);
         $offers = $this->offers->fetch(
             $row['offer'],
             $row['param_id'],
@@ -37,7 +37,7 @@ class LanderService {
         );
     }
 
-    public function createWebsite($res) {
+    public function websiteFromArray($res) {
         return new Website(
             $res['website_id'],
             $res['website_name'],
