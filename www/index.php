@@ -27,7 +27,6 @@ $app = $bootstrap->bootstrap();
 
 $app->get('/hello/:name', function ($name) use ($app, $centrifuge) {
     // $sites = $app->container['db']->fetchAll("distinct/websites", "SELECT distinct namespace from websites");
-    $app->log->info("Test");
     $sites = $centrifuge['landers']->fetch($name);
     $app->view->appendData(['test' => 'foo']);
     $app->render('admin::models/test', array('sites' => $sites, 'name' => $name));

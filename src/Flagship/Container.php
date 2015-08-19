@@ -53,7 +53,7 @@ class Container extends \Pimple\Container {
         // Logging
         $this['logger.path'] = $c['config']['logging']['root'] . '/' . $c['config']['name'] . '.log';
 
-        $this['logger'] = $this->factory(function () use ($c) {
+        $this['logger'] = function () use ($c) {
             $log = new Logger($c['config']['name']);
             $log->pushHandler(new StreamHandler(
                 $c['logger.path'],
@@ -62,7 +62,7 @@ class Container extends \Pimple\Container {
             $log->pushProcessor(new \Monolog\Processor\WebProcessor);
             $log->pushProcessor(new \Monolog\Processor\MemoryUsageProcessor);
             return $log;
-        });
+        };
 
         // Cache
         $this['cacheDriver'] = function () use ($c) {

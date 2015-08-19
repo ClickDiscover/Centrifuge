@@ -18,8 +18,6 @@ class ViewEngine extends SlimView {
     public function render($template, $data = null) {
         $data = isset($data) ? $data : [];
         $allData = array_merge($this->all(), $data);
-        echo "All ";
-        var_dump(array_keys($allData));
         return $this->engine->render($template, $allData);
     }
 
