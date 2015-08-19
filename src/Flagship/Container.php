@@ -7,11 +7,13 @@ use Stash\Pool;
 use Stash\Session as StashSession;
 use \Domnikl\Statsd\Connection\UdpSocket as StatsdSocket;
 use \Domnikl\Statsd\Client as Statsd;
-use Monolog\Logger;
+// use Monolog\Logger;
+use Flagship\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\WebProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
 use League\Plates\Engine;
+use Slim\Middleware\DebugBar;
 
 use Flagship\Plates\VariantExtension;
 use Flagship\Plates\HtmlExtension;
@@ -19,6 +21,7 @@ use Flagship\Plates\ViewEngine;
 use Flagship\Storage\QueryCache;
 use Flagship\Service\NetworkOfferService;
 use Flagship\Service\AdexOfferService;
+
 
 class Container extends \Pimple\Container {
 
@@ -37,6 +40,14 @@ class Container extends \Pimple\Container {
             return new \PDO($c['config']['database']['pdo'], null, null, array(
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
             ));
+        };
+
+        $this['debug.bar'] = function () use ($c) {
+            $debug = new DebugBar();
+            $debug->addCollector(new \DebugBar\DataCollector\PDO\PDOCollector(
+                new \DebugBar\DataCollector\PDO\TraceablePDO($c['pdo'])
+            ));
+            return $debug;
         };
 
         // Logging

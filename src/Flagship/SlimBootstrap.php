@@ -5,7 +5,6 @@ namespace Flagship;
 use Flagship\Container;
 use Slim\Slim;
 
-
 class SlimBootstrap {
 
     protected $app;
@@ -29,12 +28,20 @@ class SlimBootstrap {
             return $container['config'];
         });
 
+        // $app->container->singleton('debugBar', function() {
+        //     return new \DebugBar\StandardDebugBar();
+        // });
+        // $debug->addCollector($container['logger']);
+        $app->add($container['debug.bar']);
+        // $app->view->appendData(['debug' => $app->container['debugBar']->getJavascriptRenderer()]);
+
         return $app;
     }
 
     public function setupLogging(Slim $app, Container $c) {
-        $app->container->singleton('log', function () use ($c) {
-            return $c['logger'];
-        });
+        $app->log->setWriter($c['logger']);
+        // $app->container->singleton('log', function () use ($c) {
+        //     return $c['logger'];
+        // });
     }
 }

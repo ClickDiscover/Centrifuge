@@ -28,7 +28,9 @@
         "pimple/pimple": "^3.0",
         "wilmoore/attributes.php": "^0.1.4",
         "anahkiasen/underscore-php": "^2.0",
-        "nicolopignatelli/valueobjects": "^3.0"
+        "nicolopignatelli/valueobjects": "^3.0",
+        "maximebf/debugbar": "^1.10",
+        "yusukezzz/slim-debugbar": "^1.1"
     },
     "autoload": {
         "psr-4": {

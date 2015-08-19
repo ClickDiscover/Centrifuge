@@ -1,6 +1,6 @@
 <?php
 if(php_sapi_name() === 'cli-server') {
-    if(preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER['REQUEST_URI'])) {
+    if(preg_match('/\.(?:png|jpg|jpeg|gif)$/', $_SERVER['REQUEST_URI'])) {
         return false;
     }
     if (strpos($_SERVER['PHP_SELF'], '/index.php') === false) {
@@ -27,7 +27,9 @@ $app = $bootstrap->bootstrap();
 
 $app->get('/hello/:name', function ($name) use ($app, $centrifuge) {
     // $sites = $app->container['db']->fetchAll("distinct/websites", "SELECT distinct namespace from websites");
+    $app->log->info("Test");
     $sites = $centrifuge['landers']->fetch($name);
+    $app->view->appendData(['test' => 'foo']);
     $app->render('admin::models/test', array('sites' => $sites, 'name' => $name));
 });
 
