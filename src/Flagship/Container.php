@@ -118,7 +118,7 @@ class Container extends \Pimple\Container {
         };
 
         $this['fs'] = function () use ($c) {
-            $adapter = new \League\Flysystem\Adapter\Local($c['config']['paths']['web']);
+            $adapter = new \League\Flysystem\Adapter\Local($c['config']['application']['templates.path']);
             $fs = new \League\Flysystem\Filesystem($adapter);
             $fs->addPlugin(new \League\Flysystem\Plugin\ListWith);
             return $fs;

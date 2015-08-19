@@ -4,8 +4,9 @@ namespace Flagship\Model;
 
 use Flagship\Util\ImmutableProperties;
 use Flagship\Util\ArrayConversions;
+use Flagship\Util\ArrayConvertible;
 
-class Website {
+class Website implements ArrayConvertible {
 
     use ImmutableProperties;
     use ArrayConversions;

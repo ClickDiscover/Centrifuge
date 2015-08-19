@@ -66,4 +66,12 @@ SQL;
             return $this->fromRow($x);
         }, $rows);
     }
+
+    public function fetchAllWebsites() {
+        $sql = "SELECT id AS website_id, name AS website_name, namespace, template_file, asset_dir FROM websites";
+        $rows = $this->db->uncachedFetchAll($sql);
+        return array_map(function ($x) {
+            return $this->websiteFromArray($x);
+        }, $rows);
+    }
 }

@@ -52,7 +52,7 @@ trait ArrayConversions {
         return $new;
     }
 
-    public function fromArray($arr) {
+    public function fromArray(array $arr) {
         foreach ($arr as $key => $val) {
             $newKey = $this->__renameKey($key, true);
             $this->$newKey = $val;

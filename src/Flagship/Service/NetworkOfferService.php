@@ -19,6 +19,10 @@ class NetworkOfferService {
     public function fetch($id) {
         $sql = "SELECT id, name, image_url FROM products WHERE id = ?";
         $row = $this->db->fetch($this->namespace, $id, $sql);
+        return $this->fromRow($row);
+    }
+
+    protected function fromRow($row) {
         $url = $this->rootPath . $row['image_url'];
         return new Product(
             $row['id'],
@@ -31,5 +35,13 @@ class NetworkOfferService {
     public function insert($name, $url) {
         $sql = "INSERT INTO products (name, image_url) VALUES (?, ?)";
         return $this->db->insert($sql, array($name, $url));
+    }
+
+    public function fetchAll() {
+        $sql = "SELECT * FROM products";
+        $rows = $this->db->uncachedFetchAll($sql);
+        return array_map(function ($x) {
+            return $this->fromRow($x);
+        }, $rows);
     }
 }

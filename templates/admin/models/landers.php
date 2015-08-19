@@ -27,7 +27,6 @@ $(function() {
     variationChange();
 });
 </script>
-
 <div>
 <h3>Create Lander</h3>
 <form action="/admin/models/landers" method="POST" id="reachForm" class="pure-form pure-form-aligned">
@@ -42,7 +41,7 @@ $(function() {
             <label for="website">Website</label>
             <select name="website_id" id="website">
                 <?php foreach($websites as $w): ?>
-                    <option value="<?= $w['id'] ?>"><?= $w['name'] ?></option>
+                    <option value="<?= $w->id ?>"><?= $w->name ?></option>
                 <?php endforeach ?>
             </select>
         </div>
@@ -71,7 +70,7 @@ $(function() {
                 <label for="step-1">Step 1</label>
                 <select name="product1_id" id="step-1">
                     <?php foreach($products as $p): ?>
-                        <option value="<?= $p['id'] ?>"><?= $p['name'] ?></option>
+                        <option value="<?= $p->id ?>"><?= $p->name ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
@@ -80,7 +79,7 @@ $(function() {
                 <label for="step-2">Step 2</label>
                 <select name="product2_id" id="step-2">
                     <?php foreach($products as $p): ?>
-                        <option value="<?= $p['id'] ?>"><?= $p['name'] ?></option>
+                        <option value="<?= $p->id ?>"><?= $p->name ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
@@ -139,8 +138,8 @@ $(function() {
 <div>
 <h3>Existing Landers</h3>
 <?= $this->multiLinkTable($landers, array(
-    'admin' => array('id', '/admin/models/landers/'),
-    'link' => array('id', '/landers/')
+    'admin' => array('ID', '/admin/models/landers/'),
+    'link' => array('ID', '/landers/')
 )) ?>
 </div>
 <br>

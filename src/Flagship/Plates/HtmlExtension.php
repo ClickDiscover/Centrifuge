@@ -5,10 +5,13 @@ namespace Flagship\Plates;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 
+use Flagship\Util\ArrayConvertible;
+
 class HtmlExtension implements ExtensionInterface {
 
     public function register(Engine $engine) {
         $engine->registerFunction('table', [$this, 'table']);
+        $engine->registerFunction('objTable', [$this, 'objTable']);
         $engine->registerFunction('linkTable', [$this, 'linkTable']);
         $engine->registerFunction('multiLinkTable', [$this, 'multiLinkTable']);
         $engine->registerFunction('vardump', [$this, 'vardump']);
@@ -20,6 +23,12 @@ class HtmlExtension implements ExtensionInterface {
 
         if(count($array) == 0) {
             return false;
+        }
+
+        if ($array[0] instanceof ArrayConvertible) {
+            $array = array_map(function ($x) {
+                return $x->toArray();
+            }, $array);
         }
 
         foreach($array[0] as $key => $value) {
@@ -35,6 +44,13 @@ class HtmlExtension implements ExtensionInterface {
         }
         $html .= '</table>';
         return $html;
+    }
+
+    public static function objTable($obj) {
+        $arrs = array_map(function ($x) {
+            return $x->toArray();
+        }, $obj);
+        return self::table($arrs);
     }
 
     public static function linkTableCol($array, $key, $basePath, $name = 'link') {

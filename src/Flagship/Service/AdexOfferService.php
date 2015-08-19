@@ -3,6 +3,7 @@
 namespace Flagship\Service;
 
 use Flagship\Model\Product;
+use Flagship\Model\AdexParameters;
 require_once CENTRIFUGE_ROOT . '/src/Flagship/Util/adexchange.php';
 
 class AdexOfferService {
@@ -25,7 +26,7 @@ class AdexOfferService {
     public function fetch($id) {
         $p = $this->paramFetch($id);
         if ($p) {
-            $r = $this->curlFetch($p['affiliate_id'], $p['vertical'], $p['country']);
+            $r = $this->curlFetch($p);
             return array(
                 $this->makeProduct($r['step1_name'], $r['step1']),
                 $this->makeProduct($r['step2_name'], $r['step2'])
@@ -40,23 +41,36 @@ class AdexOfferService {
 
     public function paramFetch($paramId) {
         $sql = "SELECT affiliate_id, vertical, country FROM ae_parameters WHERE id = ?";
-        return $this->db->fetch($this->namespace, $paramId, $sql);
+        $res = $this->db->fetch($this->namespace, $paramId, $sql);
+        $obj = new AdexParameters;
+        $obj->fromArray($res);
+        return $obj;
     }
 
-    public function curlFetch($affiliateId, $vertical, $country) {
+    public function paramFetchAll() {
+        $sql = "SELECT * FROM ae_parameters";
+        $rows = $this->db->uncachedFetchAll($sql);
+        $objects = [];
+        foreach ($rows as $ae) {
+            $obj = new AdexParameters;
+            $obj->fromArray($ae);
+            $obj->cleanName(); // Admin interfaceA
+            $objects[] = $obj;
+        }
+        return $rows;
+    }
+
+    public function curlFetch(AdexParameters $p) {
         $pool = $this->curlCache;
-        $item = $pool->getItem($this->namespace, $affiliateId, $vertical, $country);
+        $item = $pool->getItem($this->namespace, $p->affiliateId, $p->vertical, $p->country);
         $result = $item->get();
 
         if ($item->isMiss()) {
-            $this->log->info("Cache miss adexchange: ", array($affiliateId, $vertical, $country));
+            $this->log->info("Cache miss adexchange: ", array($p->affiliateId, $p->vertical, $p->country));
             // $app->system->total("ae_cache_miss");
-            $result = ad_exchange_request($affiliateId, $vertical, $country);
+            $result = ad_exchange_request($p->affiliateId, $p->vertical, $p->country);
             $item->set($result, $this->expires);
         }
-
-        // $s1 = new AdExchangeProduct($result['step1'], $result['step1_name']);
-        // $s2 = new AdExchangeProduct($result['step2'], $result['step2_name']);
         return $result;
     }
 
