@@ -11,6 +11,7 @@ class LanderTemplate {
         $this->file = $namespace . '::' . $website->templateFile;
         $this->assetRoot = $assetRoot . $namespace;
         $this->tracking = [];
+        $this->variants = new VariantHtml($namespace, $lander->variants);
     }
 
     public function getFile() {
@@ -22,7 +23,7 @@ class LanderTemplate {
             'steps' => $this->steps,
             'tracking' => $this->tracking,
             'assets' => $this->assetRoot,
-            'v' => []
+            'v' => $this->variants
         );
     }
 }

@@ -18,13 +18,10 @@ $app = new Slim\Slim($config['application']);
 $app->setName($config['name']);
 $bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
 $app = $bootstrap->bootstrap();
-// $app->hook('slim.before', function () use ($app) {
-//     echo "Before";
-//     $app->log->info("Here");
-// });
 
-// $app->get('/:uri+', function ($uri) use ($app) {
-//     $app->log->info('handler routes' . print_r($uri, 1));
+// $app->hook('slim.after', function () use ($app) {
+//     echo "After";
+//     $app->log->info("We are after");
 // });
 
 $app->get('/hello/:name', function ($name) use ($app, $centrifuge) {

@@ -24,7 +24,9 @@ class SlimBootstrap {
         });
 
 
+        // $app->log->setWriter($container['logger']);
         $app->log->setWriter($container['logger']);
+
         $app->view($container['plates']);
         $app->container->singleton('db', function() use ($container) {
             return $container['db'];
