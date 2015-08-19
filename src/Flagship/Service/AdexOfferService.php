@@ -2,11 +2,15 @@
 
 namespace Flagship\Service;
 
-require_once CENTRIFUGE_ROOT . '/src/Flagship/util/adexchange.php';
+use Flagship\Model\Product;
+require_once CENTRIFUGE_ROOT . '/src/Flagship/Util/adexchange.php';
 
 class AdexOfferService {
 
     public $namespace = "ae_parameters";
+
+    protected $imageUrlRoot = "http://www.img2srv.com/";
+    protected $imageFileExt = ".png";
 
     protected $db;
     protected $curlCache;
@@ -20,8 +24,17 @@ class AdexOfferService {
     public function fetch($id) {
         $p = $this->paramFetch($id);
         if ($p) {
-            return $this->curlFetch($p['affiliate_id'], $p['vertical'], $p['country']);
+            $r = $this->curlFetch($p['affiliate_id'], $p['vertical'], $p['country']);
+            return array(
+                $this->makeProduct($r['step1_name'], $r['step1']),
+                $this->makeProduct($r['step2_name'], $r['step2'])
+            );
         }
+    }
+
+    protected function makeProduct($name, $imageId) {
+        $url = $this->imageUrlRoot . $imageId . $this->imageFileExt;
+        return new Product($name, $url);
     }
 
     public function paramFetch($paramId) {

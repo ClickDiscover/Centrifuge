@@ -23,12 +23,13 @@ class LanderService {
 SQL;
 
         $row = $this->db->fetch($this->namespace, $id, $sql);
-        return $this->offers->fetch(
+        $offers = $this->offers->fetch(
             $row['offer'],
             $row['param_id'],
             $row['product1_id'],
             $row['product2_id']
         );
+        return $offers;
     }
 
 }

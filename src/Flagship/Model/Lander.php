@@ -2,11 +2,12 @@
 
 namespace Flagship\Model;
 
+use Flagship\Util\ImmutableModel;
 
 class Lander {
-    protected $id;
-    protected $website;
-    protected $offers;
-    protected $variants;
-    protected $notes;
+    public $id;
+    public $website;
+    public $offers;
+    public $variants;
+    public $notes;
 }

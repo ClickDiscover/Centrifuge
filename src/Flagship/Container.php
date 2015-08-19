@@ -110,7 +110,7 @@ class Container extends \Pimple\Container {
         };
 
         $this['offer.network'] = function () use ($c) {
-            return new NetworkOfferService($c['db'], $c['config']['cache']['expiration']);
+            return new NetworkOfferService($c['db'], $c['config']['application']['product.path']);
         };
 
         $this['offer.adex'] = function () use ($c) {

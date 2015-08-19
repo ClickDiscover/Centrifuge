@@ -18,7 +18,8 @@ class NetworkOfferService {
     public function fetch($id) {
         $sql = "SELECT id, name, image_url FROM products WHERE id = ?";
         $row = $this->db->fetch($this->namespace, $id, $sql);
-        return $row;
+        $url = $this->rootPath . $row['image_url'];
+        return new \Flagship\Model\Product($row['name'], $url);
     }
 
     public function insert($name, $url) {

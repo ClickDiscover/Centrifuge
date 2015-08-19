@@ -3,7 +3,7 @@
 namespace Flagship\Model;
 
 
-class Offer {
+class OfferLink {
 
     protected $name;
     protected $stepNumber;
