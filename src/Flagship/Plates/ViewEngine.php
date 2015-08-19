@@ -5,14 +5,17 @@ namespace Flagship\Plates;
 use League\Plates\Engine;
 use \Slim\View as SlimView;
 
+use Flagship\Plates\LanderTemplate;
 
 class ViewEngine extends SlimView {
 
     private $engine;
+    private $assetRoot;
 
-    public function __construct($plates) {
+    public function __construct($plates, $assetRoot) {
         parent::__construct();
         $this->engine = $plates;
+        $this->assetRoot = $assetRoot;
     }
 
     public function render($template, $data = null) {
@@ -21,19 +24,17 @@ class ViewEngine extends SlimView {
         return $this->engine->render($template, $allData);
     }
 
-    public static function fromConfig($config) {
-        $templateRoot = $config['templates.path'] . $config['paths']['relative_landers'];
-
-        $plates = new Engine($templateRoot);
-        $plates->loadExtension(new VariantExtension);
-        $plates->loadExtension(new HtmlExtension);
-        $view = new PlatesView($plates);
-        return $view->addFolder('admin', $config['paths']['template'] . '/admin');
-    }
-
     public function addFolder($namespace, $folder) {
         $this->engine->addFolder($namespace, $folder);
-        return $this;
+    }
+
+    public function landerTemplate($lander) {
+        $folders = $this->engine->getFolders();
+        $namespace = $lander->website->namespace;
+        if (!$folders->exists($namespace)) {
+            $this->engine->addFolder($namespace, $this->engine->getDirectory() . $namespace);
+        }
+        return new LanderTemplate($this->assetRoot, $lander);
     }
 }
 

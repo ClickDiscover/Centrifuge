@@ -1,15 +1,11 @@
 <?php
-require_once dirname(dirname(__DIR__)) . '/config.php';
-require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-include CENTRIFUGE_SRC_ROOT . "/models/lander.php";
 
 
-$app->get('/landers/:id', function ($id) use ($app) {
+$app->get('/content/:id', function ($id) use ($app, $centrifuge) {
 
-    echo "Lander " . $id;
-    $lander = LanderFunctions::fetch($app, $id);
-    var_dump($lander);
-    // $app->render($lander->getTemplate(), $lander->toArray());
+    $lander = $centrifuge['landers']->fetch($id);
+    $template = $centrifuge['plates']->landerTemplate($lander);
+    $app->render($template->getFile(), $template->getData());
 
     // View tracking
     // $app->performance->total("views");
@@ -42,7 +38,7 @@ $app->get('/landers/:id', function ($id) use ($app) {
 
 
 
-})->conditions(array(
+})->name('landers')->conditions(array(
     'id' => '[0-9]+'
 ));
 

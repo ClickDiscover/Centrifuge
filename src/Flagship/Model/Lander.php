@@ -2,12 +2,31 @@
 
 namespace Flagship\Model;
 
-use Flagship\Util\ImmutableModel;
+use Flagship\Util\ImmutableProperties;
+use Flagship\Plates\LanderTemplate;
 
 class Lander {
-    public $id;
-    public $website;
-    public $offers;
-    public $variants;
-    public $notes;
+
+    use ImmutableProperties;
+
+    protected $id;
+    protected $website;
+    protected $offers;
+    protected $variants;
+    protected $notes;
+
+    public function __construct(
+        $id,
+        $website,
+        $offers,
+        $variants,
+        $notes
+    ) {
+        $this->id = $id;
+        $this->website = $website;
+        $this->offers = $offers;
+        $this->variants = $variants;
+        $this->notes = $notes;
+    }
+
 }

@@ -92,11 +92,12 @@ class Container extends \Pimple\Container {
         // Plates
         $this['plates'] = function () use ($c) {
             $templateRoot = $c['config']['application']['templates.path'] . $c['config']['paths']['relative_landers'];
+            $assetRoot = $c['config']['paths']['relative_static'];
 
             $plates = new Engine($templateRoot);
             $plates->loadExtension(new VariantExtension);
             $plates->loadExtension(new HtmlExtension);
-            $view = new ViewEngine($plates);
+            $view = new ViewEngine($plates, $assetRoot);
             $view->addFolder('admin', $c['config']['application']['templates.path'] . '/admin');
             return $view;
         };

@@ -11,8 +11,12 @@ class VariantExtension implements ExtensionInterface
     protected $engine;
 
     public function register(Engine $engine) {
-        $engine->registerFunction('variant', [$this, 'variant']);
+        $engine->registerFunction('variant', [$this, 'nothing']);
         $this->engine = $engine;
+    }
+
+    public function nothing() {
+        return '';
     }
 
     public function variant($variants, $kind, $item = null) {
