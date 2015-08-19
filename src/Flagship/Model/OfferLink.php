@@ -2,17 +2,24 @@
 
 namespace Flagship\Model;
 
+use Flagship\Util\ImmutableProperties;
 
 class OfferLink {
+
+    use ImmutableProperties;
 
     protected $product;
     protected $stepNumber;
     protected $url;
+    protected $source;
+    protected $id;
 
-    public function __construct($product, $stepNumber = 1, $url = false) {
+    public function __construct($product, $stepNumber = 1, $url = false, $source = null, $id = null) {
         $this->product = $product;
         $this->stepNumber = $stepNumber;
         $this->url = $url;
+        $this->id = $id;
+        $this->source = $source;
     }
 
     public function getStepNumber() {

@@ -25,4 +25,8 @@ class VariantHtml {
         }
         return $path;
     }
+
+    public function toJson() {
+        return json_encode($this->variants);
+    }
 }

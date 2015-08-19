@@ -35,7 +35,7 @@ class AdexOfferService {
 
     protected function makeProduct($name, $imageId) {
         $url = $this->imageUrlRoot . $imageId . $this->imageFileExt;
-        return new Product($name, $url);
+        return new Product($imageId, $name, $url, 'adexchange');
     }
 
     public function paramFetch($paramId) {

@@ -18,7 +18,11 @@ class LanderService {
     }
 
     public function fetch($id) {
-        $row = $this->db->fetch($this->namespace, $id, $this->sql);
+        $row = $this->db->fetch($this->namespace, $id, self::SQL_SELECT);
+        return $this->fromRow($row);
+    }
+
+    public function fromRow($row) {
         $website = $this->websiteFromArray($row);
         $offers = $this->offers->fetch(
             $row['offer'],
@@ -47,10 +51,19 @@ class LanderService {
         );
     }
 
-    private $sql = <<<SQL
+    const SQL_BASE = <<<SQL
         SELECT l.*, w.id AS website_id, w.name AS website_name, w.namespace, w.template_file, w.asset_dir FROM landers l
         INNER JOIN websites w ON (w.id = l.website_id)
-        WHERE l.id = ?
 SQL;
 
+    const SQL_SELECT = self::SQL_BASE . " WHERE l.id = ?";
+
+    const SQL_SELECT_ALL = self::SQL_BASE . " ORDER BY id DESC";
+
+    public function fetchAll() {
+        $rows = $this->db->uncachedFetchAll(self::SQL_SELECT_ALL);
+        return array_map(function ($x) {
+            return $this->fromRow($x);
+        }, $rows);
+    }
 }

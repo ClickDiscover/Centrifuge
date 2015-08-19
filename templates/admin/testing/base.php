@@ -21,19 +21,9 @@
 <h4>Lander dump</h4>
 <pre>
 <?php
-$web = $lander->website->toArray();
-print_r($web);
+// $web = $lander->website->toArray();
+print_r($lander);
 
-$arr = ['id' => 1,
-    'name' => 'foo',
-    'namespace' => 'bar',
-    'asset_root' => 'baz',
-    'template_file' => 'buzz'
-];
-echo "FROM" . PHP_EOL;
-$w = new Flagship\Model\Website;
-$w->fromArray($web);
-print_r($w);
 
 ?>
 </pre>

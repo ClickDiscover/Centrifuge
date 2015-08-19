@@ -38,13 +38,13 @@ $app->get('/click/:stepId', function ($stepId) use ($app) {
     // Now we redirect to cpv.flagshippromotions.com/base2.php
     // Eventually it will go to our campaign managment system
     $url = null;
-    $centrifuge = $app->container['centrifuge'];
-    $conf = $centrifuge['application'];
-    if ($conf['click_method'] === 'direct') {
+    $clickMethod = $app->config('click_method');
+    $clickUrl = $app->config('click_url');
+    if ($clickMethod === 'direct') {
         $url = Url::createFromServer($_SERVER);
-        $url->setPath($conf['click_url']);
-    } elseif ($conf['click_method'] === 'redirect') {
-        $url = Url::createFromUrl($conf['click_url']);
+        $url->setPath($clickUrl);
+    } elseif ($clickMethod === 'redirect') {
+        $url = Url::createFromUrl($clickUrl);
     }
     $currentQuery = Url::createFromServer($_SERVER)->getQuery()->toArray();
     $currentQuery['id'] = $stepId;

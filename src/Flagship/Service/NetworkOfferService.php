@@ -2,6 +2,7 @@
 
 namespace Flagship\Service;
 
+use \Flagship\Model\Product;
 
 class NetworkOfferService {
 
@@ -19,7 +20,12 @@ class NetworkOfferService {
         $sql = "SELECT id, name, image_url FROM products WHERE id = ?";
         $row = $this->db->fetch($this->namespace, $id, $sql);
         $url = $this->rootPath . $row['image_url'];
-        return new \Flagship\Model\Product($row['name'], $url);
+        return new Product(
+            $row['id'],
+            $row['name'],
+            $url,
+            'network'
+        );
     }
 
     public function insert($name, $url) {
