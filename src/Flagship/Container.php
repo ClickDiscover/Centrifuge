@@ -21,6 +21,7 @@ use Flagship\Plates\ViewEngine;
 use Flagship\Storage\QueryCache;
 use Flagship\Service\NetworkOfferService;
 use Flagship\Service\AdexOfferService;
+use Flagship\Service\CustomRouteService;
 
 
 class Container extends \Pimple\Container {
@@ -100,6 +101,11 @@ class Container extends \Pimple\Container {
             $view->addFolder('admin', $c['config']['application']['templates.path'] . '/admin');
             return $view;
         };
+
+        $this['custom.routes'] = function () use ($c) {
+            return new CustomRouteService($c['db']);
+        };
+
 
         $this['db'] = function () use ($c) {
             $db = new QueryCache(

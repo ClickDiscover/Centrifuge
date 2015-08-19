@@ -18,12 +18,14 @@ $app = new Slim\Slim($config['application']);
 $app->setName($config['name']);
 $bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
 $app = $bootstrap->bootstrap();
-$app->log->info("test");
 // $app->hook('slim.before', function () use ($app) {
 //     echo "Before";
 //     $app->log->info("Here");
 // });
 
+// $app->get('/:uri+', function ($uri) use ($app) {
+//     $app->log->info('handler routes' . print_r($uri, 1));
+// });
 
 $app->get('/hello/:name', function ($name) use ($app, $centrifuge) {
     // $sites = $app->container['db']->fetchAll("distinct/websites", "SELECT distinct namespace from websites");
