@@ -1,9 +1,9 @@
 <html>
 <head>
     <title><?= $this->e($title) ?></title>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="/static/admin/pure-min.css">
+    <link rel="stylesheet" href="/static/admin/grids-responsive-min.css">
+    <script src="/static/admin/jquery-2.1.4.min.js"></script>
 
     <style>
         #page {

@@ -1,6 +1,5 @@
 <?php
 if(php_sapi_name() === 'cli-server') {
-    // if(preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER['REQUEST_URI'])) {
     if (preg_match('/\/static\//', $_SERVER['REQUEST_URI'])) {
         return false;
     }
@@ -31,6 +30,7 @@ $app->get('/hello/:name', function ($name) use ($app, $centrifuge) {
 });
 
 
+require_once $config['paths']['routes'] . 'admin2.php';
 require_once $config['paths']['routes'] . 'landers.php';
 require_once $config['paths']['routes'] . 'clicks.php';
 require_once $config['paths']['routes'] . 'conversions.php';

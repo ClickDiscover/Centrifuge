@@ -18,6 +18,10 @@ class HtmlExtension implements ExtensionInterface {
         $html = '<table class="pure-table">';
         $html .= '<tr>';
 
+        if(count($array) == 0) {
+            return false;
+        }
+
         foreach($array[0] as $key => $value) {
             $html .= '<th>' . $key . '</th>';
         }

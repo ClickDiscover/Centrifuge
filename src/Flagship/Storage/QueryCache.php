@@ -39,18 +39,24 @@ class QueryCache {
     public function fetch($namespace, $id, $sql) {
         $ns = implode('/', [$namespace, $id]);
         return $this->cachedQuery($ns, function ($db) use ($sql, $id) {
-            return $this->prepared($sql, [$id]);
+            return $this->query($sql, [$id]);
         });
     }
 
     public function insert($sql, $params) {
         $sql .= ' RETURNING id ';
-        return $this->prepared($sql, $params);
+        return $this->query($sql, $params);
     }
 
-    public function prepared($sql, $params = []) {
+    public function query($sql, $params = []) {
         $s = $this->db->prepare($sql);
         $s->execute($params);
         return $s->fetch();
+    }
+
+    public function uncachedFetchAll($sql, $params = []) {
+        $s = $this->db->query($sql);
+        $s->execute($params);
+        return $s->fetchAll();
     }
 }

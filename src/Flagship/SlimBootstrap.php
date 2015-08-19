@@ -39,7 +39,7 @@ class SlimBootstrap {
         $this->setupHooks();
         $app->add($container['debug.bar']);
 
-        $app->add(new \Flagship\Middleware\LanderFallback($container['config']['application']['fallback_lander']));
+        // $app->add(new \Flagship\Middleware\LanderFallback($container['config']['application']['fallback_lander']));
 
         return $app;
     }

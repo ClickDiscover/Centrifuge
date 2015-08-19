@@ -117,6 +117,13 @@ class Container extends \Pimple\Container {
             return $db;
         };
 
+        $this['fs'] = function () use ($c) {
+            $adapter = new \League\Flysystem\Adapter\Local($c['config']['paths']['web']);
+            $fs = new \League\Flysystem\Filesystem($adapter);
+            $fs->addPlugin(new \League\Flysystem\Plugin\ListWith);
+            return $fs;
+        };
+
         $this['offer.network'] = function () use ($c) {
             return new NetworkOfferService($c['db'], $c['config']['application']['product.path']);
         };

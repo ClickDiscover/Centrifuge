@@ -26,5 +26,4 @@ class NetworkOfferService {
         $sql = "INSERT INTO products (name, image_url) VALUES (?, ?)";
         return $this->db->insert($sql, array($name, $url));
     }
-
 }

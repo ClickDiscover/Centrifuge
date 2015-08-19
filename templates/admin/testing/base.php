@@ -19,10 +19,13 @@ $this->vardump(array(
 </pre>
 </div>
 
+
 <div>
-<h4>Steps</h4>
+<h4>Lander dump</h4>
 <pre>
-<?= $this->vardump($steps, true) ?>
+<?php
+print_r($lander);
+?>
 </pre>
 </div>
 
@@ -31,12 +34,6 @@ $this->vardump(array(
 <p>path: <?= $assets ?></p>
 </div>
 
-
-<div>
-<h4>Tracking</h4>
-<p>Enabled <?= $this->vardump($tracking->getEnabled()) ?></p>
-<?= $tracking->getTrackingHTML() ?>
-</div>
 
 <div>
 <h4>Variants</h4>
@@ -63,7 +60,7 @@ $this->vardump(array(
     <div>Look at how fat this chick is!<br>[put a fat pic here]</br></div>
 
 
-    <div><h3>Step <?=$this->e($steps[1]->getId())?>:</h3>
+    <div><h3>Step <?=$this->e($steps[1]->getStepNumber())?>:</h3>
     Buy this shit! <a href="<?= $step1_link ?>"><?= $step1_name ?></a>!
     <br><br>
     Holy balls, it looks great!
@@ -71,7 +68,7 @@ $this->vardump(array(
     </div>
 
 
-    <div><h3>Step <?=$this->e($steps[2]->getId())?>:</h3>
+    <div><h3>Step <?=$this->e($steps[2]->getStepNumber())?>:</h3>
     It only works if you buy some more shit! <a href="<?= $step2_link ?>"><?= $step2_name ?></a>!
     <br><br>
     <img src=<?= $step2_image ?>>
