@@ -18,7 +18,7 @@ class SlimBootstrap {
     public function bootstrap() {
         $app = $this->app;
         $container = $this->container;
-        $this->setupLogging($app, $container);
+        $app->log->setWriter($container['logger']);
 
         $app->view($container['plates']);
         $app->container->singleton('db', function() use ($container) {
@@ -28,20 +28,12 @@ class SlimBootstrap {
             return $container['config'];
         });
 
-        // $app->container->singleton('debugBar', function() {
-        //     return new \DebugBar\StandardDebugBar();
-        // });
-        // $debug->addCollector($container['logger']);
         $app->add($container['debug.bar']);
-        // $app->view->appendData(['debug' => $app->container['debugBar']->getJavascriptRenderer()]);
+
+        $container['offers']->setUrlFor(function ($route, $params) use ($app) {
+            return $app->urlFor($route, $params);
+        });
 
         return $app;
-    }
-
-    public function setupLogging(Slim $app, Container $c) {
-        $app->log->setWriter($c['logger']);
-        // $app->container->singleton('log', function () use ($c) {
-        //     return $c['logger'];
-        // });
     }
 }

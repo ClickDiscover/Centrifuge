@@ -11,10 +11,16 @@ class OfferService {
 
     protected $network;
     protected $adex;
+    protected $urlFor;
 
-    public function __construct($network, $adex) {
+    public function __construct($network, $adex, $urlForCallback = false) {
         $this->network = $network;
         $this->adex = $adex;
+        $this->urlFor = $urlForCallback;
+    }
+
+    public function setUrlFor($closure) {
+        $this->urlFor = $closure;
     }
 
     public function fetch($type, $paramId = null, $product1Id = null, $product2Id = null) {
@@ -31,10 +37,22 @@ class OfferService {
         $steps = [];
         foreach ($offers as $i => $o) {
             $num = $i + 1;
-            $steps[$num] = new OfferLink($offers[$i], $num);
+            $steps[$num] = $this->createOfferLink($o, $num);
         }
 
         // count($offers) represents 1 or 2 step lander..
         return $steps;
+    }
+
+    protected function createOfferLink($offer, $num)  {
+        $offer = new OfferLink($offer, $num);
+        if($this->urlFor) {
+            $func = $this->urlFor;
+            $clickUrl = $func('click', array(
+                'stepId' => $offer->getStepNumber()
+            ));
+            $offer->setUrl($clickUrl);
+        }
+        return $offer;
     }
 }

@@ -52,6 +52,4 @@ $app->get('/click/:stepId', function ($stepId) use ($app) {
     echo $url;
     $app->redirect($url);
 
-})->conditions(array(
-    'stepId' => '[0-9]+'
-));
+})->name('click')->conditions(array('stepId' => '[0-9]+'));
