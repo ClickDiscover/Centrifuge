@@ -5,15 +5,24 @@ namespace Flagship\Model;
 
 class OfferLink {
 
-    protected $name;
+    protected $product;
     protected $stepNumber;
-    protected $url;
-    protected $imageUrl;
 
-    public function __construct($stepNumber, $product, $imageUrl = false) {
-        $this->name = $name;
+    public function __construct($product, $stepNumber = 1) {
+        $this->product = $product;
         $this->stepNumber = $stepNumber;
-        $this->imageUrl = $imageUrl;
+    }
+
+    public function getStepNumber() {
+        return $this->stepNumber;
+    }
+
+    public function getName() {
+        return $this->product->name;
+    }
+
+    public function getImageUrl() {
+        return $this->product->imageUrl;
     }
 }
 

@@ -2,6 +2,7 @@
 
 namespace Flagship\Service;
 
+use Flagship\Model\OfferLink;
 
 class OfferService {
 
@@ -26,6 +27,14 @@ class OfferService {
         } elseif ($type === self::ADEX_TYPE) {
             $offers[] = $this->adex->fetch($paramId);
         }
-        return $offers;
+
+        $steps = [];
+        foreach ($offers as $i => $o) {
+            $num = $i + 1;
+            $steps[$num] = new OfferLink($offers[$i], $num);
+        }
+
+        // count($offers) represents 1 or 2 step lander..
+        return $steps;
     }
 }
