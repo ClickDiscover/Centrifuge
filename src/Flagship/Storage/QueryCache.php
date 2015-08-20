@@ -48,6 +48,23 @@ class QueryCache {
         return $this->query($sql, $params);
     }
 
+    public function insertArray($table, $data) {
+        if (count($data) == 0) {
+            return false;
+        }
+
+        $names = array_keys($data);
+        $sql  = "INSERT INTO {$table} (" . implode(', ', $names) . ") ";
+
+        $placeholders = [];
+        foreach ($names as $k) {
+            $placeholders[":{$k}"] = $data[$k];
+        }
+
+        $sql .= " VALUES (" . implode(', ', array_keys($placeholders)) . ") ";
+        return $this->insert($sql, $placeholders);
+    }
+
     public function query($sql, $params = []) {
         $s = $this->db->prepare($sql);
         $s->execute($params);

@@ -57,7 +57,7 @@ class AdexOfferService {
             $obj->cleanName(); // Admin interfaceA
             $objects[] = $obj;
         }
-        return $rows;
+        return $objects;
     }
 
     public function curlFetch(AdexParameters $p) {
@@ -74,9 +74,13 @@ class AdexOfferService {
         return $result;
     }
 
-    public function insert($app, $arr) {
-        $sql = "INSERT INTO ae_parameters (affiliate_id, vertical, country, name) VALUES (:affiliate_id, :vertical, :country, :name)";
-        return $db->insert($sql, $arr);
+    public function insert($obj) {
+        $arr = $obj->toArray();
+        unset($arr['id']);
+        $id = $this->db->insertArray($this->namespace, $arr);
+        $arr['id'] = $id;
+        $obj->fromArray($arr);
+        return $obj;
     }
 
 }

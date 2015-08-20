@@ -31,13 +31,14 @@ class AdexParameters implements ArrayConvertible {
         $this->id = $id;
         $this->name = $name;
         $this->affiliateId = $affiliateId;
-        $this->assetRoot = $vertical;
+        $this->vertical = $vertical;
         $this->country = $country;
+        return $this;
     }
 
     public function cleanName() {
         if(!isset($this->name)) {
-            return implode(' | ', array(
+            $this->name = implode(' | ', array(
                 $this->affiliateId,
                 $this->country,
                 $this->vertical

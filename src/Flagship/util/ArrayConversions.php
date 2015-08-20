@@ -42,6 +42,14 @@ trait ArrayConversions {
         }
     }
 
+    public function keys($toCamel = true) {
+        $vars = $this->__keys();
+        return array_map(function ($x) use ($toCamel) {
+            return (($toCamel) ? from_camel_case($x) : $x);
+        }, array_keys($vars));
+    }
+
+
     public function toArray() {
         $vars = $this->__keys();
         $new = [];
@@ -57,5 +65,6 @@ trait ArrayConversions {
             $newKey = $this->__renameKey($key, true);
             $this->$newKey = $val;
         }
+        return $this;
     }
 }

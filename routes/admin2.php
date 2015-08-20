@@ -110,8 +110,12 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             return $app->render('admin::models/base', $bundle);
         });
 
-        // $app->post('/adexchange', function () use ($app, $centrifuge) {
-
+        $app->post('/adexchange', function () use ($app, $centrifuge) {
+            $input = $app->request->post();
+            $obj = new \Flagship\Model\AdexParameters();
+            $obj->fromArray($input);
+            $res = $centrifuge['offer.adex']->insert($obj);
+        });
     });
 });
 
