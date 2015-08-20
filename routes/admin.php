@@ -1,176 +1,147 @@
 <?php
-require_once dirname(dirname(__DIR__)) . '/config.php';
-require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-require_once CENTRIFUGE_SRC_ROOT . "/models/product.php";
-require_once CENTRIFUGE_SRC_ROOT . "/models/lander.php";
-require_once CENTRIFUGE_SRC_ROOT . "/models/route.php";
-require_once CENTRIFUGE_SRC_ROOT . "/models/event.php";
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
 
 
-function cleanAeParams($aeParams) {
-    $clean = array();
-    foreach ($aeParams as $i => $ae) {
-        $clean[$i] = $ae;
-        if(!isset($ae['name'])) {
-            $clean[$i]['name'] = implode(' | ', array(
-                $ae['affiliate_id'],
-                $ae['country'],
-                $ae['vertical']
-            ));
-        }
-    }
-    return $clean;
-}
-
-function set_alt(&$arr, &$alt, $key) {
-    $arr[$key] = $value;
-    unset($arr[$key]);
-}
-
-function landersServedAllTheWay($db, $products, $aeParams) {
-    $pns     = array_column($products, 'name', 'id');
-    $adex    = array_column($aeParams, 'name', 'id');
-    $sql     = "SELECT l.*, w.name AS website_name FROM landers l INNER JOIN websites w ON (w.id = l.website_id) ORDER BY id DESC";
-    $landers = array();
-    foreach($db->query($sql, PDO::FETCH_ASSOC) as $row) {
-        $row['website_id'] = $row['website_name'];
-        unset($row['website_name']);
-
-        if ($row['offer'] === 'network') {
-            $row['product1_id'] = $pns[$row['product1_id']];
-            $row['product2_id'] = $pns[$row['product2_id']];
-        } elseif ($row['offer'] === 'adexchange') {
-            $row['param_id'] = $adex[$row['param_id']];
-        }
-
-        // Put notes at end...
-        $notes = $row['notes'];
-        unset($row['notes']);
-        $row['notes'] = $notes;
-        $landers[] = $row;
-    }
-    return $landers;
-}
-
-
-$app->path('admin', function($req) use ($app) {
-    $app->path('phpinfo', function() {
-        return phpinfo();
-    });
-    $app->path('ping', function ($req) use ($app) {
-        return "pong!";
-    });
-
-    $app->path('models', function($req) use ($app) {
-        $adapter = new Local(CENTRIFUGE_WEB_ROOT);
-        $fs = new Filesystem($adapter);
-        $fs->addPlugin(new League\Flysystem\Plugin\ListWith);
-        $websites = $app->db->query('SELECT * FROM websites')->fetchAll(PDO::FETCH_ASSOC);
-        $products = $app->db->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
-        $routes   = $app->db->query('SELECT * FROM routes')->fetchAll(PDO::FETCH_ASSOC);
-        $aeParams = cleanAEParams($app->db->query('SELECT * FROM ae_parameters')->fetchAll(PDO::FETCH_ASSOC));
-        $landers = landersServedAllTheWay($app->db, $products, $aeParams);
-        $allModels = array(
-            "websites" => $websites,
-            "products" => $products,
-            "routes" => $routes,
-            "aeParams" => $aeParams,
-            "landers" => $landers
+class ProductFinder {
+    public static function go($fs, $path, $products) {
+        $files = $fs->listWith(['mimetype', 'timestamp'], $path);
+        $files = array_filter($files, function ($x) { return(strpos($x['mimetype'], 'image') !== false); });
+        $files = array_map(function ($x) { return "/" . $x['path']; }, $files);
+        $existing = array_map(function ($x) use ($path) { return $x->imageUrl; }, $products);
+        $unused = array_diff($files, $existing);
+        return array(
+            'existing' => $existing,
+            'unused' => $unused
         );
+    }
+}
 
-        $app->get(function () use ($app, $allModels) {
-            $config = get_defined_constants(true)['user'];
-            $config['SESSION_ID'] = session_id();
-            $allModels['config'] = $config;
-            return $app->plates->render('admin::models/base', $allModels);
+class VariantFinder {
+    public static function go($fs, $path) {
+        $values = array();
+        if ($fs->has($path)) {
+            $contents = $fs->listContents($path, true);
+            foreach ($contents as $c) {
+                if ($c['type'] === 'file' && $c['filename'] !== 'default') {
+                    $base = array_slice(explode('/', $c['dirname']), -1)[0];
+                    $values[$base][] = $c['filename'];
+                }
+            }
+        }
+        return $values;
+    }
+}
+
+
+$app->group('/admin', function() use ($app, $centrifuge) {
+    $app->group('/models', function() use ($app, $centrifuge) {
+
+        $centrifuge['admin.products'] = function () use ($centrifuge) {
+            return $centrifuge['offer.network']->fetchAll();
+        };
+        $centrifuge['admin.websites'] = function () use ($centrifuge) {
+            return $centrifuge['landers']->fetchAllWebsites();
+        };
+        $centrifuge['admin.routes'] = function () use ($centrifuge) {
+            return $centrifuge['custom.routes']->fetchAll();
+        };
+        $centrifuge['admin.adex.params'] = function () use ($centrifuge) {
+            return $centrifuge['offer.adex']->paramFetchAll();
+        };
+        $centrifuge['admin.landers'] = function () use ($centrifuge) {
+            return array_map(function ($x) {
+                return \Flagship\Util\FlattenObjects::lander($x);
+            }, $centrifuge['landers']->fetchAll());
+        };
+        $centrifuge['admin.bundle'] = function () use ($centrifuge) {
+            return array(
+                'websites' => $centrifuge['admin.websites'],
+                'routes' => $centrifuge['admin.routes'],
+                'aeParams' => $centrifuge['admin.adex.params'],
+                'landers' => $centrifuge['admin.landers'],
+                'products' => $centrifuge['admin.products']
+            );
+        };
+
+
+
+        $app->group('/products', function () use ($app, $centrifuge) {
+            $app->get('/', function () use ($app, $centrifuge) {
+                $fs = $centrifuge['fs'];
+                $products = $centrifuge['admin.products'];
+                $productRoot = $centrifuge['config']['paths']['relative_product'];
+                $finder = ProductFinder::go($fs, $productRoot, $products);
+                $finder['products'] = $products;
+                return $app->render('admin::models/products', $finder);
+            });
+
+            $app->post('/', function () use ($app, $centrifuge) {
+                $name = $app->request->post('name');
+                $url = $app->request->post('image_url');
+                $centrifuge['offer.network']->insert($name, $url);
+                $app->redirect('/admin/models/products');
+            });
         });
 
 
-        $app->path('products', function() use ($app, $products, $fs) {
-            $app->get(function () use ($app, $products, $fs) {
-                $files = $fs->listWith(['mimetype', 'timestamp'], CENTRIFUGE_PRODUCT_ROOT);
-                $files = array_filter($files, function ($x) { return(strpos($x['mimetype'], 'image') !== false); });
-                $files = array_map(function ($x) { return "/" . $x['path']; }, $files);
-                $existing = array_map(function ($x) { return CENTRIFUGE_PRODUCT_ROOT . $x['image_url']; }, $products);
-                $unused = array_diff($files, $existing);
+        $app->group('/landers', function () use ($app, $centrifuge) {
+            $app->get('/:id', function ($id) use ($app, $centrifuge) {
+                $lander = $centrifuge['landers']->fetch($id);
+                $template = $centrifuge['plates']->landerTemplate($lander);
+                $app->render('admin::testing/base', $template->getData());
+            })->conditions(['id' => '[0-9]+']);
 
-                return $app->plates->render('admin::models/products', array(
-                    'products' => $products,
-                    'existing' => $existing,
-                    'unused' => $unused
-                ));
-            });
-
-            $app->post(function ($req) use ($app) {
-                $n = $req->post()['name'];
-                $url = $req->post()['image_url'];
-                NetworkProduct::insert($app, $n, $url);
-                return $app->response()->redirect('/admin/models/products');
-            });
-        });
-
-        $app->path('landers', function ($req) use ($app, $allModels, $fs) {
-            $app->param('int', function ($req, $id) use ($app) {
-                $lander = LanderFunctions::fetch($app, $id);
-                $app->get(function () use ($app, $lander)  {
-                    return $app->plates->render('admin::testing/base', $lander->toArray());
-                });
-            });
-
-            $app->get(function () use ($app, $allModels, $fs) {
+            $app->get('/', function () use ($app, $centrifuge) {
+                $bundle = $centrifuge['admin.bundle'];
                 $variants = [];
-                foreach ($allModels['websites'] as $ws) {
-                    $path =  'landers/' . $ws['namespace'] . '/variants';
-
-                    if ($fs->has($path)) {
-                        $contents = $fs->listContents($path, true);
-                        $values = array();
-                        foreach ($contents as $c) {
-                            if ($c['type'] === 'file' && $c['filename'] !== 'default') {
-                                $base = array_slice(explode('/', $c['dirname']), -1)[0];
-                                $values[$base][] = $c['filename'];
-                            }
-                        }
-                        $variants[$ws['id']] = $values;
-                    }
+                foreach ($bundle['websites'] as $ws) {
+                    $path =  '/landers/' . $ws->namespace . '/variants';
+                    $variants[$ws->id] = VariantFinder::go($centrifuge['fs'], $path);
                 }
-                $allModels['variants'] = $variants;
-                return $app->plates->render('admin::models/landers', $allModels);
+                $bundle['variants'] = $variants;
+                return $app->render('admin::models/landers', $bundle);
             });
 
-            $app->post(function ($req) use ($app) {
-                $post = $req->post();
-                // Extract Route
+            $app->post('/', function () use ($app, $centrifuge) {
+                $input = $app->request->post();
                 $route = null;
-                if ($post['route'] != '') {
-                    $route = $post['route'];
+                if ($input['route'] != '') {
+                    $route = $input['route'];
                 }
-                unset($post['route']);
+                unset($input['route']);
 
-                // Insert lander
-                $landerId = LanderFunctions::insert($app, $post);
-                // return '<pre>' . print_r($landerId, true) . '</pre>';
-
-                // Insert route
+                $landerId = $centrifuge['landers']->insert($input);
+                // $log->warn('route '. $route);
                 if (isset($route)) {
-                    $routeRes = RouteFunctions::insert($app, $route, $landerId);
-                    $app->cache->getItem('routes')->clear();
+                    $lid = $landerId['id'];
+                    $res = $centrifuge['custom.routes']->insert($route, $lid);
                 }
-
-                // Redirect to admin page
-                return $app->response()->redirect('/admin/models/landers');
+                $app->redirect('/admin/models/landers');
             });
         });
 
-        $app->path('adexchange', function () use ($app) {
-            $app->post(function ($req) use ($app) {
-                AdExchangeProduct::insert($app, $req->post());
-                return $app->response()->redirect('/admin/models');
-            });
+        $app->get('/', function () use ($app, $centrifuge) {
+            $bundle = $centrifuge['admin.bundle'];
+            $bundle['config'] = $centrifuge['config'];
+            return $app->render('admin::models/base', $bundle);
+        });
+
+        $app->post('/adexchange', function () use ($app, $centrifuge) {
+            $input = $app->request->post();
+            $obj = new \Flagship\Model\AdexParameters();
+            $obj->fromArray($input);
+            $res = $centrifuge['offer.adex']->insert($obj);
         });
     });
+});
+
+
+$app->get('/admin/phpinfo', function() {
+    return phpinfo();
+});
+$app->get('/admin/ping', function () use ($app) {
+    echo "pong!";
 });
 
