@@ -7,7 +7,7 @@ use Flagship\Model\Website;
 
 class LanderService {
 
-    public $namespace = "lander";
+    public $namespace = "landers";
 
     protected $db;
     protected $offers;
@@ -74,4 +74,33 @@ SQL;
             return $this->websiteFromArray($x);
         }, $rows);
     }
+
+    public function insert($arr) {
+        // Remove data from different offers
+        if ($arr['notes'] === '') {
+            unset($arr['notes']);
+        }
+        if (isset($arr['tracking'])) {
+            unset($arr['tracking']);
+        }
+
+        if (isset($arr['variants'])) {
+            $vars = array_flip($arr['variants']);
+            unset($vars['default']);
+            if (count($vars) > 0) {
+                $arr['variants'] = json_encode(array_flip($vars));
+            } else {
+                unset($arr['variants']);
+            }
+        }
+
+        if($arr['offer'] == 'adexchange') {
+            unset($arr['product1_id']);
+            unset($arr['product2_id']);
+        } elseif ($arr['offer'] == 'network') {
+            unset($arr['param_id']);
+        }
+        return $this->db->insertArray($this->namespace, $arr);
+    }
+
 }

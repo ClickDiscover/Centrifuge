@@ -73,6 +73,7 @@ $app->group('/admin', function() use ($app, $centrifuge) {
                 $products = $centrifuge['admin.products'];
                 $productRoot = $centrifuge['config']['paths']['relative_product'];
                 $finder = ProductFinder::go($fs, $productRoot, $products);
+                $finder['products'] = $products;
                 return $app->render('admin::models/products', $finder);
             });
 
@@ -101,6 +102,23 @@ $app->group('/admin', function() use ($app, $centrifuge) {
                 }
                 $bundle['variants'] = $variants;
                 return $app->render('admin::models/landers', $bundle);
+            });
+
+            $app->post('/', function () use ($app, $centrifuge) {
+                $input = $app->request->post();
+                $route = null;
+                if ($input['route'] != '') {
+                    $route = $input['route'];
+                }
+                unset($input['route']);
+
+                $landerId = $centrifuge['landers']->insert($input);
+                // $log->warn('route '. $route);
+                if (isset($route)) {
+                    $lid = $landerId['id'];
+                    $res = $centrifuge['custom.routes']->insert($route, $lid);
+                }
+                $app->redirect('/admin/models/landers');
             });
         });
 

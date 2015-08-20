@@ -59,7 +59,7 @@ $(function() {
                 <label for="ae-params">Ad Exchange Parameters</label>
                 <select name="param_id" id="ae-params">
                     <?php foreach($aeParams as $ae): ?>
-                        <option value="<?= $ae['id'] ?>"><?= $ae['name'] ?></option>
+                        <option value="<?= $ae->id ?>"><?= $ae->name ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
