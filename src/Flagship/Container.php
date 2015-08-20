@@ -4,7 +4,6 @@ namespace Flagship;
 
 use Stash\Driver\FileSystem;
 use Stash\Pool;
-use Stash\Session as StashSession;
 use \Domnikl\Statsd\Connection\UdpSocket as StatsdSocket;
 use \Domnikl\Statsd\Client as Statsd;
 // use Monolog\Logger;
@@ -76,10 +75,9 @@ class Container extends \Pimple\Container {
             return $cache;
         };
         // Session
-        $this['sessionCache'] = function () use ($c) {
+        $this['session.cache'] = function () use ($c) {
             $sessionCache= new Pool($this['cacheDriver']);
             $sessionCache->setNamespace('session');
-            // StashSession::registerHandler(new StashSession($sessionCache));
             return $sessionCache;
         };
 

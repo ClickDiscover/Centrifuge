@@ -69,6 +69,11 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 
         $app->group('/products', function () use ($app, $centrifuge) {
             $app->get('/', function () use ($app, $centrifuge) {
+                if(!isset($_SESSION['new_count'])) {
+                    $_SESSION['new_count'] = 0;
+                }
+                $_SESSION['new_count'] += 1;
+
                 $fs = $centrifuge['fs'];
                 $products = $centrifuge['admin.products'];
                 $productRoot = $centrifuge['config']['paths']['relative_product'];

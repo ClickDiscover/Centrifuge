@@ -4,6 +4,7 @@ namespace Flagship;
 
 use Flagship\Container;
 use Slim\Slim;
+use \Stash\Session as StashSession;
 
 class SlimBootstrap {
 
@@ -23,8 +24,6 @@ class SlimBootstrap {
             return $app->urlFor($route, $params);
         });
 
-
-        // $app->log->setWriter($container['logger']);
         $app->log->setWriter($container['logger']);
 
         $app->view($container['plates']);
@@ -37,6 +36,7 @@ class SlimBootstrap {
         };
 
         $this->setupHooks();
+        $app->add(new \Flagship\Middleware\Session($container['session.cache']));
         $app->add($container['debug.bar']);
 
         // $app->add(new \Flagship\Middleware\LanderFallback($container['config']['application']['fallback_lander']));
