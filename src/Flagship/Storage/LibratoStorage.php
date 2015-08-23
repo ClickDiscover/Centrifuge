@@ -1,9 +1,12 @@
 <?php
-namespace Flagship\Metrics;
+namespace Flagship\Storage;
 
 
 
 class LibratoStorage {
+
+    use \Flagship\Util\Logging;
+
     protected $statsd;
     protected $source;
     protected $metric;
@@ -14,13 +17,16 @@ class LibratoStorage {
         $this->source = $source;
     }
 
-    public function name($s, $m) {
-        $s = implode('.', $s);
-        $m = implode('.', $m);
-        return $s . '-' . $m;
+    public function name($source, $metric) {
+        $source = str_replace('-', '', $source);
+        $metric = str_replace('-', '', $metric);
+        $source = implode('.', $source);
+        $metric = implode('.', $metric);
+        return $source . '-' . $metric;
     }
 
     private function push($raw, $value) {
+        $this->log->info("Librato", [$raw, $value]);
         if (isset($value)) {
             $this->statsd->gauge($raw, $value);
         } else {
