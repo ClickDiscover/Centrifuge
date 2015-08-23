@@ -21,7 +21,9 @@ class SlimBootstrap {
         $container = $this->container;
 
         $container['offers']->setUrlFor(function ($route, $params) use ($app) {
-            return $app->urlFor($route, $params);
+            $url = $app->urlFor($route, $params);
+            $query = http_build_query($app->request->get());
+            return $url . "?" . $query;
         });
 
         $app->log->setWriter($container['logger']);
