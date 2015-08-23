@@ -7,13 +7,13 @@ use Stash\Pool;
 use \Domnikl\Statsd\Connection\UdpSocket as StatsdSocket;
 use \Domnikl\Statsd\Client as Statsd;
 // use Monolog\Logger;
-use Flagship\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\WebProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
 use League\Plates\Engine;
 use Slim\Middleware\DebugBar;
 
+use Flagship\Logger;
 use Flagship\Plates\VariantExtension;
 use Flagship\Plates\HtmlExtension;
 use Flagship\Plates\ViewEngine;
@@ -21,6 +21,7 @@ use Flagship\Storage\QueryCache;
 use Flagship\Service\NetworkOfferService;
 use Flagship\Service\AdexOfferService;
 use Flagship\Service\CustomRouteService;
+use Flagship\Storage\LibratoStorage;
 
 
 class Container extends \Pimple\Container {
@@ -81,12 +82,6 @@ class Container extends \Pimple\Container {
             return $sessionCache;
         };
 
-        // Statsd
-        $this['statsd'] = function () use ($c) {
-            $conn = new StatsdSocket('localhost', 8125);
-            return new Statsd($conn);
-        };
-
         // Plates
         $this['plates'] = function () use ($c) {
             $templateRoot = $c['config']['application']['templates.path'] . $c['config']['paths']['relative_landers'];
@@ -138,6 +133,32 @@ class Container extends \Pimple\Container {
 
         $this['landers'] = function () use ($c) {
             return new \Flagship\Service\LanderService($c['db'], $c['offers']);
+        };
+
+        // Librato
+        $this['statsd'] = function () use ($c) {
+            $conn = new StatsdSocket('localhost', 8125);
+            return new Statsd($conn);
+        };
+
+        $this['librato.performance'] = function () use ($c) {
+            $librato = new LibratoStorage(
+                $c['statsd'],
+                [$c['config']['environment']],
+                [$c['config']['name'], 'performance']
+            );
+            $librato->setLogger($c['logger']);
+            return $librato;
+        };
+
+        $this['librato.system'] = function () use ($c) {
+            $librato = new LibratoStorage(
+                $c['statsd'],
+                [$c['config']['environment'], $c['config']['hostname']],
+                [$c['config']['name'], 'system']
+            );
+            $librato->setLogger($c['logger']);
+            return $librato;
         };
     }
 }

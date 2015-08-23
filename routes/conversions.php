@@ -2,7 +2,7 @@
 
 
 
-$app->get('/conversions', function() use ($app) {
+$app->get('/conversions', function() use ($app, $centrifuge) {
     $config = $app->config('database');
     $redis = new Predis\Client($config['redis']);
     $total = $redis->get('interceptor:conversions:totals');
@@ -11,11 +11,10 @@ $app->get('/conversions', function() use ($app) {
     $data = array();
     foreach ($keys as $k) {
         $keyword = array_reverse(explode(':', $k))[0];
-        $keyword = str_replace('-', '', $keyword);
         $data[$keyword] = $redis->get($k);
-        // $app->performance->breakout('keyword', $keyword, 'conversions', $data[$keyword]);
+        $centrifuge['librato.performance']->breakout('keyword', $keyword, 'conversions', $data[$keyword]);
     }
-    // $app->performance->total('conversions', $total);
+    $centrifuge['librato.performance']->total('conversions', $total);
 
     echo '<pre>Totals: ' . $total . PHP_EOL;
     echo 'By keyword' . PHP_EOL;

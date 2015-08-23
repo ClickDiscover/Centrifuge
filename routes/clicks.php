@@ -19,21 +19,21 @@ function extractLanderFromRequest($req) {
     }
 }
 
-$app->get('/click/:stepId', function ($stepId) use ($app) {
-    // $app->performance->total("clicks");
+$app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     $req = $app->request;
+    $centrifuge['librato.performance']->total("clicks");
 
     // Lander Tracking
     $landerId = extractLanderFromRequest($req);
-    // if (ENABLE_LANDER_TRACKING && isset($landerId)) {
-    //     $app->performance->breakout('lander', $landerId, 'clicks');
-    // }
+    if (isset($landerId)) {
+        $centrifuge['librato.performance']->breakout('lander', $landerId, 'clicks');
+    }
 
     // Keyword Tracking
     $keyword = $req->get('keyword');
-    // if (isset($keyword)) {
-    //     $app->performance->breakout('keyword', $keyword, 'clicks');
-    // }
+    if (isset($keyword)) {
+        $centrifuge['librato.performance']->breakout('keyword', $keyword, 'clicks');
+    }
 
     // Now we redirect to cpv.flagshippromotions.com/base2.php
     // Eventually it will go to our campaign managment system
@@ -49,7 +49,6 @@ $app->get('/click/:stepId', function ($stepId) use ($app) {
     $currentQuery = Url::createFromServer($_SERVER)->getQuery()->toArray();
     $currentQuery['id'] = $stepId;
     $url->getQuery()->modify($currentQuery);
-    echo $url;
     $app->redirect($url);
 
 })->name('click')->conditions(array('stepId' => '[0-9]+'));

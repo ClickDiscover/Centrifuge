@@ -9,39 +9,39 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
         $app->notFound();
     }
 
-    $template = $centrifuge['plates']->landerTemplate($lander);
-    $app->render($template->getFile(), $template->getData());
 
     // View tracking
-    // $app->performance->total("views");
-    //
+    $centrifuge['librato.performance']->total("views");
+    $centrifuge['librato.performance']->breakout('lander', $lander->id, 'views');
+
+    // Not sure if I care about this as a flag
     // $enabled = $app->config('flags');
     // if ($enabled['lander_tracking']) {
-    //     $app->performance->breakout('lander', $lander->id, 'views');
-    //     if ($req->isBot()) {
-    //         $app->system->total('bot_hits');
-    //         $app->log->warning("Bot Error", $_SERVER);
-    //     }
-    //     $seg = array(
-    //         "anonymousId" => str_replace('"', '', $_COOKIE['ajs_anonymous_id']),
-    //         "name" => "Landing Page",
-    //         "properties" => array(
-    //             "url" => "/landers/" . $id
-    //         )
-    //     );
-    //     echo '<pre>';
-    //     print_r($_COOKIE); echo '</pre>';
-    //     print_r($seg);
-    //     Segment::page($seg);
+        // if ($req->isBot()) {
+        //     $app->system->total('bot_hits');
+        //     $app->log->warning("Bot Error", $_SERVER);
+        // }
+        // $seg = array(
+        //     "anonymousId" => str_replace('"', '', $_COOKIE['ajs_anonymous_id']),
+        //     "name" => "Landing Page",
+        //     "properties" => array(
+        //         "url" => "/landers/" . $id
+        //     )
+        // );
+        // echo '<pre>';
+        // print_r($_COOKIE); echo '</pre>';
+        // print_r($seg);
+        // Segment::page($seg);
     // }
 
     // Keyword Tracking
-    // $keyword = $req->query('keyword');
-    // if (isset($keyword)) {
-    //     $app->performance->breakout('keyword', $keyword, 'views');
-    // }
+    $keyword = $app->request->get('keyword');
+    if (isset($keyword)) {
+        $centrifuge['librato.performance']->breakout('keyword', $keyword, 'views');
+    }
 
-
+    $template = $centrifuge['plates']->landerTemplate($lander);
+    $app->render($template->getFile(), $template->getData());
 
 })->name('landers')->conditions(array(
     'id' => '[0-9]+'
