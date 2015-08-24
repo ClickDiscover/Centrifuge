@@ -60,6 +60,10 @@ trait ArrayConversions {
         return $new;
     }
 
+    public function toCleanArray() {
+        return array_filter($this->toArray());
+    }
+
     public function fromArray(array $arr) {
         foreach ($arr as $key => $val) {
             $newKey = $this->__renameKey($key, true);
