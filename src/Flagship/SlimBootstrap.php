@@ -47,10 +47,11 @@ class SlimBootstrap {
         };
 
         $app->add(new \Flagship\Middleware\UserTracker(
-            new \Hashids\Hashids(
-                $container['config']['hashids']['salt'],
-                $container['config']['hashids']['length']
-            )
+            new \Flagship\Test\MockHasher
+            // new \Hashids\Hashids(
+            //     $container['config']['hashids']['salt'],
+            //     $container['config']['hashids']['length']
+            // )
         ));
 
         $app->add(new \Flagship\Middleware\Session($container['session.cache']));

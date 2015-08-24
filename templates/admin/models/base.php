@@ -1,5 +1,9 @@
 <?php $this->layout('admin::models/layout', ['title' => 'All Data']) ?>
 <?php $this->start('page') ?>
+<pre>
+<?php echo 'tracking' . PHP_EOL ?>
+<?= print_r($tracking, true) ?>
+</pre>
 
 <?= $this->fetch('admin::partials/adexchange') ?>
 

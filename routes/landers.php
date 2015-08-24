@@ -13,7 +13,7 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
     // View tracking
     $centrifuge['librato.performance']->total("views");
     $centrifuge['librato.performance']->breakout('lander', $lander->id, 'views');
-    $_SESSION['lander_count'] = isset($_SESSION['lander_count']) ? 1 + $_SESSION['lander_count'] : 0;
+    $_SESSION['lander_count'] = isset($_SESSION['lander_count']) ? 1 + $_SESSION['lander_count'] : 1;
 
     // Not sure if I care about this as a flag
     // $enabled = $app->config('flags');

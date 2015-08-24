@@ -5,6 +5,7 @@ namespace Flagship\Middleware;
 use \Slim\Middleware;
 use \Hashids\Hashids;
 
+use Flagship\Event\BaseEvent;
 use Flagship\Middleware\Session;
 
 
@@ -22,15 +23,20 @@ class UserTracker extends Middleware {
         $sessionIdCookie = $app->getCookie(Session::SESSION_KEY);
 
         $tracking = [];
-        // $requestTime = $app->environment['REQUEST_TIME'];
         $requestTime = $_SERVER['REQUEST_TIME'];
-        $tracking['visit.id'] = $this->hasher->encode($requestTime);
         $tracking['visit.time'] = $requestTime;
 
         if (isset($sessionIdCookie)) {
             $tracking['user.id'] = $sessionIdCookie;
+            $tracking['visit.id'] = $this->hasher->encode([$sessionIdCookie, $requestTime]);
+        } else {
+            $tracking['visit.id'] = $this->hasher->encode([$requestTime]);
         }
 
+
+        $ev = new BaseEvent($req);
+        $tracking['url'] = $ev->urlContext->toCleanArray();
+        $tracking['user'] = $ev->userContext->toCleanArray();
         $app->view->set('tracking', $tracking);
 
         $this->next->call();

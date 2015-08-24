@@ -35,7 +35,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Flagship\\": "src/Flagship/"
+            "Flagship\\": "src/Flagship/",
+            "Flagship\\Test\\": "test/Flagship/"
         }
     },
     "scripts": {
