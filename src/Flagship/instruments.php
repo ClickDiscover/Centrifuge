@@ -7,7 +7,7 @@ require_once __DIR__ . '/util/librato.php';
 
 use Stash\Session;
 
-
+// Check
 $log = new Monolog\Logger('centrifuge');
 $log->pushHandler(new Monolog\Handler\StreamHandler(
     CENTRIFUGE_LOG_ROOT . 'centrifuge.log',
@@ -20,14 +20,18 @@ $log->pushProcessor(new Monolog\Processor\MemoryUsageProcessor);
 // $db = function () {
 //     return new PDO(PDO_URL);
 // };
+// Check
 $db = new F3\LazyPDO\LazyPDO(PDO_URL);
 
 
+// Check
 $cacheDriver = new Stash\Driver\FileSystem();
 $cacheDriver->setOptions(array('path' => CENTRIFUGE_CACHE_ROOT));
 $cache = new Stash\Pool($cacheDriver);
 $cache->setNamespace('centrifuge');
 $cache->setLogger($log);
+
+// still working on
 $sessionCache= new Stash\Pool($cacheDriver);
 $sessionCache->setNamespace('session');
 $sessionCache->setLogger($log);
@@ -35,7 +39,7 @@ Session::registerHandler(new Session($sessionCache));
 
 
 
-
+// Check
 $connection = new \Domnikl\Statsd\Connection\UdpSocket('localhost', 8125);
 $source = LIBRATO_ENV;
 $metrics = new \Domnikl\Statsd\Client($connection);

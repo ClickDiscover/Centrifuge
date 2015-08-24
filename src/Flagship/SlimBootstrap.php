@@ -20,6 +20,10 @@ class SlimBootstrap {
         $app = $this->app;
         $container = $this->container;
 
+        $this->setupHooks();
+        $this->configureDevelopmentMode();
+        $this->configureProductionMode();
+
         $container['offers']->setUrlFor(function ($route, $params) use ($app) {
             $url = $app->urlFor($route, $params);
             $query = http_build_query($app->request->get());
@@ -37,25 +41,35 @@ class SlimBootstrap {
             return $container['custom.routes']->fetchAll();
         };
 
-        $this->setupHooks();
         $app->add(new \Flagship\Middleware\Session($container['session.cache']));
-        $app->add($container['debug.bar']);
-
-
-        $app->notFound(function () use ($app, $container) {
-            $fallback = $app->config('fallback_lander');
-
-            $container['logger']->warning('4xx', [$app->request->getPathInfo()]);
-            $container['librato.system']->total('4xx');
-
-            if (isset($fallback)) {
-                $app->redirect($app->urlFor('landers', array('id' => $fallback)));
-            }
-        });
-
-        // $app->add(new \Flagship\Middleware\LanderFallback($container['config']['application']['fallback_lander']));
 
         return $app;
+    }
+
+    public function configureDevelopmentMode() {
+        $app = $this->app;
+        $container = $this->container;
+        $app->configureMode('development', function () use ($app, $container) {
+            $app->add($container['debug.bar']);
+        });
+    }
+
+    public function configureProductionMode() {
+        $app = $this->app;
+        $container = $this->container;
+        $app->configureMode('production', function () use ($app, $container) {
+            // Fallback to lander
+            $app->notFound(function () use ($app, $container) {
+                $fallback = $app->config('fallback_lander');
+
+                $container['logger']->warning('4xx', [$app->request->getPathInfo()]);
+                $container['librato.system']->total('4xx');
+
+                if (isset($fallback)) {
+                    $app->redirect($app->urlFor('landers', array('id' => $fallback)));
+                }
+            });
+        });
     }
 
     public function setupHooks() {

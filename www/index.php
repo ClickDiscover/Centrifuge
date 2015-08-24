@@ -19,16 +19,12 @@ $bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
 $app = $bootstrap->bootstrap();
 $app->setCookie('Testing', 'Weeee');
 
-// $app->hook('slim.after', function () use ($app) {
-//     echo "After";
-//     $app->log->info("We are after");
-// });
-
 
 require_once $config['paths']['routes'] . 'admin.php';
 require_once $config['paths']['routes'] . 'landers.php';
 require_once $config['paths']['routes'] . 'clicks.php';
 require_once $config['paths']['routes'] . 'conversions.php';
+
 
 $app->run();
 ?>

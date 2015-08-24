@@ -29,6 +29,13 @@
 </head>
 <body>
 
+<div><pre>
+Session ID: <?= session_id() ?>
+
+$_COOKIE
+<?= print_r($_COOKIE, true) ?>
+</pre></div>
+
 <div id="menu-container">
     <?= $this->fetch('admin::models/menu') ?>
 </div>
