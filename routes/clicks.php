@@ -46,7 +46,8 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     } elseif ($clickMethod === 'redirect') {
         $url = Url::createFromUrl($clickUrl);
     }
-    $currentQuery = Url::createFromServer($_SERVER)->getQuery()->toArray();
+    // $currentQuery = Url::createFromServer($_SERVER)->getQuery()->toArray();
+    $currentQuery = $req->get();
     $currentQuery['id'] = $stepId;
     $url->getQuery()->modify($currentQuery);
     $app->redirect($url);

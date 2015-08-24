@@ -30,9 +30,11 @@
 <body>
 
 <div><pre>
-Session ID: <?= session_id() ?>
+Session ID: <?php echo  session_id() . PHP_EOL ?>
+<?php echo '$_SESSION' . PHP_EOL ?>
+<?= print_r($_SESSION, true) ?>
 
-$_COOKIE
+<?php echo '$_COOKIE' . PHP_EOL ?>
 <?= print_r($_COOKIE, true) ?>
 </pre></div>
 

@@ -26,8 +26,13 @@ class SlimBootstrap {
 
         $container['offers']->setUrlFor(function ($route, $params) use ($app) {
             $url = $app->urlFor($route, $params);
-            $query = http_build_query($app->request->get());
-            return $url . "?" . $query;
+            $get = $app->request->get();
+            if (count($get) == 0) {
+                return $url;
+            } else {
+                $query = http_build_query($get);
+                return $url . "?" . $query;
+            }
         });
 
         $app->log->setWriter($container['logger']);
@@ -40,6 +45,13 @@ class SlimBootstrap {
         $app->container['custom.routes'] = function () use ($container) {
             return $container['custom.routes']->fetchAll();
         };
+
+        $app->add(new \Flagship\Middleware\UserTracker(
+            new \Hashids\Hashids(
+                $container['config']['hashids']['salt'],
+                $container['config']['hashids']['length']
+            )
+        ));
 
         $app->add(new \Flagship\Middleware\Session($container['session.cache']));
 

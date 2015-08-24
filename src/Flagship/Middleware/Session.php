@@ -7,37 +7,20 @@ use Stash\Session as StashSession;
 
 class Session extends Middleware {
 
-    protected $options = [
-        'name' => '_fp_session',
-        'lifetime' => 0,
-        'path' => null,
-        'domain' => null,
-        'secure' => false,
-        'httponly' => true,
-    ];
+    const SESSION_KEY = '_fp_session';
 
-    public function __construct($cache, $options = []) {
-        $keys = array_keys($this->options);
-        foreach ($keys as $key) {
-            if (array_key_exists($key, $options)) {
-                $this->options[$key] = $options[$key];
-            }
-        }
+    protected $name;
+    // protected $options = [ ];
+
+    public function __construct($cache, $name = self::SESSION_KEY, $options = []) {
+        $this->name = $name;
         StashSession::registerHandler(new StashSession($cache));
     }
 
     public function call() {
-        $options = $this->options;
         $req = $this->app->request;
-        // $current = session_get_cookie_params();
-        // $lifetime = (int)($options['lifetime'] ?: $current['lifetime']);
-        // $path     = $options['path'] ?: $current['path'];
-        // $domain   = $options['domain'] ?: $current['domain'];
-        // $secure   = (bool)$options['secure'];
-        // $httponly = (bool)$options['httponly'];
-        // session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
-        session_name($options['name']);
-        // session_cache_limiter(false); //http://docs.slimframework.com/#Sessions
+        session_name($this->name);
+        session_cache_limiter(false);
         session_start();
         $this->next->call();
     }
