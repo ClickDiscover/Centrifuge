@@ -41,6 +41,18 @@ class SlimBootstrap {
         $app->add(new \Flagship\Middleware\Session($container['session.cache']));
         $app->add($container['debug.bar']);
 
+
+        $app->notFound(function () use ($app, $container) {
+            $fallback = $app->config('fallback_lander');
+
+            $container['logger']->warning('4xx', [$app->request->getPathInfo()]);
+            $container['librato.system']->total('4xx');
+
+            if (isset($fallback)) {
+                $app->redirect($app->urlFor('landers', array('id' => $fallback)));
+            }
+        });
+
         // $app->add(new \Flagship\Middleware\LanderFallback($container['config']['application']['fallback_lander']));
 
         return $app;
@@ -48,6 +60,20 @@ class SlimBootstrap {
 
     public function setupHooks() {
         $app = $this->app;
+        $container = $this->container;
+
+        // Statsd Reporting
+        $timerMetricName = $container['librato.system']->totalName('request_time');
+        $app->hook("slim.before", function () use ($container, $timerMetricName) {
+            $container['librato.system']->total('num_requests');
+            $container['statsd']->startTiming($timerMetricName);
+        });
+
+        $app->hook("slim.after", function () use ($container, $timerMetricName) {
+            $container['statsd']->endTiming($timerMetricName);
+        });
+
+        // Custom URL handler
         $app->hook("slim.before", function () use ($app) {
             $uri = $app->environment['PATH_INFO'];
             $custom = $app->container['custom.routes'];
