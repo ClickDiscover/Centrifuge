@@ -141,6 +141,7 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             $obj = new \Flagship\Model\AdexParameters();
             $obj->fromArray($input);
             $res = $centrifuge['offer.adex']->insert($obj);
+            $app->redirect('/admin/models');
         });
     });
 });
@@ -151,5 +152,14 @@ $app->get('/admin/phpinfo', function() {
 });
 $app->get('/admin/ping', function () use ($app) {
     echo "pong!";
+});
+
+
+$app->get('/admin/tracking', function () use ($app, $centrifuge) {
+    $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
+
+    echo "<pre>";
+    print_r($app->view->get('tracking'));
+    echo "Return</pre>";
 });
 

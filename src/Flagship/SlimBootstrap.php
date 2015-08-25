@@ -47,11 +47,6 @@ class SlimBootstrap {
         };
 
 
-        $app->add(new \Flagship\Middleware\Session(
-            $container['session.cache'],
-            new \Flagship\Test\MockHasher,
-            60
-        ));
 
         $app->add(new \Flagship\Middleware\UserTracker(
             new \Flagship\Test\MockHasher
@@ -61,6 +56,7 @@ class SlimBootstrap {
             // )
         ));
 
+        $app->add(new \Flagship\Middleware\Session($container['session.cache'], 120));
 
         return $app;
     }
@@ -69,7 +65,7 @@ class SlimBootstrap {
         $app = $this->app;
         $container = $this->container;
         $app->configureMode('development', function () use ($app, $container) {
-            $app->add($container['debug.bar']);
+            // $app->add($container['debug.bar']);
         });
     }
 
