@@ -10,4 +10,9 @@ class MockHasher {
     public function decode($str) {
         return explode(',', trim($str, '[]'));
     }
+
+    public function randomId() {
+        return uniqid();
+    }
+
 }

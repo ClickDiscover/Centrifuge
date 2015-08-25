@@ -36,6 +36,8 @@ class VariantFinder {
 
 
 $app->group('/admin', function() use ($app, $centrifuge) {
+    $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
+
     $app->group('/models', function() use ($app, $centrifuge) {
 
         $centrifuge['admin.products'] = function () use ($centrifuge) {
@@ -129,6 +131,7 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 
         $app->get('/', function () use ($app, $centrifuge) {
             $bundle = $centrifuge['admin.bundle'];
+            $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
             $bundle['config'] = $centrifuge['config'];
             return $app->render('admin::models/base', $bundle);
         });
