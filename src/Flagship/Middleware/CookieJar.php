@@ -2,36 +2,7 @@
 
 namespace Flagship\Middleware;
 
-
-class Cookie {
-
-    use ImmutableProperties;
-
-    protected $key;
-    protected $value;
-    protected $lifetime = 0;
-    protected $path     = null;
-    protected $domain   = null;
-    protected $secure   = false;
-    protected $httpOnly = false;
-
-    public function __construct(
-        $key      = null,
-        $value    = null,
-        $lifetime = null,
-        $path     = null,
-        $domain   = null,
-        $secure   = null,
-        $httpOnly = null
-    ) {
-        $this->key      = $key;
-        $this->domain   = $domain;
-        $this->path     = $path     ?: $this->path;
-        $this->lifetime = $lifetime ?: $this->lifetime;
-        $this->secure   = $secure   ?: $this->secure;
-        $this->httpOnly = $httpOnly ?: $this->httpOnly;
-    }
-}
+use Symfony\Component\HttpFoundation\Cookie;
 
 class CookieJar {
 
@@ -49,8 +20,6 @@ class CookieJar {
         $this->defaultPath = $path;
     }
 
-
-    public function f(){}
+    // public function cookie(
 }
-
 
