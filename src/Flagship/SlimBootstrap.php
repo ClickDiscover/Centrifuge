@@ -46,8 +46,6 @@ class SlimBootstrap {
             return $container['custom.routes']->fetchAll();
         };
 
-
-
         $app->add(new \Flagship\Middleware\UserTracker(
             new \Flagship\Test\MockHasher
             // new \Hashids\Hashids(
@@ -56,7 +54,10 @@ class SlimBootstrap {
             // )
         ));
 
-        $app->add(new \Flagship\Middleware\Session($container['session.cache'], 120));
+        $app->add(new \Flagship\Middleware\Session(
+            $container['session.cache'],
+            $container['cookie.jar']
+        ));
 
         return $app;
     }

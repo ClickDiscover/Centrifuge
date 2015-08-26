@@ -66,19 +66,28 @@ class UserTracker extends Middleware {
         $app = $this->app;
         $req = $this->app->request;
         $cookieId = $app->getCookie(Session::SESSION_KEY);
-        $sessionId = $_SESSION['a'];
+        $sessionId = $_SESSION[Session::SESSION_KEY];
 
         $tracking = [];
         $requestTime = $_SERVER['REQUEST_TIME'];
         $tracking['visit.time'] = $requestTime;
 
-        if (isset($cookieId)) {
-            $tracking['user.cookie.id'] = $cookieId;
-            $tracking['visit.id'] = $this->hasher->encode([$cookieId, $requestTime]);
-        } else {
-            $tracking['user.session.id'] = $sessionId;
-            $tracking['visit.id'] = $this->hasher->encode([$requestTime]);
+        if (isset($sessionId)) {
+            $tracking['session.id'] = $sessionId;
         }
+
+        if (isset($cookieId)) {
+            $tracking['cookie.id'] = $cookieId;
+        }
+
+
+        // if (isset($cookieId)) {
+        //     $tracking['user.cookie.id'] = $cookieId;
+        //     $tracking['visit.id'] = $this->hasher->encode([$cookieId, $requestTime]);
+        // } else {
+        //     $tracking['user.session.id'] = $sessionId;
+        //     $tracking['visit.id'] = $this->hasher->encode([$requestTime]);
+        // }
 
 
         $ev = new BaseEvent($req);

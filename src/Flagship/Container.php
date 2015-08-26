@@ -22,6 +22,7 @@ use Flagship\Service\NetworkOfferService;
 use Flagship\Service\AdexOfferService;
 use Flagship\Service\CustomRouteService;
 use Flagship\Storage\LibratoStorage;
+use Flagship\Storage\CookieJar;
 
 
 class Container extends \Pimple\Container {
@@ -75,11 +76,21 @@ class Container extends \Pimple\Container {
             $cache->setNamespace($c['config']['name']);
             return $cache;
         };
+
         // Session
         $this['session.cache'] = function () use ($c) {
             $sessionCache= new Pool($this['cacheDriver']);
             $sessionCache->setNamespace('session');
             return $sessionCache;
+        };
+
+        // Cookies
+        $this['cookie.jar'] = function () use ($c) {
+            return new CookieJar(
+                $c['config']['cookie']['root.domain'],
+                $c['config']['cookie']['session.lifetime'],
+                $c['config']['cookie']['visitor.lifetime']
+            );
         };
 
         // Plates
