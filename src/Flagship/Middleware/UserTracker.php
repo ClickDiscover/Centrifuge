@@ -19,7 +19,6 @@ class UserTracker extends Middleware {
     const PREFIX = '_fp_';
 
 
-
     protected $hasher;
     // protected $rootDomain;
     // protected $cookieLifetime;
