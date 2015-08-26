@@ -10,17 +10,20 @@ class CookieJar {
 
     use ImmutableProperties;
 
+    // Piwik: Life of the session cookie (in sec)
+    // public $referralCookieTimeout = 15768000; // 6 months
+
     const MINUTES   = 1800;     // 30 minutes
     const MONTHS    = 33955200; // 13 months (365 + 28 days)
     const HALF_YEAR = 15768000; // 6 months
 
-    protected $prefix = '_fp_';
     protected $sessionLifetime;
     protected $visitorLifetime;
     protected $path;
     protected $domain;
     protected $secure = false;
     protected $httpOnly = true;
+    protected $app;
 
     public function __construct (
         $domain,
@@ -35,16 +38,35 @@ class CookieJar {
         $this->visitorLifetime = $visitorLifetime;
     }
 
+    public function setSlimApp($app) {
+        $this->app = $app;
+    }
 
-    public function makeCookie($key, $value, $expires = 0) {
-        return new Cookie(
-            $prefix . $key,
-            $value,
-            $expires,
-            $this->path,
-            $this->domain,
-            $this->secure,
-            $this->httpOnly
+    public function setCookie($key, $value, $expires = 0) {
+        if (isset($this->app)) {
+            $this->app->setCookie(
+                $key,
+                $value,
+                $expires,
+                $this->path,
+                $this->domain,
+                $this->secure,
+                $this->httpOnly
+            );
+        }
+
+        return $this->cookieArray($key, $value, $expires);
+    }
+
+    protected function cookieArray($key, $value, $expires = 0) {
+        return array(
+            'key'      => $key,
+            'value'    => $value,
+            'expires'  => $expires,
+            'path'     => $this->path,
+            'domain'   => $this->domain,
+            'secure'   => $this->secure,
+            'httpOnly' => $this->httpOnly
         );
     }
 

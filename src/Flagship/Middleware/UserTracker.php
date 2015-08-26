@@ -7,6 +7,7 @@ use \Hashids\Hashids;
 
 use Flagship\Event\BaseEvent;
 use Flagship\Middleware\Session;
+use Flagship\Storage\CookieJar;
 
 
 
@@ -16,36 +17,14 @@ use Flagship\Middleware\Session;
 
 class UserTracker extends Middleware {
 
-    const PREFIX = '_fp_';
-
+    const VISITOR_COOKIE = '_fp_id';
 
     protected $hasher;
-    // protected $rootDomain;
-    // protected $cookieLifetime;
-    // protected $cookiePath;
+    protected $cookieJar;
 
-    // Life of the visitor cookie (in sec)
-    public $visitorCookieTimeout = 33955200; // 13 months (365 + 28 days)
-    // Life of the session cookie (in sec)
-    public $sessionCookieTimeout = 1800; // 30 minutes
-    // Life of the session cookie (in sec)
-    public $referralCookieTimeout = 15768000; // 6 months
-
-
-    public function __construct($hasher) {
+    public function __construct($cookieJar, $hasher) {
+        $this->cookieJar = $cookieJar;
         $this->hasher = $hasher;
-
-        // Visitor Ids in order
-        // $this->userId = false;
-        // $this->forcedVisitorId = false;
-        // $this->cookieVisitorId = false;
-        // $this->randomVisitorId = false;
-
-        // $this->setNewVisitorId();
-
-        // $this->configCookiesDisabled = false;
-        // $this->configCookiePath = self::DEFAULT_COOKIE_PATH;
-        // $this->configCookieDomain = '';
 
         // $this->currentTs = time();
         // $this->createTs = $this->currentTs;
@@ -53,7 +32,6 @@ class UserTracker extends Middleware {
         // $this->currentVisitTs = false;
         // $this->lastVisitTs = false;
         // $this->ecommerceLastOrderTimestamp = false;
-
     }
 
     public function call() {
@@ -65,19 +43,29 @@ class UserTracker extends Middleware {
     public function setUserId() {
         $app = $this->app;
         $req = $this->app->request;
-        $cookieId = $app->getCookie(Session::SESSION_KEY);
-        $sessionId = $_SESSION[Session::SESSION_KEY];
-
         $tracking = [];
         $requestTime = $_SERVER['REQUEST_TIME'];
+
+        $sessionCookie = $app->getCookie(Session::SESSION_KEY);
+        $sessionId = $_SESSION[Session::SESSION_KEY];
+
+        $visitorCookie = $app->getCookie(self::VISITOR_COOKIE);
+
+        if (!isset($visitorCookie)) {
+            $vcPre = $this->cookieJar->setCookie(self::VISITOR_COOKIE, $this->hasher->encode(time()));
+            $tracking['visitor.cookie.pre'] = $vcPre;
+        }
+
         $tracking['visit.time'] = $requestTime;
+        $tracking['visitor.cookie'] = $visitorCookie;
+        $tracking['foo'] = !isset($_SESSION['foo']);
 
         if (isset($sessionId)) {
             $tracking['session.id'] = $sessionId;
         }
 
-        if (isset($cookieId)) {
-            $tracking['cookie.id'] = $cookieId;
+        if (isset($sessionCookie)) {
+            $tracking['session.cookie'] = $sessionCookie;
         }
 
 

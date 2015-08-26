@@ -158,8 +158,10 @@ $app->get('/admin/ping', function () use ($app) {
 $app->get('/admin/tracking', function () use ($app, $centrifuge) {
     $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
 
-    echo "<pre>";
+    echo "<pre>Session\n";
+    print_r($_SESSION);
+    echo "\nTracking\n";
     print_r($app->view->get('tracking'));
-    echo "Return</pre>";
+    echo "</pre>";
 });
 

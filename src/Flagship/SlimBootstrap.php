@@ -35,9 +35,10 @@ class SlimBootstrap {
             }
         });
 
+        $container['cookie.jar']->setSlimApp($app);
         $app->log->setWriter($container['logger']);
-
         $app->view($container['plates']);
+
         $app->container->singleton('db', function() use ($container) {
             return $container['db'];
         });
@@ -47,11 +48,12 @@ class SlimBootstrap {
         };
 
         $app->add(new \Flagship\Middleware\UserTracker(
-            new \Flagship\Test\MockHasher
-            // new \Hashids\Hashids(
-            //     $container['config']['hashids']['salt'],
-            //     $container['config']['hashids']['length']
-            // )
+            $container['cookie.jar'],
+            // new \Flagship\Test\MockHasher
+            new \Hashids\Hashids(
+                $container['config']['hashids']['salt'],
+                $container['config']['hashids']['length']
+            )
         ));
 
         $app->add(new \Flagship\Middleware\Session(
@@ -66,7 +68,7 @@ class SlimBootstrap {
         $app = $this->app;
         $container = $this->container;
         $app->configureMode('development', function () use ($app, $container) {
-            // $app->add($container['debug.bar']);
+            $app->add($container['debug.bar']);
         });
     }
 
