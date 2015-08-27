@@ -51,9 +51,15 @@ class UserTracker extends Middleware {
 
         $visitorCookie = $app->getCookie(self::VISITOR_COOKIE);
 
+        $visitorId = null;
+        $sessionId = null;
+
         if (!isset($visitorCookie)) {
-            $vcPre = $this->cookieJar->setCookie(self::VISITOR_COOKIE, $this->hasher->encode(time()));
+            $visitorId = $this->hasher->encode(time());
+            $vcPre = $this->cookieJar->setCookie(self::VISITOR_COOKIE, $visitorId);
             $tracking['visitor.cookie.pre'] = $vcPre;
+        } else {
+            $visitorId = $visitorCookie;
         }
 
         $tracking['visit.time'] = $requestTime;
