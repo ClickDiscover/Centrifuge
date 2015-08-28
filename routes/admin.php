@@ -167,7 +167,7 @@ function trackingPage($app, $centrifuge) {
     echo "<pre>Session\n";
     print_r($_SESSION);
     echo "\nTracking\n";
-    print_r($app->view->get('tracking'));
+    print_r($app->environment['tracking']);
     echo "</pre>";
 }
 

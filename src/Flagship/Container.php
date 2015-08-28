@@ -6,14 +6,13 @@ use Stash\Driver\FileSystem;
 use Stash\Pool;
 use \Domnikl\Statsd\Connection\UdpSocket as StatsdSocket;
 use \Domnikl\Statsd\Client as Statsd;
-// use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\WebProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
 use League\Plates\Engine;
 use Slim\Middleware\DebugBar;
 
-use Flagship\Logger;
+use Flagship\Util\Logger;
 use Flagship\Plates\VariantExtension;
 use Flagship\Plates\HtmlExtension;
 use Flagship\Plates\ViewEngine;
@@ -62,6 +61,7 @@ class Container extends \Pimple\Container {
                 $c['logger.path'],
                 Logger::toMonologLevel($c['config']['logging']['level'])
             ));
+            Logger::setInstance($log);
             return $log;
         };
 

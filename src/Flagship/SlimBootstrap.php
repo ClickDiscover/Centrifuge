@@ -48,7 +48,8 @@ class SlimBootstrap {
         };
 
         $app->add(new \Flagship\Middleware\UserTracker(
-            $container['cookie.jar']
+            $container['cookie.jar'],
+            new \Flagship\Event\EventFactory($app->config('tracking'))
             // new \Flagship\Test\MockHasher
         ));
 

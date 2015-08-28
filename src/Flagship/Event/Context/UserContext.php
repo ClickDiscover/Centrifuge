@@ -23,7 +23,7 @@ class UserContext {
         $this->referrer  = $refer;
     }
 
-    public static function fromRequest(&$request) {
+    public static function fromRequest($request) {
         return new UserContext(
             $request->getIp(),
             $request->getUserAgent(),

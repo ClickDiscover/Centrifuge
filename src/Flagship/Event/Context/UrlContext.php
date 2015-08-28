@@ -26,7 +26,7 @@ class UrlContext {
         $this->query     = $query;
     }
 
-    public static function fromRequest(&$request) {
+    public static function fromRequest($request) {
         return new UrlContext(
             $request->getHost(),
             $request->getUrl(),

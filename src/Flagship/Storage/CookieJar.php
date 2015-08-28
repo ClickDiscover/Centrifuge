@@ -2,7 +2,9 @@
 
 namespace Flagship\Storage;
 
-use Symfony\Component\HttpFoundation\Cookie;
+use Slim\Slim;
+use Hashids\Hashids;
+
 use Flagship\Middleware\Session;
 use Flagship\Util\ImmutableProperties;
 
@@ -28,7 +30,7 @@ class CookieJar {
     protected $app;
 
     public function __construct (
-        $hasher,
+        Hashids $hasher,
         $domain,
         $sessionLifetime,
         $visitorLifetime
@@ -41,7 +43,7 @@ class CookieJar {
         $this->visitorLifetime = $visitorLifetime;
     }
 
-    public function setSlimApp($app) {
+    public function setSlimApp(Slim $app) {
         $this->app = $app;
     }
 
@@ -108,7 +110,7 @@ class CookieJar {
         return $t;
     }
 
-    public function setTracking($tc) {
+    public function setTracking(TrackingCookie $tc) {
         if (empty($this->app)) {
             return false;
         }
@@ -116,5 +118,12 @@ class CookieJar {
         $this->setCookie(TrackingCookie::KEY, $tc->toCookie(), $this->visitorLifetime);
     }
 
+    public function getCookie ($name, $deleteIfInvalid = true) {
+        if (empty($this->app)) {
+            return false;
+        }
+
+        return $this->app->getCookie($name, $deleteIfInvalid);
+    }
 }
 

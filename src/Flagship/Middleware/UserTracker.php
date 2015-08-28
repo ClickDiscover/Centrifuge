@@ -4,59 +4,65 @@ namespace Flagship\Middleware;
 
 use \Slim\Middleware;
 
-use Flagship\Event\BaseEvent;
+use Flagship\Event\EventFactory;
 use Flagship\Middleware\Session;
 use Flagship\Storage\CookieJar;
 
-
-
-// class UserTracker extends UserTrackerM {
-//     use \Flagship\Util\MiddlewareTrace;
-// }
 
 class UserTracker extends Middleware {
 
     const VISITOR_KEY = '_fp_id';
 
+    protected $config;
     protected $cookieJar;
     protected $trackingCookie = null;
+    protected $events;
 
-    public function __construct($cookieJar) {
+    public function __construct(CookieJar $cookieJar, EventFactory $events) {
         $this->cookieJar = $cookieJar;
-
-        // $this->currentTs = time();
-        // $this->createTs = $this->currentTs;
-        // $this->visitCount = 0;
-        // $this->currentVisitTs = false;
-        // $this->lastVisitTs = false;
-        // $this->ecommerceLastOrderTimestamp = false;
+        $this->events = $events;
     }
 
     public function call() {
-        $this->app->hook('slim.before.dispatch', [$this, 'setUserId']);
+        // A little bit of a kludge, should be in Container.php
+        $this->config = $this->app->config('tracking');
+
+        $this->app->hook('slim.before.dispatch', [$this, 'before']);
         $this->next->call();
-        $this->trackingCookie->incrementVisitCount();
-        $this->cookieJar->setTracking($this->trackingCookie);
+        $this->after();
     }
 
-
-    public function setUserId() {
-        $app = $this->app;
+    public function before() {
         $req = $this->app->request;
-        $tracking = [];
-        $requestTime = $_SERVER['REQUEST_TIME'];
+        $env = $this->app->environment();
 
-        // $sessionCookie = $app->getCookie(Session::SESSION_KEY);
         $this->trackingCookie = $this->cookieJar->getOrCreateTracking();
-        // $tracking['cookie'] = $this->trackingCookie;
-        $tracking['cookie'] = $this->trackingCookie->pretty();
+        $ev = $this->events->createFromRequest($req);
 
+        // Set tracking information on app environment
+        $tracking              = [];
+        $tracking['cookie']    = $this->trackingCookie->pretty();
+        $tracking['context'] = $ev->toArray();
+        // $tracking['url']       = $ev->urlContext->toCleanArray();
+        // $tracking['user']      = $ev->userContext->toCleanArray();
+        // $tracking['google.id'] = $this->checkGACookie();
+        $env['tracking']       = $tracking;
+    }
 
+    public function after () {
+        if(isset($this->trackingCookie)) {
+            $this->trackingCookie->incrementVisitCount();
+            $this->cookieJar->setTracking($this->trackingCookie);
+        }
+    }
 
-
-        $ev = new BaseEvent($req);
-        $tracking['url'] = $ev->urlContext->toCleanArray();
-        $tracking['user'] = $ev->userContext->toCleanArray();
-        $app->view->set('tracking', $tracking);
+    // Set google analytics ID on env for segment integration
+    protected function checkGACookie() {
+        $ga = $this->cookieJar->getCookie('_ga');
+        if (isset($ga)) {
+            $parts = explode('.', $ga);
+            $gaID = $parts[count($parts)-2].'.'.$parts[count($parts)-1];
+            return $gaID;
+        }
     }
 }

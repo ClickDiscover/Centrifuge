@@ -26,7 +26,6 @@ class LibratoStorage {
     }
 
     private function push($raw, $value) {
-        $this->log->info("Librato", [$raw, $value]);
         if (isset($value)) {
             $this->statsd->gauge($raw, $value);
         } else {
