@@ -15,8 +15,8 @@ class CampaignContext {
     protected $__keyMap = [];
 
     function __construct(
-        $ad      = false,
         $keyword = false,
+        $ad      = false,
         $utm     = false
     ) {
         $this->ad      = $ad;
@@ -31,9 +31,9 @@ class CampaignContext {
 
         // Everything to lowercase for sanity
         $qs = $request->params();
-        // $log = Logger::getInstance();
-        // $log->info('test', $qs);
         foreach ($qs as $key => $value) {
+            $key = str_replace('=', '', $key);
+
             if (strtolower($key) === $campaignKey) {
                 $keyword = $value;
             }
