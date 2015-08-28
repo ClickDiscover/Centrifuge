@@ -3,6 +3,7 @@
 namespace Flagship\Storage;
 
 use Symfony\Component\HttpFoundation\Cookie;
+use Flagship\Middleware\Session;
 use Flagship\Util\ImmutableProperties;
 
 
@@ -17,6 +18,7 @@ class CookieJar {
     const MONTHS    = 33955200; // 13 months (365 + 28 days)
     const HALF_YEAR = 15768000; // 6 months
 
+    protected $hasher;
     protected $sessionLifetime;
     protected $visitorLifetime;
     protected $path;
@@ -26,13 +28,14 @@ class CookieJar {
     protected $app;
 
     public function __construct (
+        $hasher,
         $domain,
         $sessionLifetime,
         $visitorLifetime
     ) {
-        $this->domain = $domain;
+        $this->hasher = $hasher;
         // Should check valid domain
-        $this->domain = "";
+        $this->domain = $domain;
         $this->path = '/';
         $this->sessionLifetime = $sessionLifetime;
         $this->visitorLifetime = $visitorLifetime;
@@ -43,6 +46,9 @@ class CookieJar {
     }
 
     public function setCookie($key, $value, $expires = 0) {
+        if ($expires > 0) {
+            $expires += time();
+        }
         if (isset($this->app)) {
             $this->app->setCookie(
                 $key,
@@ -80,5 +86,35 @@ class CookieJar {
             $this->httpOnly
         );
     }
+
+    public function getOrCreateTracking() {
+        if (empty($this->app)) {
+            return false;
+        }
+
+        $t = TrackingCookie::getOrCreate(
+            $this->app->getCookie(TrackingCookie::KEY),
+            $this->hasher
+        );
+
+        $visitId = $_SESSION[Session::SESSION_KEY];
+        // This is a weird state
+        // Session should have always been started by now
+        if(empty($visitId)) {
+        }
+        if (isset($t)) {
+            $t->setVisitId($visitId);
+        }
+        return $t;
+    }
+
+    public function setTracking($tc) {
+        if (empty($this->app)) {
+            return false;
+        }
+
+        $this->setCookie(TrackingCookie::KEY, $tc->toCookie(), $this->visitorLifetime);
+    }
+
 }
 

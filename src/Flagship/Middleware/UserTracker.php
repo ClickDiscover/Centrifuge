@@ -3,7 +3,6 @@
 namespace Flagship\Middleware;
 
 use \Slim\Middleware;
-use \Hashids\Hashids;
 
 use Flagship\Event\BaseEvent;
 use Flagship\Middleware\Session;
@@ -17,14 +16,13 @@ use Flagship\Storage\CookieJar;
 
 class UserTracker extends Middleware {
 
-    const VISITOR_COOKIE = '_fp_id';
+    const VISITOR_KEY = '_fp_id';
 
-    protected $hasher;
     protected $cookieJar;
+    protected $trackingCookie = null;
 
-    public function __construct($cookieJar, $hasher) {
+    public function __construct($cookieJar) {
         $this->cookieJar = $cookieJar;
-        $this->hasher = $hasher;
 
         // $this->currentTs = time();
         // $this->createTs = $this->currentTs;
@@ -37,6 +35,8 @@ class UserTracker extends Middleware {
     public function call() {
         $this->app->hook('slim.before.dispatch', [$this, 'setUserId']);
         $this->next->call();
+        $this->trackingCookie->incrementVisitCount();
+        $this->cookieJar->setTracking($this->trackingCookie);
     }
 
 
@@ -46,42 +46,12 @@ class UserTracker extends Middleware {
         $tracking = [];
         $requestTime = $_SERVER['REQUEST_TIME'];
 
-        $sessionCookie = $app->getCookie(Session::SESSION_KEY);
-        $sessionId = $_SESSION[Session::SESSION_KEY];
-
-        $visitorCookie = $app->getCookie(self::VISITOR_COOKIE);
-
-        $visitorId = null;
-        $sessionId = null;
-
-        if (!isset($visitorCookie)) {
-            $visitorId = $this->hasher->encode(time());
-            $vcPre = $this->cookieJar->setCookie(self::VISITOR_COOKIE, $visitorId);
-            $tracking['visitor.cookie.pre'] = $vcPre;
-        } else {
-            $visitorId = $visitorCookie;
-        }
-
-        $tracking['visit.time'] = $requestTime;
-        $tracking['visitor.cookie'] = $visitorCookie;
-        $tracking['foo'] = !isset($_SESSION['foo']);
-
-        if (isset($sessionId)) {
-            $tracking['session.id'] = $sessionId;
-        }
-
-        if (isset($sessionCookie)) {
-            $tracking['session.cookie'] = $sessionCookie;
-        }
+        // $sessionCookie = $app->getCookie(Session::SESSION_KEY);
+        $this->trackingCookie = $this->cookieJar->getOrCreateTracking();
+        // $tracking['cookie'] = $this->trackingCookie;
+        $tracking['cookie'] = $this->trackingCookie->pretty();
 
 
-        // if (isset($cookieId)) {
-        //     $tracking['user.cookie.id'] = $cookieId;
-        //     $tracking['visit.id'] = $this->hasher->encode([$cookieId, $requestTime]);
-        // } else {
-        //     $tracking['user.session.id'] = $sessionId;
-        //     $tracking['visit.id'] = $this->hasher->encode([$requestTime]);
-        // }
 
 
         $ev = new BaseEvent($req);

@@ -11,7 +11,7 @@ use Stash\Session as StashSession;
 
 class Session extends Middleware {
 
-    const SESSION_KEY = '_fp_session';
+    const SESSION_KEY = '_fp_visit_id';
 
     protected $cookieJar;
 

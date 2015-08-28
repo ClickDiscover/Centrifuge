@@ -36,7 +36,6 @@ class VariantFinder {
 
 
 $app->group('/admin', function() use ($app, $centrifuge) {
-    $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
 
     $app->group('/models', function() use ($app, $centrifuge) {
 
@@ -131,7 +130,7 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 
         $app->get('/', function () use ($app, $centrifuge) {
             $bundle = $centrifuge['admin.bundle'];
-            $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
+            // $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
             $bundle['config'] = $centrifuge['config'];
             return $app->render('admin::models/base', $bundle);
         });
@@ -144,6 +143,12 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             $app->redirect('/admin/models');
         });
     });
+
+
+    $app->get('/tracking', function () use ($app, $centrifuge) {
+        trackingPage($app, $centrifuge);
+    });
+
 });
 
 
@@ -155,7 +160,8 @@ $app->get('/admin/ping', function () use ($app) {
 });
 
 
-$app->get('/admin/tracking', function () use ($app, $centrifuge) {
+function trackingPage($app, $centrifuge) {
+    // sessions in slim route "Groups" arent excuted it seems
     $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
 
     echo "<pre>Session\n";
@@ -163,5 +169,5 @@ $app->get('/admin/tracking', function () use ($app, $centrifuge) {
     echo "\nTracking\n";
     print_r($app->view->get('tracking'));
     echo "</pre>";
-});
+}
 

@@ -84,9 +84,17 @@ class Container extends \Pimple\Container {
             return $sessionCache;
         };
 
+        $this['hashids'] = function () use ($c) {
+            return new \Hashids\Hashids(
+                $c['config']['hashids']['salt'],
+                $c['config']['hashids']['length']
+            );
+        };
+
         // Cookies
         $this['cookie.jar'] = function () use ($c) {
             return new CookieJar(
+                $c['hashids'],
                 $c['config']['cookie']['root.domain'],
                 $c['config']['cookie']['session.lifetime'],
                 $c['config']['cookie']['visitor.lifetime']
