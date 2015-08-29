@@ -12,13 +12,18 @@ function paramWithContext($app, $tracking, $key, $context = 'context', $subconte
 }
 
 
-function segmentPage($jar, $tracking, $lander) {
+function segmentPage($app, $centrifuge, $lander) {
+
+    $tracking = $app->environment['tracking'];
+    $jar = $centrifuge['cookie.jar'];
+
     if (empty($tracking['flagship.id'])) {
+        // Could return anon id.
         return false;
     }
     $userId = $tracking['flagship.id'];
 
-    if (empty($_SESSION['_fp_segment'])) {
+    if (empty($_SESSION['_fp_segment']) || !$_SESSION['_fp_segment'] ) {
         if (empty($jar->getCookie('_fp_segment'))) {
             Segment::identify([
                 'userId' => $userId
@@ -26,7 +31,13 @@ function segmentPage($jar, $tracking, $lander) {
             $_SESSION['_fp_segment'] = true;
             $jar->setCookie('_fp_segment', $userId, CookieJar::MONTHS);
         }
+
+        $segmentId = $jar->getCookie('_fp_segment');
+        if ($segmentId != $userId) {
+            $centrifuge['logger']->warn('Segment ID differs from User ID', [$userId, $segmentId, $tracking]);
+        }
     }
+
     $context = [];
     if (isset($tracking['context']['user']['ip'])) {
         $context['ip'] = $tracking['context']['user']['ip'];
@@ -97,7 +108,7 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
     // Segment.io tracking
 
     $jar = $centrifuge['cookie.jar'];
-    $pg = segmentPage($jar, $tracking, $lander);
+    $pg = segmentPage($app, $centrifuge, $lander);
     Segment::page($pg);
 
     $template = $centrifuge['plates']->landerTemplate($lander);
