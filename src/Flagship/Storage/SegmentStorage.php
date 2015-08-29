@@ -8,8 +8,10 @@ class SegmentStorage {
     protected $jar;
     protected $log;
 
-    public function __construct($writeKey, CookieJar $jar, \Flagship\Util\Logger $log) {
-        \Segment::init($writeKey);
+    public function __construct($config, CookieJar $jar, \Flagship\Util\Logger $log) {
+        $segconf = $config['segment'];
+        $options = isset($segconf['options']) ? $segconf['options'] : [];
+        \Segment::init($segconf['write.key'], $options);
         $this->jar = $jar;
         $this->log = $log;
     }
@@ -19,6 +21,15 @@ class SegmentStorage {
         $this->identify($tracking);
         $context = $this->buildContext($tracking);
         $properties =  $this->buildProperties($tracking, $lander);
+
+        if (isset($tracking['cookie'])) {
+            $tc = $tracking['cookie'];
+            $view = $tc->getLastVisitTime();
+            $click = $tc->getLastOfferClickTime();
+            if (isset($view) && isset($click)) {
+                $properties['time_to_click'] = $click - $view;
+            }
+        }
 
         $pg = array(
             'userId' => $tracking['flagship.id'],

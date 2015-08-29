@@ -33,6 +33,11 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     $req = $app->request;
     $centrifuge['librato.performance']->total("clicks");
 
+    $tracking = $app->environment['tracking'];
+    if (isset($tracking['cookie'])) {
+        $tracking['cookie']->setLastOfferClickTime(time());
+    }
+
     // Lander Tracking
     $lander = landerFromRequest($centrifuge['landers'], $req);
     if (isset($lander)) {
@@ -40,10 +45,6 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
         $centrifuge['segment']->offerClick($app->environment['tracking'], $lander);
     }
 
-    $tracking = $app->environment['tracking'];
-    if (isset($tracking['cookie'])) {
-        $tracking['cookie']->setLastOfferClickTime(time());
-    }
 
     // Keyword Tracking
     $keyword = $req->get('keyword');

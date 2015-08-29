@@ -183,7 +183,7 @@ class Container extends \Pimple\Container {
 
         $this['segment'] = function () use ($c) {
             return new SegmentStorage(
-                $c['config']['database']['segment_key'],
+                $c['config'],
                 $c['cookie.jar'],
                 $c['logger']
             );
