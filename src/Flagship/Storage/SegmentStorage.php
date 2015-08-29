@@ -15,19 +15,35 @@ class SegmentStorage {
     }
 
 
+    public function offerClick($tracking, $lander) {
+        $this->identify($tracking);
+        $context = $this->buildContext($tracking);
+        $properties =  $this->buildProperties($tracking, $lander);
+
+        $pg = array(
+            'userId' => $tracking['flagship.id'],
+            'event' => 'Offer Click',
+            'properties' => $properties,
+            'context' => $context
+       );
+       \Segment::track($pg);
+    }
 
     public function landingPage($tracking, $lander) {
         $this->identify($tracking);
+        $context = $this->buildContext($tracking);
+        $properties =  $this->buildProperties($tracking, $lander);
 
-        $tc = $tracking['context'];
-        $user = array_intersect_key($tc['user'], array_flip(['ip', 'user_agent']));
-        $camp = array_intersect_key($tc['campaign'], array_flip(['keyword', 'ad']));
+        $pg = array(
+            'userId' => $tracking['flagship.id'],
+            'name' => 'Landing Pageview',
+            'properties' => $properties,
+            'context' => $context
+       );
+       \Segment::page($pg);
+    }
 
-        if (isset($tc['campaign']['utm'])) {
-            $camp = array_merge($camp, $tc['campaign']['utm']);
-        }
-        $context = array_merge($user, $camp);
-
+    protected function buildProperties($tracking, $lander) {
         $properties = array(
             'lander_id' => $lander->id,
             'title' => $lander->notes,
@@ -37,18 +53,19 @@ class SegmentStorage {
         $properties['offer1'] = $lander->offers[1]->getName();
         $properties['offer2'] = $lander->offers[2]->getName();
 
-        $url = array_intersect_key($tc['url'], array_flip(['url', 'path']));
-        $properties = array_merge($properties, $url);
+        $url = array_intersect_key($tracking['context']['url'], array_flip(['url', 'path']));
+        return array_merge($properties, $url);
+    }
 
-        $pg = array(
-            'userId' => $tracking['flagship.id'],
-            'name' => 'Landing Pageview',
-            'properties' => $properties,
-            'context' => $context
-       );
-       \Segment::page($pg);
+    protected function buildContext($tracking) {
+        $tc = $tracking['context'];
+        $user = array_intersect_key($tc['user'], array_flip(['ip', 'user_agent']));
+        $camp = array_intersect_key($tc['campaign'], array_flip(['keyword', 'ad']));
 
-       return $pg;
+        if (isset($tc['campaign']['utm'])) {
+            $camp = array_merge($camp, $tc['campaign']['utm']);
+        }
+        return array_merge($user, $camp);
     }
 
     protected function identify($tracking) {

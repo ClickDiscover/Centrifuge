@@ -26,7 +26,9 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     // Lander Tracking
     $landerId = extractLanderFromRequest($req);
     if (isset($landerId)) {
+        $lander = $centrifuge['landers']->fetch($landerId);
         $centrifuge['librato.performance']->breakout('lander', $landerId, 'clicks');
+        $centrifuge['segment']->offerCLick($app->environment['tracking'], $lander);
     }
 
     // Keyword Tracking
