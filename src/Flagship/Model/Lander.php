@@ -15,6 +15,9 @@ class Lander {
     protected $variants;
     protected $notes;
 
+    // For Intl landers to user their native currency
+    protected $locale = 'US';
+
     public function __construct(
         $id,
         $website,
