@@ -89,6 +89,7 @@ class CookieJar {
         );
     }
 
+    // Will overwrite incorrect cookies
     public function getOrCreateTracking() {
         if (empty($this->app)) {
             return false;
@@ -106,6 +107,8 @@ class CookieJar {
         }
         if (isset($t)) {
             $t->setVisitId($visitId);
+        } else {
+            $t = TrackingCookie::create($this->hasher);
         }
         return $t;
     }

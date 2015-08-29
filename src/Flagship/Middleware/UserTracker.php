@@ -36,18 +36,24 @@ class UserTracker extends Middleware {
         $req = $this->app->request;
         $env = $this->app->environment();
 
-        $this->trackingCookie = $this->cookieJar->getOrCreateTracking();
+        $tracking = [];
         $ev = $this->events->createFromRequest($req);
-
-        // Set tracking information on app environment
-        $tracking              = [];
-        $tracking['cookie']    = $this->trackingCookie->pretty();
-        $tracking['flagship.id']    = $this->trackingCookie->getId();
-        $tracking['context'] = $ev->toArray();
+        $ev->finalize();
+        $tracking['context'] = $ev;
         $tracking['google.id'] = $this->checkGACookie();
 
+        // Get or create tracking cookie
+        $tc = $this->cookieJar->getOrCreateTracking();
+        if (empty($tc)) {
+            $this->app->log->warn('Warning tracking cookie is not set');
+        } else {
+            $this->trackingCookie = $tc;
+            $tracking['cookie']    = $this->trackingCookie->pretty();
+            $tracking['flagship.id']    = $this->trackingCookie->getId();
+        }
+
+        // Set tracking information on app environment
         $env['tracking']       = $tracking;
-        // $this->app->view->set('tracking', $tracking);
     }
 
     public function after () {

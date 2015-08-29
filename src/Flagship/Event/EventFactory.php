@@ -39,11 +39,28 @@ class Event extends \ArrayObject {
         parent::__construct($init, \ArrayObject::ARRAY_AS_PROPS);
     }
 
-    public function toArray() {
-        $clean = [];
-        foreach ($this as $k => $v) {
-            $clean[$k] = $v->toCleanArray();
+    public function get($subcontext, $key, $default = null) {
+        if (isset($this[$subcontext]) && isset($this[$subcontext][$key])) {
+            return $this[$subcontext][$key];
         }
-        return $clean;
+        return $default;
+    }
+
+    public function getMulti($sub, $keys) {
+        $out = [];
+        $s = $this[$sub];
+        foreach ($keys as $k) {
+            if (isset($s[$k])) {
+                $out[$k] = $s[$k];
+            }
+        }
+        return $out;
+    }
+
+    // Cleans up the contexts, ready for serialization
+    public function finalize() {
+        foreach ($this as $k => $v) {
+            $this[$k] = $v->toCleanArray();
+        }
     }
 }

@@ -22,6 +22,7 @@ use Flagship\Service\AdexOfferService;
 use Flagship\Service\CustomRouteService;
 use Flagship\Storage\LibratoStorage;
 use Flagship\Storage\CookieJar;
+use Flagship\Storage\SegmentStorage;
 
 
 class Container extends \Pimple\Container {
@@ -180,6 +181,12 @@ class Container extends \Pimple\Container {
             return $librato;
         };
 
-        \Segment::init($c['config']['database']['segment_key']);
+        $this['segment'] = function () use ($c) {
+            return new SegmentStorage(
+                $c['config']['database']['segment_key'],
+                $c['cookie.jar'],
+                $c['logger']
+            );
+        };
     }
 }

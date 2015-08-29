@@ -160,6 +160,9 @@ function trackingPage($app, $centrifuge) {
     print_r($_SESSION);
     echo "\nTracking\n";
     print_r($app->environment['tracking']);
+    echo "\nContext\n";
+    $context = $app->environment['tracking']['context'];
+    print_r($context);
     echo "</pre>";
 }
 
