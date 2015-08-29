@@ -99,7 +99,7 @@ class CookieJar {
             $this->hasher
         );
 
-        $visitId = $_SESSION[Session::SESSION_KEY];
+        $visitId = $this->getVisitId();
         // This is a weird state
         // Session should have always been started by now
         if(empty($visitId)) {
@@ -116,6 +116,10 @@ class CookieJar {
         }
 
         $this->setCookie(TrackingCookie::KEY, $tc->toCookie(), $this->visitorLifetime);
+    }
+
+    public function getVisitId() {
+        return $_SESSION[Session::SESSION_KEY];
     }
 
     public function getCookie ($name, $deleteIfInvalid = true) {

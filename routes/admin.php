@@ -70,11 +70,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 
         $app->group('/products', function () use ($app, $centrifuge) {
             $app->get('/', function () use ($app, $centrifuge) {
-                if(!isset($_SESSION['new_count'])) {
-                    $_SESSION['new_count'] = 0;
-                }
-                $_SESSION['new_count'] += 1;
-
                 $fs = $centrifuge['fs'];
                 $products = $centrifuge['admin.products'];
                 $productRoot = $centrifuge['config']['paths']['relative_product'];
@@ -130,7 +125,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 
         $app->get('/', function () use ($app, $centrifuge) {
             $bundle = $centrifuge['admin.bundle'];
-            // $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
             $bundle['config'] = $centrifuge['config'];
             return $app->render('admin::models/base', $bundle);
         });
@@ -162,8 +156,6 @@ $app->get('/admin/ping', function () use ($app) {
 
 function trackingPage($app, $centrifuge) {
     // sessions in slim route "Groups" arent excuted it seems
-    $_SESSION['admin_hits'] = isset($_SESSION['admin_hits']) ? 1 + $_SESSION['admin_hits'] : 0;
-
     echo "<pre>Session\n";
     print_r($_SESSION);
     echo "\nTracking\n";

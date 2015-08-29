@@ -29,7 +29,7 @@ class UrlContext {
     public static function fromRequest($request) {
         return new UrlContext(
             $request->getHost(),
-            $request->getUrl(),
+            $request->getUrl() . $request->getPath(),
             $request->getPath(),
             $request->params()
         );

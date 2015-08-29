@@ -17,7 +17,6 @@ $app = new Slim\Slim($config['application']);
 $app->setName($config['name']);
 $bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
 $app = $bootstrap->bootstrap();
-// $app->setCookie('Testing', 'Weeee');
 
 
 require_once $config['paths']['routes'] . 'admin.php';

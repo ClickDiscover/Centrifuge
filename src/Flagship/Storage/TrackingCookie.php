@@ -136,6 +136,10 @@ class TrackingCookie {
         return implode('.', array_filter($this->toArray()));
     }
 
+    /////////////////////
+    // Factory Methods //
+    /////////////////////
+
 
     public static function getOrCreate($cookieValue, $hasher) {
         if (empty($cookieValue)) {

@@ -27,7 +27,7 @@ class UserTracker extends Middleware {
         // A little bit of a kludge, should be in Container.php
         $this->config = $this->app->config('tracking');
 
-        $this->app->hook('slim.before.dispatch', [$this, 'before']);
+        $this->app->hook('slim.before', [$this, 'before']);
         $this->next->call();
         $this->after();
     }
@@ -42,11 +42,12 @@ class UserTracker extends Middleware {
         // Set tracking information on app environment
         $tracking              = [];
         $tracking['cookie']    = $this->trackingCookie->pretty();
+        $tracking['flagship.id']    = $this->trackingCookie->getId();
         $tracking['context'] = $ev->toArray();
-        // $tracking['url']       = $ev->urlContext->toCleanArray();
-        // $tracking['user']      = $ev->userContext->toCleanArray();
-        // $tracking['google.id'] = $this->checkGACookie();
+        $tracking['google.id'] = $this->checkGACookie();
+
         $env['tracking']       = $tracking;
+        // $this->app->view->set('tracking', $tracking);
     }
 
     public function after () {

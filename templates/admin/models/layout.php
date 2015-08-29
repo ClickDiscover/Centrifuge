@@ -29,14 +29,10 @@
 </head>
 <body>
 
-<div><pre>
-Session ID: <?php echo  session_id() . PHP_EOL ?>
-<?php echo '$_SESSION' . PHP_EOL ?>
-<?= print_r($_SESSION, true) ?>
-
-<?php echo '$_COOKIE' . PHP_EOL ?>
-<?= print_r($_COOKIE, true) ?>
-</pre></div>
+<div>
+<pre>
+</pre>
+</div>
 
 <div id="menu-container">
     <?= $this->fetch('admin::models/menu') ?>

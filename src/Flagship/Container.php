@@ -179,5 +179,7 @@ class Container extends \Pimple\Container {
             $librato->setLogger($c['logger']);
             return $librato;
         };
+
+        \Segment::init($c['config']['database']['segment_key']);
     }
 }
