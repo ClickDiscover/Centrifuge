@@ -157,7 +157,7 @@ $app->get('/admin/ping', function () use ($app) {
 function trackingPage($app, $centrifuge) {
     // sessions in slim route "Groups" arent excuted it seems
     echo "<pre>Session\n";
-    print_r($_SESSION);
+    // print_r($_SESSION);
     echo "\nTracking\n";
     print_r($app->environment['tracking']);
     echo "\nContext\n";

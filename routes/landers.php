@@ -23,9 +23,14 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
     }
     $ad = $context->get('campaign', 'ad', $app->request->params('ad'));
 
-    // Segment.io tracking
+    // User tracking
+    $_SESSION['last_lander'] = $lander;
+    if (isset($tracking['cookie'])) {
+        $tracking['cookie']->setLastVisitTime(time());
+    }
     $pg = $centrifuge['segment']->landingPage($tracking, $lander);
 
+    // Rendering
     $template = $centrifuge['plates']->landerTemplate($lander);
     $app->render($template->getFile(), $template->getData());
 

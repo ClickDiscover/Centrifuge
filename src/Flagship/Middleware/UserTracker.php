@@ -48,7 +48,8 @@ class UserTracker extends Middleware {
             $this->app->log->warn('Warning tracking cookie is not set');
         } else {
             $this->trackingCookie = $tc;
-            $tracking['cookie']    = $this->trackingCookie->pretty();
+            $tracking['debug'] = ['cookie' => $this->trackingCookie->pretty()];
+            $tracking['cookie'] = $this->trackingCookie;
             $tracking['flagship.id']    = $this->trackingCookie->getId();
         }
 

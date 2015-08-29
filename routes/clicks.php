@@ -3,15 +3,15 @@ use League\Url\Url;
 
 
 
-function extractLanderFromRequest($req) {
-    $refer = $req->getReferer();
-    $qs = $req->get('fp_lid');
-    if ($refer != "") {
+
+function landerIdFromRequest($req) {
+    $qs    = $req->get('fp_lid');
+    $refer = $req->getReferrer();
+    if (isset($refer)) {
         $refer = Url::createFromUrl($refer);
         $path = $refer->getPath()->toArray();
         $id = array_pop($path);
-        $referHost = ltrim ($refer->setScheme(null)->getBaseUrl(), '/');
-        if ($referHost == $req->getHostWithPort()) {
+        if ($refer->getHost() == $req->getHost()) {
             return $id;
         }
     } elseif (isset($qs)) {
@@ -19,16 +19,30 @@ function extractLanderFromRequest($req) {
     }
 }
 
+function landerFromRequest($landers, $req) {
+    if (isset($_SESSION['last_lander'])) {
+        return $_SESSION['last_lander'];
+    } else {
+        $id = landerIdFromRequest($req);
+        return (isset($id)) ? $landers->fetch($id) : null;
+    }
+}
+
+
 $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     $req = $app->request;
     $centrifuge['librato.performance']->total("clicks");
 
     // Lander Tracking
-    $landerId = extractLanderFromRequest($req);
-    if (isset($landerId)) {
-        $lander = $centrifuge['landers']->fetch($landerId);
-        $centrifuge['librato.performance']->breakout('lander', $landerId, 'clicks');
-        $centrifuge['segment']->offerCLick($app->environment['tracking'], $lander);
+    $lander = landerFromRequest($centrifuge['landers'], $req);
+    if (isset($lander)) {
+        // $centrifuge['logger']->info('Lander', [$lander->id]);
+        $centrifuge['segment']->offerClick($app->environment['tracking'], $lander);
+    }
+
+    $tracking = $app->environment['tracking'];
+    if (isset($tracking['cookie'])) {
+        $tracking['cookie']->setLastOfferClickTime(time());
     }
 
     // Keyword Tracking
@@ -48,10 +62,10 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     } elseif ($clickMethod === 'redirect') {
         $url = Url::createFromUrl($clickUrl);
     }
-    // $currentQuery = Url::createFromServer($_SERVER)->getQuery()->toArray();
     $currentQuery = $req->get();
     $currentQuery['id'] = $stepId;
     $url->getQuery()->modify($currentQuery);
+
     $app->redirect($url);
 
 })->name('click')->conditions(array('stepId' => '[0-9]+'));
