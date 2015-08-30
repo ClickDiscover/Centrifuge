@@ -150,7 +150,7 @@ class TrackingCookie {
     }
 
     public static function create($hasher) {
-        $id = $hasher->encode(mt_rand());
+        $id = $hasher->encode(mt_rand(0, $hasher->get_max_int_value()));
         return new TrackingCookie($id, time(), 0);
     }
 
@@ -162,6 +162,7 @@ class TrackingCookie {
         array_shift($parts);
 
         $id = $parts[0];
+        \Flagship\Util\Logger::getInstance()->info("fromCookie", [$id, $str]);
         $creationTs = $parts[1];
         $count = (int) $parts[2];
         $t = new TrackingCookie($id, $creationTs, $count);
