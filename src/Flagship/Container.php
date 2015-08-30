@@ -39,7 +39,7 @@ class Container extends \Pimple\Container {
 
         // Database
         $this['pdo'] = function () use ($c) {
-            return new \F3\LazyPDO($c['config']['database']['pdo'], null, null, array(
+            return new \F3\LazyPDO\LazyPDO($c['config']['database']['pdo'], null, null, array(
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
             ));
         };
