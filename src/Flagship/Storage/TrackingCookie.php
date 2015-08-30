@@ -162,7 +162,6 @@ class TrackingCookie {
         array_shift($parts);
 
         $id = $parts[0];
-        \Flagship\Util\Logger::getInstance()->info("fromCookie", [$id, $str]);
         $creationTs = $parts[1];
         $count = (int) $parts[2];
         $t = new TrackingCookie($id, $creationTs, $count);

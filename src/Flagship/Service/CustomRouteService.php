@@ -24,6 +24,7 @@ class CustomRouteService {
 
     public function insert($url, $landerId) {
         $sql = "INSERT INTO routes (url, lander_id) VALUES (?, ?)";
-        return $this->db->insert($sql, array($url, $landerId));
+        $id = $this->db->insert($sql, array($url, $landerId));
+        $this->db->flushAll($this->namespace);
     }
 }

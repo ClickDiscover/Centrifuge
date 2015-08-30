@@ -11,6 +11,7 @@ class SegmentStorage {
     public function __construct($config, CookieJar $jar, \Flagship\Util\Logger $log) {
         $segconf = $config['segment'];
         $options = isset($segconf['options']) ? $segconf['options'] : [];
+        // $integrations = isset($segconf['options']) ? $segconf['options'] : [];
         \Segment::init($segconf['write.key'], $options);
         $this->jar = $jar;
         $this->log = $log;
@@ -55,9 +56,11 @@ class SegmentStorage {
             'userId' => $tracking['flagship.id'],
             'name' => 'Landing Pageview',
             'properties' => $properties,
+            'integrations' => ['All' => true],
             'context' => $context
        );
-       $res = \Segment::page($pg);
+        \Segment::page($pg);
+        return $pg;
     }
 
     protected function buildProperties($tracking, $lander) {
@@ -82,6 +85,11 @@ class SegmentStorage {
         if (isset($tc['campaign']['utm'])) {
             $camp = array_merge($camp, $tc['campaign']['utm']);
         }
+
+        if (isset($tracking['google.id'])) {
+            $user['Google Analytics'] = array('clientId' => $tracking['google.id']);
+        }
+
         return array_merge($user, $camp);
     }
 

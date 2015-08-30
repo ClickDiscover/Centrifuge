@@ -76,4 +76,13 @@ class QueryCache {
         $s->execute($params);
         return $s->fetchAll();
     }
+
+    public function flushAll($namespace) {
+        $this->flush($namespace, '*');
+    }
+
+    public function flush($namespace, $id) {
+        $ns = implode('/', [$namespace, $id]);
+        $this->cache->getItem($ns)->clear();
+    }
 }
