@@ -11,8 +11,6 @@ use Flagship\Storage\CookieJar;
 
 class UserTracker extends Middleware {
 
-    const VISITOR_KEY = '_fp_id';
-
     protected $config;
     protected $cookieJar;
     protected $trackingCookie = null;

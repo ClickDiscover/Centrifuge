@@ -47,6 +47,7 @@ class SegmentStorage {
         if(!$this->identify($tracking)) {
             return false;
         }
+
         $context = $this->buildContext($tracking);
         $properties =  $this->buildProperties($tracking, $lander);
 
@@ -56,7 +57,7 @@ class SegmentStorage {
             'properties' => $properties,
             'context' => $context
        );
-       \Segment::page($pg);
+       $res = \Segment::page($pg);
     }
 
     protected function buildProperties($tracking, $lander) {
@@ -91,19 +92,18 @@ class SegmentStorage {
         }
 
         $userId = $tracking['flagship.id'];
-        if (empty($_SESSION['_fp_segment']) || !$_SESSION['_fp_segment'] ) {
-            if (empty($this->jar->getCookie('_fp_segment'))) {
-                \Segment::identify([
-                    'userId' => $userId
-                ]);
-                $_SESSION['_fp_segment'] = true;
-                $this->jar->setCookie('_fp_segment', $userId, CookieJar::MONTHS);
-            }
-
-            $segmentId = $this->jar->getCookie('_fp_segment');
-            if (isset($segmentId) && $segmentId != $userId) {
-                $this->log->warn('Segment ID differs from User ID', [$userId, $segmentId, $tracking]);
-            }
+        if (empty($_SESSION['_fp_segment'])) {
+            \Segment::identify([
+                'userId' => $userId
+            ]);
+            $_SESSION['_fp_segment'] = $userId;
+            // $this->jar->setCookie('_fp_segment', $userId, CookieJar::MONTHS);
         }
+
+        // $segmentId = $this->jar->getCookie('_fp_segment');
+        // if (isset($segmentId) && $segmentId != $userId) {
+        //     $this->log->warn('Segment ID differs from User ID', [$userId, $segmentId, $tracking]);
+        // }
+        return true;
     }
 }
