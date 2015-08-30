@@ -35,16 +35,16 @@ class Container extends \Pimple\Container {
 
 
     public function configure() {
-        $c = $this;
 
         // Database
-        $this['pdo'] = function () use ($c) {
-            return new \F3\LazyPDO\LazyPDO($c['config']['database']['pdo'], null, null, array(
+        $this['pdo'] = function ($c) {
+            $pdo = new \F3\LazyPDO\LazyPDO($c['config']['database']['pdo'], null, null, array(
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
             ));
+            return $pdo;
         };
 
-        $this['debug.bar'] = function () use ($c) {
+        $this['debug.bar'] = function ($c) {
             $debug = new DebugBar();
             $debug->addCollector(new \DebugBar\DataCollector\PDO\PDOCollector(
                 new \DebugBar\DataCollector\PDO\TraceablePDO($c['pdo'])
@@ -54,9 +54,9 @@ class Container extends \Pimple\Container {
         };
 
         // Logging
-        $this['logger.path'] = $c['config']['logging']['root'] . '/' . $c['config']['name'] . '.log';
+        $this['logger.path'] = $this['config']['logging']['root'] . '/' . $this['config']['name'] . '.log';
 
-        $this['logger'] = function () use ($c) {
+        $this['logger'] = function ($c) {
             $log = new Logger($c['config']['name']);
             $log->pushHandler(new StreamHandler(
                 $c['logger.path'],
@@ -67,25 +67,25 @@ class Container extends \Pimple\Container {
         };
 
         // Cache
-        $this['cacheDriver'] = function () use ($c) {
+        $this['cacheDriver'] = function ($c) {
             $driver = new FileSystem();
             $driver->setOptions(array('path' => $c['config']['cache']['root']));
             return $driver;
         };
-        $this['cache'] = function () use ($c) {
-            $cache = new Pool($this['cacheDriver']);
+        $this['cache'] = function ($c) {
+            $cache = new Pool($c['cacheDriver']);
             $cache->setNamespace($c['config']['name']);
             return $cache;
         };
 
         // Session
-        $this['session.cache'] = function () use ($c) {
-            $sessionCache= new Pool($this['cacheDriver']);
+        $this['session.cache'] = function ($c) {
+            $sessionCache= new Pool($c['cacheDriver']);
             $sessionCache->setNamespace('session');
             return $sessionCache;
         };
 
-        $this['hashids'] = function () use ($c) {
+        $this['hashids'] = function ($c) {
             return new \Hashids\Hashids(
                 $c['config']['hashids']['salt'],
                 $c['config']['hashids']['length']
@@ -93,7 +93,7 @@ class Container extends \Pimple\Container {
         };
 
         // Cookies
-        $this['cookie.jar'] = function () use ($c) {
+        $this['cookie.jar'] = function ($c) {
             return new CookieJar(
                 $c['hashids'],
                 $c['config']['cookie']['root.domain'],
@@ -103,7 +103,7 @@ class Container extends \Pimple\Container {
         };
 
         // Plates
-        $this['plates'] = function () use ($c) {
+        $this['plates'] = function ($c) {
             $templateRoot = $c['config']['application']['templates.path'] . $c['config']['paths']['relative_landers'];
             $assetRoot = $c['config']['paths']['relative_static'];
 
@@ -115,12 +115,16 @@ class Container extends \Pimple\Container {
             return $view;
         };
 
-        $this['custom.routes'] = function () use ($c) {
+        $this['custom.routes'] = function ($c) {
             return new CustomRouteService($c['db']);
         };
 
 
-        $this['db'] = function () use ($c) {
+        $this['db'] = function ($c) {
+            // $pdo = new \F3\LazyPDO\LazyPDO($c['config']['database']['pdo'], null, null, array(
+            //     \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+            // ));
+            // $conn->getAttribute(PDO::ATTR_CONNECTION_STATUS);
             $db = new QueryCache(
                 $c['pdo'],
                 $c['cache'],
@@ -130,38 +134,38 @@ class Container extends \Pimple\Container {
             return $db;
         };
 
-        $this['fs'] = function () use ($c) {
+        $this['fs'] = function ($c) {
             $adapter = new \League\Flysystem\Adapter\Local($c['config']['application']['templates.path']);
             $fs = new \League\Flysystem\Filesystem($adapter);
             $fs->addPlugin(new \League\Flysystem\Plugin\ListWith);
             return $fs;
         };
 
-        $this['offer.network'] = function () use ($c) {
+        $this['offer.network'] = function ($c) {
             return new NetworkOfferService($c['db'], $c['config']['application']['product.path']);
         };
 
-        $this['offer.adex'] = function () use ($c) {
+        $this['offer.adex'] = function ($c) {
             $service = new AdexOfferService($c['db'], $c['cache'], $c['config']['cache']['adex.expiration']);
             $service->setLogger($c['logger']);
             return $service;
         };
 
-        $this['offers'] = function () use ($c) {
+        $this['offers'] = function ($c) {
             return new \Flagship\Service\OfferService($c['offer.network'], $c['offer.adex']);
         };
 
-        $this['landers'] = function () use ($c) {
+        $this['landers'] = function ($c) {
             return new \Flagship\Service\LanderService($c['db'], $c['offers']);
         };
 
         // Librato
-        $this['statsd'] = function () use ($c) {
+        $this['statsd'] = function ($c) {
             $conn = new StatsdSocket('localhost', 8125);
             return new Statsd($conn);
         };
 
-        $this['librato.performance'] = function () use ($c) {
+        $this['librato.performance'] = function ($c) {
             $librato = new LibratoStorage(
                 $c['statsd'],
                 [$c['config']['environment']],
@@ -171,7 +175,7 @@ class Container extends \Pimple\Container {
             return $librato;
         };
 
-        $this['librato.system'] = function () use ($c) {
+        $this['librato.system'] = function ($c) {
             $librato = new LibratoStorage(
                 $c['statsd'],
                 [$c['config']['environment'], $c['config']['hostname']],
@@ -181,7 +185,7 @@ class Container extends \Pimple\Container {
             return $librato;
         };
 
-        $this['segment'] = function () use ($c) {
+        $this['segment'] = function ($c) {
             return new SegmentStorage(
                 $c['config'],
                 $c['cookie.jar'],
@@ -190,3 +194,24 @@ class Container extends \Pimple\Container {
         };
     }
 }
+
+
+class DebugContainer extends Container {
+    public function __construct(array $config) {
+        parent::__construct();
+        $this->clog = new \Monolog\Logger('container');
+        $this->clog->pushHandler(new StreamHandler(
+            '/tmp/container.log', \Monolog\Logger::INFO
+        ));
+    }
+    public function offsetGet($id) {
+        $config = [$id];
+        if(isset($_SERVER['REQUEST_URI'])) {
+            $config[] = $_SERVER['REQUEST_URI'];
+        }
+        $this->clog->info("Id", $config);
+        return parent::offsetGet($id);
+    }
+}
+
+

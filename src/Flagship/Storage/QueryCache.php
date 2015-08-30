@@ -8,7 +8,7 @@ use Flagship\Container;
 class QueryCache {
     use \Flagship\Util\Logging;
 
-    protected $db;
+    public $db;
     protected $cache;
     protected $expiration;
 

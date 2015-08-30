@@ -24,24 +24,23 @@ class SlimBootstrap {
         $this->configureDevelopmentMode();
         $this->configureProductionMode();
 
-        $container['offers']->setUrlFor(function ($route, $params) use ($app) {
-            $url = $app->urlFor($route, $params);
-            $get = $app->request->get();
-            if (count($get) == 0) {
-                return $url;
-            } else {
-                $query = http_build_query($get);
-                return $url . "?" . $query;
-            }
+        $container->extend('offers', function ($offers, $c) use ($app) {
+            $offers->setUrlFor(function ($route, $params) use ($app) {
+                $url = $app->urlFor($route, $params);
+                $get = $app->request->get();
+                if (count($get) == 0) {
+                    return $url;
+                } else {
+                    $query = http_build_query($get);
+                    return $url . "?" . $query;
+                }
+            });
+            return $offers;
         });
 
         $container['cookie.jar']->setSlimApp($app);
         $app->log->setWriter($container['logger']);
         $app->view($container['plates']);
-
-        $app->container->singleton('db', function() use ($container) {
-            return $container['db'];
-        });
 
         $app->container['custom.routes'] = function () use ($container) {
             return $container['custom.routes']->fetchAll();
@@ -65,7 +64,7 @@ class SlimBootstrap {
         $app = $this->app;
         $container = $this->container;
         $app->configureMode('development', function () use ($app, $container) {
-            $app->add($container['debug.bar']);
+            // $app->add($container['debug.bar']);
         });
     }
 
