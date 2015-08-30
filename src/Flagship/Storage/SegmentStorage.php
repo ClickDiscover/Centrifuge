@@ -93,7 +93,7 @@ class SegmentStorage {
         $userId = $tracking['flagship.id'];
         if (empty($_SESSION['_fp_segment']) || !$_SESSION['_fp_segment'] ) {
             if (empty($this->jar->getCookie('_fp_segment'))) {
-                Segment::identify([
+                \Segment::identify([
                     'userId' => $userId
                 ]);
                 $_SESSION['_fp_segment'] = true;
