@@ -18,7 +18,10 @@ class SegmentStorage {
 
 
     public function offerClick($tracking, $lander) {
-        $this->identify($tracking);
+        if(!$this->identify($tracking)) {
+            return false;
+        }
+
         $context = $this->buildContext($tracking);
         $properties =  $this->buildProperties($tracking, $lander);
 
@@ -41,7 +44,9 @@ class SegmentStorage {
     }
 
     public function landingPage($tracking, $lander) {
-        $this->identify($tracking);
+        if(!$this->identify($tracking)) {
+            return false;
+        }
         $context = $this->buildContext($tracking);
         $properties =  $this->buildProperties($tracking, $lander);
 
