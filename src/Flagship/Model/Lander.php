@@ -16,6 +16,7 @@ class Lander {
     protected $notes;
 
     // For Intl landers to user their native currency
+    protected $geo;
     protected $locale = 'US';
 
     public function __construct(
@@ -23,13 +24,15 @@ class Lander {
         $website,
         $offers,
         $variants,
-        $notes
+        $notes,
+        $geo
     ) {
         $this->id = $id;
         $this->website = $website;
         $this->offers = $offers;
         $this->variants = $variants;
         $this->notes = $notes;
+        $this->geo = $geo;
     }
 
 }

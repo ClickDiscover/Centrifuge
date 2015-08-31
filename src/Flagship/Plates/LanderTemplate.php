@@ -11,7 +11,7 @@ class LanderTemplate {
         $namespace = $website->namespace;
         $this->file = $namespace . '::' . $website->templateFile;
         $this->assetRoot = $assetRoot . $namespace;
-        $this->tracking = [];
+        $this->geo = $lander->geo;
         $this->variants = new VariantHtml($namespace, $lander->variants);
     }
 
@@ -22,7 +22,7 @@ class LanderTemplate {
     public function getData() {
         return array(
             'steps' => $this->steps,
-            'tracking' => $this->tracking,
+            'geo' => $this->geo,
             'assets' => $this->assetRoot,
             'v' => $this->variants
         );

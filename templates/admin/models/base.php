@@ -18,7 +18,7 @@
 <div>
 <h3>Landers</h3>
 <?= $this->multiLinkTable($landers, array(
-    'admin' => array('ID', '/admin/models/content/'),
+    'admin' => array('ID', '/admin/models/landers/'),
     'link' => array('ID', '/content/')
 )) ?>
 </div>
