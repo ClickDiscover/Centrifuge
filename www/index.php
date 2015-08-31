@@ -1,29 +1,29 @@
 <?php
 if(php_sapi_name() === 'cli-server') {
-    $filename = __DIR__.preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
-    if(is_file($filename)) {
+    if (preg_match('/\/static\//', $_SERVER['REQUEST_URI'])) {
         return false;
+    }
+    if (strpos($_SERVER['PHP_SELF'], '/index.php') === false) {
+        $_SERVER['PHP_SELF'] = '/index.php' . $_SERVER['PHP_SELF'];
+        $_SERVER['SCRIPT_NAME'] = '/index.php';
     }
 }
 
 require_once dirname(__DIR__) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
 
-$app = new Bullet\App();
-$request = new Bullet\Request();
-require CENTRIFUGE_APP_ROOT . '/master.php';
+$centrifuge =  new Flagship\Container($config);
+$app = new Slim\Slim($config['application']);
+$app->setName($config['name']);
+$bootstrap = new Flagship\SlimBootstrap($app, $centrifuge);
+$app = $bootstrap->bootstrap();
 
 
-$timerMetric = $app->system->totalName('request_time');
-$app->metrics->startTiming($timerMetric);
+require_once $config['paths']['routes'] . 'admin.php';
+require_once $config['paths']['routes'] . 'landers.php';
+require_once $config['paths']['routes'] . 'clicks.php';
+require_once $config['paths']['routes'] . 'conversions.php';
 
 
-$routesDir = CENTRIFUGE_APP_ROOT . '/routes/';
-require $routesDir . 'landers.php';
-require $routesDir . 'clicks.php';
-require $routesDir . 'admin.php';
-require $routesDir . 'conversions.php';
-
-
-echo $app->run($request);
-$time = $app->metrics->endTiming($timerMetric);
+$app->run();
+?>
