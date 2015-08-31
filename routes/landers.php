@@ -29,10 +29,6 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
         $tracking['cookie']->setLastVisitTime(time());
     }
     $pg = $centrifuge['segment']->landingPage($tracking, $lander);
-    echo '<pre>';
-    print_r($pg);
-    echo '</pre>';
-
     // Rendering
     $centrifuge['plates']->landerRender($app, $lander);
 
