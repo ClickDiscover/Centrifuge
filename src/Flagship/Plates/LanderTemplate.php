@@ -4,6 +4,7 @@ namespace Flagship\Plates;
 
 
 class LanderTemplate {
+
     public function __construct($assetRoot, $lander) {
         $this->steps = $lander->offers;
         $website = $lander->website;
@@ -18,7 +19,7 @@ class LanderTemplate {
         return $this->file;
     }
 
-    public function getData($staticRoot = '') {
+    public function getData() {
         return array(
             'steps' => $this->steps,
             'tracking' => $this->tracking,

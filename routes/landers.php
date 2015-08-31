@@ -29,10 +29,12 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
         $tracking['cookie']->setLastVisitTime(time());
     }
     $pg = $centrifuge['segment']->landingPage($tracking, $lander);
+    echo '<pre>';
+    print_r($pg);
+    echo '</pre>';
 
     // Rendering
-    $template = $centrifuge['plates']->landerTemplate($lander);
-    $app->render($template->getFile(), $template->getData());
+    $centrifuge['plates']->landerRender($app, $lander);
 
 })->name('landers')->conditions(array(
     'id' => '[0-9]+'

@@ -9,12 +9,17 @@ use Flagship\Util\ArrayConvertible;
 
 class HtmlExtension implements ExtensionInterface {
 
+    protected $engine;
+    public $template;
+
     public function register(Engine $engine) {
         $engine->registerFunction('table', [$this, 'table']);
         $engine->registerFunction('objTable', [$this, 'objTable']);
         $engine->registerFunction('linkTable', [$this, 'linkTable']);
         $engine->registerFunction('multiLinkTable', [$this, 'multiLinkTable']);
         $engine->registerFunction('vardump', [$this, 'vardump']);
+        $engine->registerFunction('scripts', [$this, 'scripts']);
+        $this->engine = $engine;
     }
 
     public static function table($array){
