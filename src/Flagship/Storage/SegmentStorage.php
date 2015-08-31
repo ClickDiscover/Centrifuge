@@ -25,7 +25,7 @@ class SegmentStorage {
             return false;
         }
 
-        $stepNumber = $tracking['click.step_id']
+        $stepNumber = $tracking['click.step_id'];
         $context = $this->buildContext($tracking);
         $properties =  $this->buildProperties($tracking, $lander);
         $properties['offer'] = $lander->offers[$stepNumber]->getName();
