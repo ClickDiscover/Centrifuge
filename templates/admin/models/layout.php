@@ -23,23 +23,30 @@
 
         pre { font-family: monospace; }
 
-        <?= $this->section('style') ?>
+        <?php if ($this->section('style')): ?>
+            <?= $this->section('style') ?>
+        <?php endif ?>
     </style>
 
 </head>
 <body>
 
-<div>
-<pre>
-</pre>
-</div>
-
 <div id="menu-container">
     <?= $this->fetch('admin::models/menu') ?>
 </div>
 
+<div>
+    <pre>
+        <?php if (isset($data)): ?>
+            <?= $data ?>
+        <?php endif ?>
+    </pre>
+</div>
+
 <div id="page">
-    <?=$this->section('page')?>
+    <?php if ($this->section('page')): ?>
+        <?= $this->section('page')?>
+    <?php endif ?>
 </div>
 
 

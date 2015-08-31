@@ -55,5 +55,9 @@ class ViewEngine extends SlimView {
 
         return $app->render($template->getFile(), $data);
     }
+
+    public function make($name) {
+        return $this->engine->make($name);
+    }
 }
 

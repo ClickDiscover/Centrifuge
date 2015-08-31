@@ -102,6 +102,7 @@ class Container extends \Pimple\Container {
             );
         };
 
+
         // Plates
         $this['plates'] = function ($c) {
             $templateRoot = $c['config']['application']['templates.path'] . $c['config']['paths']['relative_landers'];
@@ -121,10 +122,6 @@ class Container extends \Pimple\Container {
 
 
         $this['db'] = function ($c) {
-            // $pdo = new \F3\LazyPDO\LazyPDO($c['config']['database']['pdo'], null, null, array(
-            //     \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
-            // ));
-            // $conn->getAttribute(PDO::ATTR_CONNECTION_STATUS);
             $db = new QueryCache(
                 $c['pdo'],
                 $c['cache'],
@@ -157,6 +154,15 @@ class Container extends \Pimple\Container {
 
         $this['landers'] = function ($c) {
             return new \Flagship\Service\LanderService($c['db'], $c['offers']);
+        };
+
+        // Conversions
+        $this['redis'] = function ($c) {
+            return new \Predis\Client($c['config']['database']['redis']);
+        };
+
+        $this['conversions'] = function ($c) {
+            return new \Flagship\Service\ConversionService($c['redis']);
         };
 
         // Librato

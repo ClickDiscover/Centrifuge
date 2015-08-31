@@ -34,6 +34,7 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     $centrifuge['librato.performance']->total("clicks");
 
     $tracking = $app->environment['tracking'];
+    $tracking['click.step_id'] = $stepId;
     if (isset($tracking['cookie'])) {
         $tracking['cookie']->setLastOfferClickTime(time());
     }

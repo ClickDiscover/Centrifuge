@@ -25,8 +25,11 @@ class SegmentStorage {
             return false;
         }
 
+        $stepNumber = $tracking['click.step_id']
         $context = $this->buildContext($tracking);
         $properties =  $this->buildProperties($tracking, $lander);
+        $properties['offer'] = $lander->offers[$stepNumber]->getName();
+        $properties['step.number'] = $stepNumber;
 
         if (isset($tracking['cookie'])) {
             $tc = $tracking['cookie'];
@@ -53,6 +56,8 @@ class SegmentStorage {
 
         $context = $this->buildContext($tracking);
         $properties =  $this->buildProperties($tracking, $lander);
+        $properties['offer1'] = $lander->offers[1]->getName();
+        $properties['offer2'] = $lander->offers[2]->getName();
 
         $pg = array(
             'userId' => $tracking['flagship.id'],
@@ -72,8 +77,6 @@ class SegmentStorage {
             'website' => $lander->website->name,
         );
         $properties['offer_source'] = $lander->offers[1]->product->source;
-        $properties['offer1'] = $lander->offers[1]->getName();
-        $properties['offer2'] = $lander->offers[2]->getName();
 
         $url = array_intersect_key($tracking['context']['url'], array_flip(['url', 'path']));
         return array_merge($properties, $url);

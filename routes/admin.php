@@ -140,7 +140,16 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 
 
     $app->get('/tracking', function () use ($app, $centrifuge) {
-        trackingPage($app, $centrifuge);
+        $out  = "Session\n";
+        $out .= print_r($_SESSION, true);
+        $out .= "\nTracking\n";
+        $out .= print_r($app->environment['tracking'], true);
+        $out .= "\nCookies\n";
+        $out .= print_r($app->request->cookies->all(), true);
+        echo $centrifuge['plates']->render('admin::models/layout', [
+            'title' => 'Tracking',
+            'data' => $out
+        ]);
     });
 
 });
@@ -154,15 +163,20 @@ $app->get('/admin/ping', function () use ($app) {
 });
 
 
-function trackingPage($app, $centrifuge) {
-    // sessions in slim route "Groups" arent excuted it seems
-    echo "<pre>Session\n";
-    // print_r($_SESSION);
-    echo "\nTracking\n";
-    print_r($app->environment['tracking']);
-    echo "\nContext\n";
-    $context = $app->environment['tracking']['context'];
-    print_r($context);
-    echo "</pre>";
-}
+$app->get('/conversions', function() use ($app, $centrifuge) {
+    $convs = $centrifuge['conversions'];
+    $total = $convs->totals();
+    $keys = $convs->keywords();
+    $centrifuge['librato.performance']->total('conversions', $total);
+    foreach ($keys as $k => $v) {
+        $centrifuge['librato.performance']->breakout('keyword', $k, 'conversions', $v);
+    }
 
+    $out  = '<br>Totals: ' . $total . PHP_EOL;
+    $out .= 'By keyword' . PHP_EOL;
+    $out .= print_r($keys, true);
+    echo $centrifuge['plates']->render('admin::models/layout', [
+        'title' => 'Conversions',
+        'data' => $out
+    ]);
+});

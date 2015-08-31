@@ -22,7 +22,6 @@ $app = $bootstrap->bootstrap();
 require_once $config['paths']['routes'] . 'admin.php';
 require_once $config['paths']['routes'] . 'landers.php';
 require_once $config['paths']['routes'] . 'clicks.php';
-require_once $config['paths']['routes'] . 'conversions.php';
 
 
 $app->run();
