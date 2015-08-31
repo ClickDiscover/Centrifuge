@@ -80,9 +80,22 @@ SQL;
         }, $rows);
     }
 
+    public function fetchAllGeos() {
+        $sql = "SELECT id, name, country, locale, data FROM geos ORDER BY id ASC";
+        $rows = $this->db->uncachedFetchAll($sql);
+        return array_map(function ($x) {
+            return $this->geoFromArray($x);
+        }, $rows);
+    }
+
     public function fetchGeo($id) {
         $sql = "SELECT id, name, country, locale, data FROM geos WHERE id = ?";
-        $x = $this->db->fetch('geolang', $id, $sql);
+        return $this->geoFromArray(
+            $this->db->fetch('geolang', $id, $sql)
+        );
+    }
+
+    public function geoFromArray($x) {
         $d = json_decode($x['data'], true);
         return new Geo(
             $x['id'], $x['name'], $x['country'], $x['locale'], $d
@@ -110,6 +123,10 @@ SQL;
             unset($arr['product2_id']);
         } elseif ($arr['offer'] == 'network') {
             unset($arr['param_id']);
+        }
+
+        if (empty($arr['active'])) {
+            $arr['active'] = true;
         }
         return $this->db->insertArray($this->namespace, $arr);
     }

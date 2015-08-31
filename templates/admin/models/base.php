@@ -31,6 +31,14 @@
 <br><br>
 <br>
 
+
+<div>
+<h3>Geos</h3>
+<?= $this->table($geos) ?>
+</div>
+<br>
+<br>
+
 <div>
 <h3>Websites</h3>
 <?= $this->table($websites) ?>

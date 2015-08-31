@@ -3,6 +3,8 @@
 namespace Flagship\Model;
 
 use Flagship\Util\ImmutableProperties;
+use Flagship\Util\ArrayConversions;
+use Flagship\Util\ArrayConvertible;
 
 use Punic\Territory;
 use Punic\Language;
@@ -70,4 +72,15 @@ class Geo {
         $loc  = ($locale != "") ? $locale : $this->locale;
         return Unit::format($amount, $unit, $fmt, $loc);
     }
+
+    public function toArray() {
+        return [
+            'ID' => $this->id,
+            'name' => $this->name,
+            'country' => $this->country,
+            'locale' => $this->locale,
+            'data' => json_encode($this->data)
+        ];
+    }
+
 }
