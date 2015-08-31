@@ -34,24 +34,40 @@ class Geo {
         $this->data = $data;
 
         $this->data['language.id'] = str_replace('_', '-', $this->locale);
+
+        if (empty($this->data['money.width'])) {
+            $this->data['money.width'] = 'narrow';
+        }
+
+        if (empty($this->data['unit.format'])) {
+            $this->data['unit.format'] = 'short';
+        }
     }
 
-    public function pronoun($locale = '') {
-        $lang = Language::getName($this->data['language.id']);
-        $first = explode(' ', $lang)[0];
-        return $first;
+    public function pronoun($locale = 'en') {
+        if (empty($this->data['pronoun'])) {
+            $loc = ($locale != "") ? $locale : $this->locale;
+            $lang = Language::getName($this->data['language.id'], $loc);
+            $first = explode(' ', $lang)[0];
+            return $first;
+        } else {
+            return $this->data['pronoun'];
+        }
     }
 
-    public function money($amount, $alt = 'narrow', $locale = '') {
+    public function money($amount, $width = '', $locale = 'en') {
+        $wid  = ($width != "")  ? $width  : $this->data['money.width'];
+        $loc  = ($locale != "") ? $locale : $this->locale;
         $code = Currency::getCurrencyForTerritory($this->country);
-        $c = Currency::getSymbol($code, $alt, $locale);
-        $num = Number::format($amount, 2, $this->locale);
+        $c    = Currency::getSymbol($code, $wid, $loc);
+        $num  = Number::format($amount, 2, $loc);
         return $c . $num;
     }
 
-    public function weight($amount, $alt = 'long', $locale = '') {
+    public function weight($amount, $alt = '', $locale = 'en') {
         $unit = $this->data['unit.weight'];
-        return Unit::format($amount, $unit, $alt, $locale);
+        $fmt  = ($alt != '') ? $alt : $this->data['unit.format'];
+        $loc  = ($locale != "") ? $locale : $this->locale;
+        return Unit::format($amount, $unit, $fmt, $loc);
     }
-
 }

@@ -37,6 +37,13 @@
 <div>
 <h4>Geo</h4>
 <pre>
+<?php
+foreach(\Punic\Language::getAll() as $code => $lang) {
+    // echo $code . " => " . $geo->pronoun() . PHP_EOL;
+}
+
+
+?>
 <?php var_dump($geo) ?>
 </pre>
 </div>
@@ -44,7 +51,7 @@
 
 
 <div>
-<h1><strong class="text-pink">Breaking:</strong> Controversial <?= $geo->money(5000, 'default') ?> 'Skinny Pill' Hits The <?= $geo->pronoun() ?> Market.</h1>
+<h1><strong class="text-pink">Breaking:</strong> Controversial <?= $geo->money(5000) ?> 'Skinny Pill' Hits The <?= $geo->pronoun() ?> Market.</h1>
 <h4>Think Diet Pills Don't Work? Here's One That Doctors Say May Actually Deliver.</h4>
 
 <h5>
