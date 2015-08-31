@@ -37,6 +37,8 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
 ));
 
 
-$app->get('/landers/:id', function ($id) use ($app) {
-    $app->redirect($app->urlFor('landers', array('id' => $id)));
+$app->get('/landers/:id', function ($id) use ($app, $centrifuge) {
+    // Slim's url for doesnt add querystring params really fucking annoying
+    $url = $centrifuge['slim.urlFor']('landers', array('id' => $id));
+    $app->redirect($url);
 });

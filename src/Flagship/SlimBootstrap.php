@@ -20,20 +20,24 @@ class SlimBootstrap {
         $app = $this->app;
         $container = $this->container;
 
+        $container['slim.urlFor'] = $container->protect(function ($destination, $params) use ($app) {
+            $getParams = $app->request->get();
+            $url = $app->urlFor($destination, $params);
+            if (count($getParams) == 0) {
+                return $url;
+            } else {
+                $query = http_build_query($getParams);
+                return $url . "?" . $query;
+            }
+        });
+
         $this->setupHooks();
         $this->configureDevelopmentMode();
         $this->configureProductionMode();
 
-        $container->extend('offers', function ($offers, $c) use ($app) {
-            $offers->setUrlFor(function ($route, $params) use ($app) {
-                $url = $app->urlFor($route, $params);
-                $get = $app->request->get();
-                if (count($get) == 0) {
-                    return $url;
-                } else {
-                    $query = http_build_query($get);
-                    return $url . "?" . $query;
-                }
+        $container->extend('offers', function ($offers, $c) use ($container) {
+            $offers->setUrlFor(function ($route, $params) use ($container) {
+                return $container['slim.urlFor']($route, $params);
             });
             return $offers;
         });
@@ -90,7 +94,7 @@ class SlimBootstrap {
                 $container['librato.system']->total('4xx');
 
                 if (isset($fallback)) {
-                    $app->redirect($app->urlFor('landers', array('id' => $fallback)));
+                    $app->redirect($container['slim.urlFor']('landers', array('id' => $fallback)));
                 }
             });
         });
@@ -112,7 +116,7 @@ class SlimBootstrap {
         });
 
         // Custom URL handler
-        $app->hook("slim.before", function () use ($app) {
+        $app->hook("slim.before", function () use ($app, $container) {
             $uri = $app->environment['PATH_INFO'];
             $custom = $app->container['custom.routes'];
             foreach ($custom as $c) {
