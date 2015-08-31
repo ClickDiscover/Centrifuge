@@ -3,7 +3,7 @@
 
 
 $app->get('/conversions', function() use ($app, $centrifuge) {
-    $config = $app->config('database');
+    $config = $centrifuge['config']['database'];
     $redis = new Predis\Client($config['redis']);
     $total = $redis->get('interceptor:conversions:totals');
     $keys = $redis->keys('interceptor:conversions:keywords:*');
