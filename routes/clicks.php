@@ -44,7 +44,7 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     if (isset($lander)) {
         // $centrifuge['logger']->info('Lander', [$lander->id]);
         $centrifuge['librato.performance']->breakout('lander', $lander->id, 'clicks');
-        $centrifuge['segment']->offerClick($app->environment['tracking'], $lander);
+        $centrifuge['segment']->offerClick($tracking, $lander);
     }
 
 
