@@ -79,7 +79,12 @@ class Geo {
             'name' => $this->name,
             'country' => $this->country,
             'locale' => $this->locale,
-            'data' => json_encode($this->data)
+            'Weight Example' => $this->weight(25.3),
+            'Money Example' => $this->money(100),
+            'Pronoun' => $this->pronoun(),
+            'Weight Unit' => $this->data['unit.weight'],
+            'Unit Format' => $this->data['unit.format'],
+            'Money Width' => $this->data['money.width']
         ];
     }
 
