@@ -19,7 +19,6 @@ class SegmentStorage {
         $this->log = $log;
     }
 
-
     public function offerClick($tracking, $lander) {
         if(!$this->identify($tracking)) {
             return false;

@@ -11,6 +11,9 @@ class VariantExtension implements ExtensionInterface {
 
     public function register(Engine $engine) {
         $engine->registerFunction('variant', [$this, 'variant']);
+        $engine->registerFunction('value', [$this, 'value']);
+        $engine->registerFunction('val', [$this, 'value']);
+        $engine->registerFunction('v', [$this, 'value']);
         $this->engine = $engine;
     }
 
@@ -22,6 +25,14 @@ class VariantExtension implements ExtensionInterface {
         $path = $variants->get($kind, $item);
         if ($this->engine->exists($path)) {
             return $this->engine->render($path);
+        }
+    }
+
+    public function value($val, $default = '') {
+        if ($val) {
+            return $val;
+        } else {
+            return $default;
         }
     }
 }

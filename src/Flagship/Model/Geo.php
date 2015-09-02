@@ -11,6 +11,9 @@ use Punic\Language;
 use Punic\Currency;
 use Punic\Unit;
 use Punic\Number;
+use PhpUnitsOfMeasure\PhysicalQuantity\Length;
+use PhpUnitsOfMeasure\PhysicalQuantity\Mass;
+
 
 class Geo {
 
@@ -21,19 +24,22 @@ class Geo {
     protected $country;
     protected $locale;
     protected $data = [];
+    protected $variables = [];
 
     public function __construct(
         $id,
         $name,
         $country,
         $locale,
-        $data = []
+        $data = [],
+        $variables = []
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->country = $country;
         $this->locale = $locale;
         $this->data = $data;
+        $this->variables = $variables;
 
         $this->data['language.id'] = str_replace('_', '-', $this->locale);
 
@@ -42,7 +48,7 @@ class Geo {
         }
 
         if (empty($this->data['unit.format'])) {
-            $this->data['unit.format'] = 'short';
+            $this->data['unit.format'] = 'short,1';
         }
     }
 
@@ -57,21 +63,44 @@ class Geo {
         }
     }
 
-    public function money($amount, $width = '', $locale = 'en') {
+    public function money($amount, $precision = 2, $width = '', $locale = 'en') {
         $wid  = ($width != "")  ? $width  : $this->data['money.width'];
         $loc  = ($locale != "") ? $locale : $this->locale;
         $code = Currency::getCurrencyForTerritory($this->country);
         $c    = Currency::getSymbol($code, $wid, $loc);
-        $num  = Number::format($amount, 2, $loc);
+        $num  = Number::format($amount, $precision, $loc);
         return $c . $num;
     }
 
-    public function weight($amount, $alt = '', $locale = 'en') {
+    public function weight($amount, $unit = 'pound', $alt = '', $locale = 'en') {
+        $mass = new Mass($amount, $unit);
         $unit = $this->data['unit.weight'];
+        $value = $mass->toUnit($unit);
         $fmt  = ($alt != '') ? $alt : $this->data['unit.format'];
         $loc  = ($locale != "") ? $locale : $this->locale;
-        return Unit::format($amount, $unit, $fmt, $loc);
+        return Unit::format($value, $unit, $fmt, $loc);
     }
+
+    public function length($amount, $unit, $alt = '', $locale = 'en') {
+        $l = new Length($amount, $unit);
+        $unit = $this->data['unit.length'];
+        $value = $l->toUnit($unit);
+        $fmt  = ($alt != '') ? $alt : $this->data['unit.format'];
+        $loc  = ($locale != "") ? $locale : $this->locale;
+        return Unit::format($value, $unit, $fmt, $loc);
+    }
+
+    public function variable($key, $default = '') {
+        if (empty($this->variables[$key])) {
+            return $default;
+        }
+        return $this->variables[$key];
+    }
+
+    public function v($key, $override = null) {
+        return $this->variable($key, $override);
+    }
+
 
     public function toArray() {
         return [
@@ -84,7 +113,8 @@ class Geo {
             'Pronoun' => $this->pronoun(),
             'Weight Unit' => $this->data['unit.weight'],
             'Unit Format' => $this->data['unit.format'],
-            'Money Width' => $this->data['money.width']
+            'Money Width' => $this->data['money.width'],
+            'Variables' => print_r($this->variables, true)
         ];
     }
 

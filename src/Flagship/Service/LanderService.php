@@ -81,7 +81,7 @@ SQL;
     }
 
     public function fetchAllGeos() {
-        $sql = "SELECT id, name, country, locale, data FROM geos ORDER BY id ASC";
+        $sql = "SELECT id, name, country, locale, data, variables FROM geos ORDER BY id ASC";
         $rows = $this->db->uncachedFetchAll($sql);
         return array_map(function ($x) {
             return $this->geoFromArray($x);
@@ -89,7 +89,7 @@ SQL;
     }
 
     public function fetchGeo($id) {
-        $sql = "SELECT id, name, country, locale, data FROM geos WHERE id = ?";
+        $sql = "SELECT id, name, country, locale, data, variables FROM geos WHERE id = ?";
         return $this->geoFromArray(
             $this->db->fetch('geolang', $id, $sql)
         );
@@ -97,8 +97,9 @@ SQL;
 
     public function geoFromArray($x) {
         $d = json_decode($x['data'], true);
+        $v = json_decode($x['variables'], true);
         return new Geo(
-            $x['id'], $x['name'], $x['country'], $x['locale'], $d
+            $x['id'], $x['name'], $x['country'], $x['locale'], $d, $v
         );
     }
 
