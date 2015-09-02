@@ -102,7 +102,7 @@ class TrackingCookie {
     // Serialization //
     ///////////////////
 
-    protected function toArray() {
+    public function toArray() {
         return array(
             self::VALUE_PREFIX,
             $this->id,
