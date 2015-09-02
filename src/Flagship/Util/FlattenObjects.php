@@ -14,7 +14,9 @@ class FlattenObjects {
         $row['Product 1'] = $lander->offers[1]->getName();
         $row['Product 2'] = $lander->offers[2]->getName();
         $row['Website'] = $lander->website->name;
+        $row['Geo'] = $lander->geo->name;
         $row['Variants'] = json_encode($lander->variants);
+        $row['Active'] = 'True';
         return $row;
     }
 }

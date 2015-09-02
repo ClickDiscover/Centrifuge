@@ -4,6 +4,7 @@ namespace Flagship\Service;
 
 use Flagship\Model\Lander;
 use Flagship\Model\Website;
+use Flagship\Model\Geo;
 
 class LanderService {
 
@@ -31,13 +32,16 @@ class LanderService {
             $row['product2_id']
         );
         $variants = json_decode($row['variants'], true);
+        $geo = $this->fetchGeo($row['geo_id']);
+
 
         return new Lander(
             $row['id'],
             $website,
             $offers,
             $variants,
-            $row['notes']
+            $row['notes'],
+            $geo
         );
     }
 
@@ -58,7 +62,8 @@ SQL;
 
     const SQL_SELECT = self::SQL_BASE . " WHERE l.id = ?";
 
-    const SQL_SELECT_ALL = self::SQL_BASE . " ORDER BY id DESC";
+    // Changing because this is only in admin interface
+    const SQL_SELECT_ALL = self::SQL_BASE . " WHERE l.active = TRUE ORDER BY id DESC";
 
     public function fetchAll() {
         $rows = $this->db->uncachedFetchAll(self::SQL_SELECT_ALL);
@@ -75,13 +80,33 @@ SQL;
         }, $rows);
     }
 
+    public function fetchAllGeos() {
+        $sql = "SELECT id, name, country, locale, data, variables FROM geos ORDER BY id ASC";
+        $rows = $this->db->uncachedFetchAll($sql);
+        return array_map(function ($x) {
+            return $this->geoFromArray($x);
+        }, $rows);
+    }
+
+    public function fetchGeo($id) {
+        $sql = "SELECT id, name, country, locale, data, variables FROM geos WHERE id = ?";
+        return $this->geoFromArray(
+            $this->db->fetch('geolang', $id, $sql)
+        );
+    }
+
+    public function geoFromArray($x) {
+        $d = json_decode($x['data'], true);
+        $v = json_decode($x['variables'], true);
+        return new Geo(
+            $x['id'], $x['name'], $x['country'], $x['locale'], $d, $v
+        );
+    }
+
     public function insert($arr) {
         // Remove data from different offers
         if ($arr['notes'] === '') {
             unset($arr['notes']);
-        }
-        if (isset($arr['tracking'])) {
-            unset($arr['tracking']);
         }
 
         if (isset($arr['variants'])) {
@@ -99,6 +124,10 @@ SQL;
             unset($arr['product2_id']);
         } elseif ($arr['offer'] == 'network') {
             unset($arr['param_id']);
+        }
+
+        if (empty($arr['active'])) {
+            $arr['active'] = true;
         }
         return $this->db->insertArray($this->namespace, $arr);
     }

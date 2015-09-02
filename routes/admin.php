@@ -51,6 +51,9 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         $centrifuge['admin.adex.params'] = function () use ($centrifuge) {
             return $centrifuge['offer.adex']->paramFetchAll();
         };
+        $centrifuge['admin.geos'] = function () use ($centrifuge) {
+            return array_map(function ($x) { return $x->toArray(); }, $centrifuge['landers']->fetchAllGeos());
+        };
         $centrifuge['admin.landers'] = function () use ($centrifuge) {
             return array_map(function ($x) {
                 return \Flagship\Util\FlattenObjects::lander($x);
@@ -60,6 +63,7 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             return array(
                 'websites' => $centrifuge['admin.websites'],
                 'routes' => $centrifuge['admin.routes'],
+                'geos' => $centrifuge['admin.geos'],
                 'aeParams' => $centrifuge['admin.adex.params'],
                 'landers' => $centrifuge['admin.landers'],
                 'products' => $centrifuge['admin.products']
@@ -114,7 +118,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
                 unset($input['route']);
 
                 $landerId = $centrifuge['landers']->insert($input);
-                // $log->warn('route '. $route);
                 if (isset($route)) {
                     $lid = $landerId['id'];
                     $res = $centrifuge['custom.routes']->insert($route, $lid);

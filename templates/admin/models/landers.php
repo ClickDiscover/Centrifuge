@@ -47,6 +47,16 @@ $(function() {
         </div>
 
         <div class="pure-control-group">
+            <label for="geo">Geo</label>
+            <select name="geo_id" id="geo">
+                <?php foreach($geos as $g): ?>
+                    <option value="<?= $g['ID'] ?>"><?= $g['name'] ?></option>
+                <?php endforeach ?>
+            </select>
+        </div>
+
+
+        <div class="pure-control-group">
             <label for="network-type">Network Type</label>
             <select name="offer" id="network-type">
                 <option value="adexchange">Ad Exchange</option>
@@ -115,14 +125,6 @@ $(function() {
         </div>
 
         <br>
-        <legend>Tracking Tags</legend>
-        <div class="pure-control-group">
-            <label>Tracking</label>
-            <input type="checkbox" name="tracking[]" value="googleAnalytics" checked> Google Analytics
-            <input type="checkbox" name="tracking[]" value="perfectAudience" checked> Perfect Audience
-        </div>
-
-        <br>
 
         <div class="pure-controls">
             <input type="submit" class="pure-button pure-button-primary">
@@ -138,12 +140,28 @@ $(function() {
 <div>
 <h3>Existing Landers</h3>
 <?= $this->multiLinkTable($landers, array(
-    'admin' => array('ID', '/admin/models/content/'),
+    'admin' => array('ID', '/admin/models/landers/'),
     'link' => array('ID', '/content/')
 )) ?>
 </div>
 <br>
 <br>
+
+<div>
+<h3>Geos</h3>
+<?= $this->table($geos) ?>
+</div>
+<br>
+<br>
+
+
+<div>
+<h3>Websites</h3>
+<?= $this->table($websites) ?>
+</div>
+<br>
+<br>
+
 
 <div>
 <h3>Existing Routes</h3>

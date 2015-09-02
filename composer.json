@@ -25,7 +25,8 @@
         "anahkiasen/underscore-php": "^2.0",
         "maximebf/debugbar": "^1.10",
         "yusukezzz/slim-debugbar": "^1.1",
-        "punic/punic": "^1.6"
+        "punic/punic": "^1.6",
+        "triplepoint/php-units-of-measure": "^2.0"
     },
     "autoload": {
         "psr-4": {

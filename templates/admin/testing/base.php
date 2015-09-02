@@ -23,7 +23,6 @@
 <?php
 // $web = $lander->website->toArray();
 
-
 ?>
 </pre>
 </div>
@@ -34,6 +33,33 @@
 </div>
 
 
+
+<div>
+<h4>Geo</h4>
+<pre>
+<?php
+echo 'Weight: ' . $geo->unit('weight'). PHP_EOL;
+echo 'Length: ' . $geo->unit('length'). PHP_EOL;
+echo PHP_EOL;
+
+?>
+<?php var_dump($geo) ?>
+</pre>
+</div>
+
+
+
+<div>
+<h1><strong class="text-pink">Breaking:</strong> Controversial <?= $geo->money(5000) ?> 'Skinny Pill' Hits The <?= $geo->pronoun() ?> Market.</h1>
+<h4>Think Diet Pills Don't Work? Here's One That Doctors Say May Actually Deliver.</h4>
+
+<h5>
+a study published in the journal Lipids in Health & Disease, subjects taking Simply Garcinia lost an average of <?= $geo->weight(19.2) ?>
+</h5>
+
+
+</div>
+
 <div>
 <h4>Variants</h4>
 <h5>Data</h5>
@@ -41,7 +67,6 @@
 <?= $this->vardump($v, true) ?>
 </pre>
 <h5>Display</h5>
-<?= $this->variant($v, 'headlines') ?>
 </div>
 
 
