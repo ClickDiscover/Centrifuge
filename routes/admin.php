@@ -183,3 +183,65 @@ $app->get('/conversions', function() use ($app, $centrifuge) {
         'data' => $out
     ]);
 });
+
+
+$app->group('/admin/aero', function () use($app, $centrifuge) {
+    $config = [
+        "hosts" => [
+            ["addr" => "ec2-52-11-61-236.us-west-2.compute.amazonaws.com", "port" => 3000]
+        ]
+    ];
+    $db = new Aerospike($config);
+    echo '<pre>';
+
+    $app->get('/put', function () use ($app, $db) {
+        $tracking = $app->environment['tracking'];
+        $id = $tracking['flagship.id'];
+        $key = $db->initKey('test', 'cookies', $id);
+        $tc = $tracking['cookie'];
+        $bins = [
+            'created' => $tc->getCreationTime(),
+            'numVisits' => $tc->getVisitCount()
+        ];
+        var_dump($bins);
+        // $bins = ['email' => 'oo@foo.com'];
+        // $nodes = $db->getNodes();
+        // var_dump($nodes);
+        // $status = $db->info('bins/test', $response);
+        // var_dump($status);
+        // var_dump($response);
+
+        // echo 'exists: ';
+        // var_dump($db->exists($key, $metadata));
+        // echo PHP_EOL;
+        // var_dump($metadata);
+        $status = $db->put($key, $bins);
+        if ($status == Aerospike::OK) {
+            echo "Record written.\n";
+        } else {
+            echo "[{$db->errorno()}] ".$db->error();
+        }
+        echo 'Key: ' . print_r($key, 1) . PHP_EOL;
+        echo 'bins: ' . print_r($bins, 1) . PHP_EOL;
+        echo 'Status: ';
+        var_dump($status);
+        echo '</pre>';
+    });
+
+    $app->get('/get', function () use ($app, $db) {
+        $tracking = $app->environment['tracking'];
+        $id = $tracking['flagship.id'];
+        $key = $db->initKey('test', 'cookies', $id);
+        $status = $db->get($key, $record);
+        if ($status == Aerospike::OK) {
+            var_dump($record);
+        } elseif ($status == Aerospike::ERR_RECORD_NOT_FOUND) {
+            echo "A user with key ". $key['key']. " does not exist in the database\n";
+        } else {
+            echo "[{$db->errorno()}] ".$db->error();
+        }
+    });
+});
+
+
+
