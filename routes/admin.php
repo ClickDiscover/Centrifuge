@@ -192,29 +192,24 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
         ]
     ];
     $db = new Aerospike($config);
-    echo '<pre>';
 
     $app->get('/put', function () use ($app, $db) {
+        echo '<pre>';
         $tracking = $app->environment['tracking'];
         $id = $tracking['flagship.id'];
         $key = $db->initKey('test', 'cookies', $id);
+
+        $lander = $_SESSION['last_lander'];
+        if (isset($lander)) {
+            $lkey = $db->initKey('test', 'landers', $lander->id);
+            $db->increment($lkey, 'num_hits', 1);
+        }
+
         $tc = $tracking['cookie'];
         $bins = [
             'created' => $tc->getCreationTime(),
             'numVisits' => $tc->getVisitCount()
         ];
-        var_dump($bins);
-        // $bins = ['email' => 'oo@foo.com'];
-        // $nodes = $db->getNodes();
-        // var_dump($nodes);
-        // $status = $db->info('bins/test', $response);
-        // var_dump($status);
-        // var_dump($response);
-
-        // echo 'exists: ';
-        // var_dump($db->exists($key, $metadata));
-        // echo PHP_EOL;
-        // var_dump($metadata);
         $status = $db->put($key, $bins);
         if ($status == Aerospike::OK) {
             echo "Record written.\n";
@@ -229,6 +224,7 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
     });
 
     $app->get('/get', function () use ($app, $db) {
+        echo '<pre>';
         $tracking = $app->environment['tracking'];
         $id = $tracking['flagship.id'];
         $key = $db->initKey('test', 'cookies', $id);
@@ -240,6 +236,11 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
         } else {
             echo "[{$db->errorno()}] ".$db->error();
         }
+
+        echo 'Landers: ' . PHP_EOL;
+        $db->scan('test', 'landers', function ($x) {
+            var_dump($x);
+        });
     });
 });
 
