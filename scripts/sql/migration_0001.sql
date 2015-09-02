@@ -30,11 +30,11 @@ INSERT INTO geos (name, country, locale, data, variables) VALUES ('United States
 ALTER TABLE ONLY geos ALTER COLUMN id SET DEFAULT nextval('geos_id_seq'::regclass);
 
 
-INSERT INTO geos (country, data, name) VALUES ('CA', '{"unit.length": "centimeter", "unit.weight": "kilogram"}', 'Canada');
-INSERT INTO geos (country, data, name) VALUES ('GB', '{"unit.length": "centimeter", "unit.weight": "kilogram"}', 'United Kingdom');
-INSERT INTO geos (country, data, name) VALUES ('AU', '{"unit.length": "centimeter", "unit.weight": "kilogram"}', 'Australia');
-INSERT INTO geos (country, data, name) VALUES ('ZA', '{"pronoun": "South African", "unit.length": "centimeter", "unit.weight": "kilogram"}', 'South Africa');
-INSERT INTO geos (country, data, name) VALUES ('IT', '{"unit.length": "centimeter", "unit.weight": "kilogram"}', 'Italy');
+INSERT INTO geos (country, name, locale, data) VALUES ('CA', 'Canada', 'en_CA', '{"unit.length": "centimeter", "unit.weight": "kilogram"}');
+INSERT INTO geos (country, name, locale, data) VALUES ('GB', 'Great Britan', 'en_GB', '{"unit.length": "centimeter", "unit.weight": "kilogram"}');
+INSERT INTO geos (country, name, locale, data) VALUES ('AU', 'Australia', 'en_AU', '{"unit.length": "centimeter", "unit.weight": "kilogram"}');
+INSERT INTO geos (country, name, locale, data) VALUES ('ZA', 'South Africa', 'en_ZA', '{"pronoun": "South African", "unit.length": "centimeter", "unit.weight": "kilogram"}');
+INSERT INTO geos (country, name, locale, data) VALUES ('IT', 'Italy', 'it', '{"unit.length": "centimeter", "unit.weight": "kilogram"}');
 
 
 ALTER TABLE landers

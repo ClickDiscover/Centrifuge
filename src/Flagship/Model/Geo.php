@@ -81,6 +81,15 @@ class Geo {
         return Unit::format($value, $unit, $fmt, $loc);
     }
 
+    public function unit($type, $plural = true) {
+        $x = $this->data['unit.' . $type];
+        $last = substr($x, -1);
+        if ($plural && $last != 's') {
+            $x .= 's';
+        }
+        return $x;
+    }
+
     public function length($amount, $unit, $alt = '', $locale = 'en') {
         $l = new Length($amount, $unit);
         $unit = $this->data['unit.length'];
