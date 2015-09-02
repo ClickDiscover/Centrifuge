@@ -31,7 +31,7 @@ ALTER TABLE ONLY geos ALTER COLUMN id SET DEFAULT nextval('geos_id_seq'::regclas
 
 
 INSERT INTO geos (country, name, locale, data) VALUES ('CA', 'Canada', 'en_CA', '{"unit.length": "centimeter", "unit.weight": "kilogram"}');
-INSERT INTO geos (country, name, locale, data) VALUES ('GB', 'Great Britan', 'en_GB', '{"unit.length": "centimeter", "unit.weight": "kilogram"}');
+INSERT INTO geos (country, name, locale, data) VALUES ('GB', 'Great Britan', 'en_GB', '{"unit.length": "centimeter", "unit.weight": "kilogram", "alt.name": "England"}');
 INSERT INTO geos (country, name, locale, data) VALUES ('AU', 'Australia', 'en_AU', '{"unit.length": "centimeter", "unit.weight": "kilogram"}');
 INSERT INTO geos (country, name, locale, data) VALUES ('ZA', 'South Africa', 'en_ZA', '{"pronoun": "South African", "unit.length": "centimeter", "unit.weight": "kilogram"}');
 INSERT INTO geos (country, name, locale, data) VALUES ('IT', 'Italy', 'it', '{"unit.length": "centimeter", "unit.weight": "kilogram"}');
