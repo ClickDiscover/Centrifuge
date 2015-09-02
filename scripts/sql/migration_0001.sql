@@ -1,4 +1,4 @@
---
+name()
 -- PostgreSQL database dump
 --
 
@@ -26,7 +26,7 @@ CREATE TABLE geos (
 ALTER TABLE geos OWNER TO centrifuge;
 ALTER TABLE geos_id_seq OWNER TO centrifuge;
 
-INSERT INTO geos (name, country, locale, data, variables) VALUES ('United States', 'US', 'en_US', '{"unit.format": "long", "unit.length": "centimeter", "unit.weight": "pound"}', '{}');
+INSERT INTO geos (name, country, locale, data, variables) VALUES ('United States', 'US', 'en_US', '{"alt.name": "America", "unit.format": "long", "unit.length": "centimeter", "unit.weight": "pound"}', '{}');
 ALTER TABLE ONLY geos ALTER COLUMN id SET DEFAULT nextval('geos_id_seq'::regclass);
 
 

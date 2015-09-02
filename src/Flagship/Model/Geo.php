@@ -50,7 +50,26 @@ class Geo {
         if (empty($this->data['unit.format'])) {
             $this->data['unit.format'] = 'short,1';
         }
+
+        $code = Currency::getCurrencyForTerritory($this->country);
+        if (empty($this->data['unit.money'])) {
+            $this->data['money.name'] = Currency::getName($code);
+        }
+
+        if (empty($this->data['unit.money.symbol'])) {
+            $this->data['money.symbol'] = Currency::getSymbol($code, $this->data['money.width']);
+        }
     }
+
+    public function name($locale = 'en') {
+        if (empty($this->data['alt.name'])) {
+            $loc = ($locale != "") ? $locale : $this->locale;
+            return Territory::getName($this->country, $loc);
+        } else {
+            return $this->data['alt.name'];
+        }
+    }
+
 
     public function pronoun($locale = 'en') {
         if (empty($this->data['pronoun'])) {
@@ -81,16 +100,20 @@ class Geo {
         return Unit::format($value, $unit, $fmt, $loc);
     }
 
-    public function unit($type, $plural = true) {
+    public function unit($type, $capitalize = false, $plural = true) {
         $x = $this->data['unit.' . $type];
         $last = substr($x, -1);
         if ($plural && $last != 's') {
             $x .= 's';
         }
+
+        if ($capitalize) {
+            $x = ucfirst($x);
+        }
         return $x;
     }
 
-    public function length($amount, $unit, $alt = '', $locale = 'en') {
+    public function length($amount, $unit = 'inch', $alt = '', $locale = 'en') {
         $l = new Length($amount, $unit);
         $unit = $this->data['unit.length'];
         $value = $l->toUnit($unit);

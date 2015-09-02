@@ -38,10 +38,9 @@
 <h4>Geo</h4>
 <pre>
 <?php
-foreach(\Punic\Language::getAll() as $code => $lang) {
-    // echo $code . " => " . $geo->pronoun() . PHP_EOL;
-}
-
+echo 'Weight: ' . $geo->unit('weight'). PHP_EOL;
+echo 'Length: ' . $geo->unit('length'). PHP_EOL;
+echo PHP_EOL;
 
 ?>
 <?php var_dump($geo) ?>
