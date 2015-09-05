@@ -4,7 +4,7 @@ namespace Flagship\Middleware;
 
 use \Slim\Middleware;
 
-use Flagship\Event\EventFactory;
+use Flagship\Event\EventContextFactory;
 use Flagship\Middleware\Session;
 use Flagship\Storage\CookieJar;
 
@@ -16,7 +16,7 @@ class UserTracker extends Middleware {
     protected $trackingCookie = null;
     protected $events;
 
-    public function __construct(CookieJar $cookieJar, EventFactory $events) {
+    public function __construct(CookieJar $cookieJar, EventContextFactory $events) {
         $this->cookieJar = $cookieJar;
         $this->events = $events;
     }

@@ -8,7 +8,7 @@ use Flagship\Event\Context\CampaignContext;
 
 use League\Event\EventInterface;
 
-class EventFactory {
+class EventContextFactory {
 
     protected $config;
 
@@ -29,10 +29,14 @@ class EventFactory {
     }
 }
 
-class Event extends \ArrayObject {
+class EventContext extends \ArrayObject {
+    // Event ID
     // protected $id = false;
+
+    // User Data
     // protected $userId = false;
     // protected $gaId = false;
+    // protected $cookie = false;
 
     // Init is array of Contexts.. they need an interface...
     public function __construct($init) {
