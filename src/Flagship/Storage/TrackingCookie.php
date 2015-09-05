@@ -141,16 +141,15 @@ class TrackingCookie {
     /////////////////////
 
 
-    public static function getOrCreate($cookieValue, $hasher) {
+    public static function getOrCreate($cookieValue, $id) {
         if (empty($cookieValue)) {
-            return self::create($hasher);
+            return self::create($id);
         } else {
             return self::fromCookie($cookieValue);
         }
     }
 
-    public static function create($hasher) {
-        $id = $hasher->encode(mt_rand(0, $hasher->get_max_int_value()));
+    public static function create($id) {
         return new TrackingCookie($id, time(), 0);
     }
 

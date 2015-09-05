@@ -4,6 +4,7 @@ namespace Flagship\Middleware;
 
 use \Slim\Middleware;
 
+use Flagship\Event\BaseEvent;
 use Flagship\Event\EventContextFactory;
 use Flagship\Middleware\Session;
 use Flagship\Storage\CookieJar;
@@ -51,8 +52,14 @@ class UserTracker extends Middleware {
             $tracking['flagship.id']    = $this->trackingCookie->getId();
         }
 
+        // New Event Stuff
+        // $ev = $this->events->createFromRequest($req);
+        // $eventId = $this->cookieJar->getRandomId();
+        // $userId = $tc->getId();
+        // $trackingEvent = new BaseEvent(,$tc->getId(), $ev, $tc)
+
         // Set tracking information on app environment
-        $env['tracking']       = $tracking;
+        $env['tracking'] = $tracking;
     }
 
     public function after () {

@@ -97,7 +97,7 @@ class CookieJar {
 
         $t = TrackingCookie::getOrCreate(
             $this->app->getCookie(TrackingCookie::KEY),
-            $this->hasher
+            $this->getRandomId()
         );
 
         $visitId = $this->getVisitId();
@@ -108,7 +108,7 @@ class CookieJar {
         if (isset($t)) {
             $t->setVisitId($visitId);
         } else {
-            $t = TrackingCookie::create($this->hasher);
+            $t = TrackingCookie::create($this->getRandomId());
         }
         return $t;
     }
@@ -121,16 +121,21 @@ class CookieJar {
         $this->setCookie(TrackingCookie::KEY, $tc->toCookie(), $this->visitorLifetime);
     }
 
-    public function getVisitId() {
-        return $_SESSION[Session::SESSION_KEY];
-    }
-
     public function getCookie ($name, $deleteIfInvalid = true) {
         if (empty($this->app)) {
             return false;
         }
 
         return $this->app->getCookie($name, $deleteIfInvalid);
+    }
+
+
+    public function getVisitId() {
+        return $_SESSION[Session::SESSION_KEY];
+    }
+
+    public function getRandomId() {
+        return $this->hasher->encode(mt_rand(0, $this->hasher->get_max_int_value()));
     }
 }
 

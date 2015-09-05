@@ -21,7 +21,7 @@ class EventContextFactory {
         $url  = UrlContext::fromRequest($request);
         $user = UserContext::fromRequest($request);
         $camp = CampaignContext::fromRequest($request, $c['campaign.key'], $c['ad.key']);
-        return new Event(array(
+        return new EventContext(array(
             'url' => $url,
             'user' => $user,
             'campaign' => $camp
