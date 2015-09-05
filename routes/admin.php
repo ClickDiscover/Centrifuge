@@ -188,7 +188,7 @@ $app->get('/conversions', function() use ($app, $centrifuge) {
 $app->group('/admin/aero', function () use($app, $centrifuge) {
     $config = [
         "hosts" => [
-            ["addr" => "ec2-52-11-61-236.us-west-2.compute.amazonaws.com", "port" => 3000]
+            ["addr" => "localhost", "port" => 3000]
         ]
     ];
     $db = new Aerospike($config);
@@ -199,7 +199,7 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
         $id = $tracking['flagship.id'];
         $key = $db->initKey('test', 'cookies', $id);
 
-        $lander = $_SESSION['last_lander'];
+        $lander = isset($_SESSION['last_lander']) ? $_SESSION['last_lander'] : null;
         if (isset($lander)) {
             $lkey = $db->initKey('test', 'landers', $lander->id);
             $db->increment($lkey, 'num_hits', 1);
@@ -244,5 +244,40 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
     });
 });
 
+
+
+$app->get('/admin/s3', function () use ($app) {
+    $config = array(
+        "region" => "us-east-1",
+        "version" => "latest",
+        "credentials" => [
+            "key" => "AKIAITCZFDXHYHEVBGEA",
+            "secret" => "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",
+        ],
+    );
+    $dir = 's3://events.flagshippromotions.com/segment-logs/GsDiILK8mG/1441152000000';
+
+
+    $client = new Aws\S3\S3Client($config);
+    $client->registerStreamWrapper();
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+
+    $total = [];
+    $ttl = [];
+    foreach ($iterator as $file) {
+        $name = (string) $file;
+
+        if ($stream = fopen($name, 'r')) {
+            while (!feof($stream)) {
+                echo fread($stream, 1024);
+            }
+            fclose($stream);
+        }
+        // $total[$name] = $contents;
+    }
+
+    echo 'totaL ' . count($total). PHP_EOL;
+
+});
 
 
