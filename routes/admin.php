@@ -245,39 +245,3 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
 });
 
 
-
-$app->get('/admin/s3', function () use ($app) {
-    $config = array(
-        "region" => "us-east-1",
-        "version" => "latest",
-        "credentials" => [
-            "key" => "AKIAITCZFDXHYHEVBGEA",
-            "secret" => "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",
-        ],
-    );
-    $dir = 's3://events.flagshippromotions.com/segment-logs/GsDiILK8mG/1441152000000';
-
-
-    $client = new Aws\S3\S3Client($config);
-    $client->registerStreamWrapper();
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
-
-    $total = [];
-    $ttl = [];
-    foreach ($iterator as $file) {
-        $name = (string) $file;
-
-        if ($stream = fopen($name, 'r')) {
-            while (!feof($stream)) {
-                echo fread($stream, 1024);
-            }
-            fclose($stream);
-        }
-        // $total[$name] = $contents;
-    }
-
-    echo 'totaL ' . count($total). PHP_EOL;
-
-});
-
-

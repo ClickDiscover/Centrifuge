@@ -68,7 +68,6 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     $currentQuery = $req->get();
     $currentQuery['id'] = $stepId;
     $url->getQuery()->modify($currentQuery);
-
     $app->redirect($url);
 
 })->name('click')->conditions(array('stepId' => '[0-9]+'));
