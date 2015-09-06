@@ -31,8 +31,9 @@ function landerFromRequest($landers, $req) {
 
 $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     $req = $app->request;
-    $centrifuge['librato.performance']->total("clicks");
 
+
+    // Cookie Tracking
     $tracking = $app->environment['tracking'];
     $tracking['click.step_id'] = $stepId;
     if (isset($tracking['cookie'])) {
@@ -40,13 +41,13 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     }
 
     // Lander Tracking
+    $centrifuge['librato.performance']->total("clicks");
     $lander = landerFromRequest($centrifuge['landers'], $req);
     if (isset($lander)) {
         // $centrifuge['logger']->info('Lander', [$lander->id]);
         $centrifuge['librato.performance']->breakout('lander', $lander->id, 'clicks');
         $centrifuge['segment']->offerClick($tracking, $lander);
     }
-
 
     // Keyword Tracking
     $keyword = $req->get('keyword');

@@ -197,12 +197,13 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
         echo '<pre>';
         $tracking = $app->environment['tracking'];
         $id = $tracking['flagship.id'];
-        $key = $db->initKey('test', 'cookies', $id);
+        $key = $db->initKey('test', 'users', $id);
 
+        $option = [Aerospike::OPT_POLICY_KEY => Aerospike::POLICY_KEY_SEND];
         $lander = isset($_SESSION['last_lander']) ? $_SESSION['last_lander'] : null;
         if (isset($lander)) {
             $lkey = $db->initKey('test', 'landers', $lander->id);
-            $db->increment($lkey, 'num_hits', 1);
+            $db->increment($lkey, 'num_hits', 1, $option);
         }
 
         $tc = $tracking['cookie'];
@@ -210,7 +211,7 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
             'created' => $tc->getCreationTime(),
             'numVisits' => $tc->getVisitCount()
         ];
-        $status = $db->put($key, $bins);
+        $status = $db->put($key, $bins, 0, $option);
         if ($status == Aerospike::OK) {
             echo "Record written.\n";
         } else {
@@ -227,19 +228,28 @@ $app->group('/admin/aero', function () use($app, $centrifuge) {
         echo '<pre>';
         $tracking = $app->environment['tracking'];
         $id = $tracking['flagship.id'];
-        $key = $db->initKey('test', 'cookies', $id);
+        $key = $db->initKey('test', 'users', $id);
         $status = $db->get($key, $record);
         if ($status == Aerospike::OK) {
-            var_dump($record);
+            print_r($record);
         } elseif ($status == Aerospike::ERR_RECORD_NOT_FOUND) {
             echo "A user with key ". $key['key']. " does not exist in the database\n";
         } else {
             echo "[{$db->errorno()}] ".$db->error();
         }
 
-        echo 'Landers: ' . PHP_EOL;
-        $db->scan('test', 'landers', function ($x) {
-            var_dump($x);
+
+        // echo PHP_EOL . PHP_EOL . 'Cookies: ' . PHP_EOL;
+        // $db->scan('test', 'cookies', function ($x) use ($db) {
+        //     print_r($x);
+        // });
+
+        echo PHP_EOL . PHP_EOL . 'Landers: ' . PHP_EOL;
+        $db->scan('test', 'users', function ($x) use ($db) {
+            print_r($x);
+            // $key = $db->initKey($x['key']['ns'], $x['key']['set'], $x['key']['digest'], true);
+            // $status = $db->remove($key);
+            // echo "Removed " . $status;
         });
     });
 });

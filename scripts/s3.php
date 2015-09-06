@@ -6,49 +6,53 @@ date_default_timezone_set('UTC');
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-function select($iterator, $max, $type, $namespace, $prop) {
-    $total = [];
-    $count = 0;
-    $raw = ['f' => 0, 'l' => 0];
-    $events = [];
+function stream($iterator) {
 
     foreach ($iterator as $file) {
         $name = (string) $file;
         if ($stream = fopen($name, 'r')) {
 
-            $raw['f']++;
             $done = false;
             // Loop through Lines
             while (!feof($stream) && !$done) {
-                $raw['l']++;
                 $str = stream_get_line($stream, 4096, PHP_EOL);
                 $done = (trim($str) === '0');
 
-                $json = json_decode($str, true);
-                $type = $json['type'];
-                if (isset($type)) {
-                    if (empty($events[$type])) {
-                        $events[$type] = 0;
-                    }
-                    $events[$type] += 1;
-
-                    if ($count > $max) {
-                        return [$total, $events, $raw];
-                    }
-                    $count++;
-
-
-                    if ($json['type'] === $type) {
-                        if (isset($json[$namespace]) && isset($json[$namespace][$prop])) {
-                            $total[] = $json[$namespace][$prop];
-                        }
-                    }
-                }
+                yield json_decode($str, true);
             } // End Lines
             fclose($stream);
         }
     } // End files
-    return [$total, $events, $raw];
+}
+
+
+
+function select($stream, $max, $typeSelect, $namespace, $prop) {
+    $total = [];
+    $count = 0;
+    $events = [];
+
+    foreach ($stream as $json) {
+        $type = $json['type'];
+        if (isset($type)) {
+            if (empty($events[$type])) {
+                $events[$type] = 0;
+            }
+            $events[$type] += 1;
+
+            if ($count > $max) {
+                return [$total, $events];
+            }
+            $count++;
+
+            if ($json['type'] === $typeSelect) {
+                if (isset($json[$namespace]) && isset($json[$namespace][$prop])) {
+                    $total[] = $json[$namespace][$prop];
+                }
+            }
+        }
+    } // End files
+    return [$total, $events];
 }
 
 
@@ -89,24 +93,39 @@ $config = array(
     ],
 );
 $baseDir = 's3://events.flagshippromotions.com/segment-logs/GsDiILK8mG/';
-$dir = $baseDir . '1441324800000';
+// $dir = $baseDir . '1441324800000'; // Yesterday
+// $dir = $baseDir . '1441238400000'; // 2 Days ago
+// $dir = $baseDir . '1441411200000'; // Today
+$dir = $baseDir; // All
 
-
+echo "Starting for " . $dir . PHP_EOL;
 $client = new Aws\S3\S3Client($config);
 $client->registerStreamWrapper();
+$max = 10000000;
 $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
 
-$max = 1000;
-list($views, $viewEvents, $raw) = select($iterator, $max, 'page', 'context', 'user_agent');
-echo 'Views' . PHP_EOL;
-print_r($raw);
-print_r(count($views));
 
-$iterator->rewind();
-list($clicks, $clickEvents, $raw) = select($iterator, $max, 'track', 'context', 'user_agent');
+list($views, $viewEvents) = select(stream($iterator), $max, 'page', 'properties', 'website');
+echo 'Views' . PHP_EOL;
+// print_r($raw);
+// print_r($viewEvents);
+$landerViews = array_count_values($views);
+
+
+$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+list($clicks, $clickEvents) = select(stream($iterator), $max, 'track', 'properties', 'website');
 echo 'Clicks' . PHP_EOL;
-print_r($raw);
-print_r(count($clicks));
+$landerClicks = array_count_values($clicks);
+
+foreach (array_keys($landerViews) as $id) {
+    $v = $landerViews[$id];
+    $c = isset($landerClicks[$id]) ? $landerClicks[$id] : 0;
+    $ctr = ($v == 0) ? 0 : ($c / (double) $v);
+
+    if ($c != 0) {
+        echo "ID: " . $id . " Views: " . $v . " Clicks " . $c . " CTR " . $ctr . PHP_EOL;
+    }
+}
 
 // print_r($viewEvents);
 // print_r(userAgentCounts($views, 'device'));
