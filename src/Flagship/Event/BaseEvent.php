@@ -5,6 +5,8 @@ namespace Flagship\Event;
 
 use \Slim\Helper\Set;
 
+use \Flagship\Storage\LibratoStorage;
+use \Flagship\Storage\SegmentStorage;
 
 abstract class BaseEvent {
 
@@ -12,6 +14,10 @@ abstract class BaseEvent {
     const SEGMENT_NAME = "";
     const SEGMENT_METHOD = "";
     const AEROSPIKE_KEY = "";
+    const LIBRATO_KEY = self::AEROSPIKE_KEY;
+
+    const FILTER_CONTEXT_CAMPAIGN = ['ad', 'keyword']; // UTM dealt with seperatly
+    const FILTER_CONTEXT_USER     = ['ip', 'user_agent'];
 
     protected $id;
     public $context;
@@ -67,16 +73,12 @@ abstract class BaseEvent {
         return $this->gaId;
     }
 
-    public function getSegmentArray($integrationsOn = false) {
+    public function getSegmentArray() {
         $c = [
             'userId' => $this->getUserId(),
             'properties' => $this->properties->all(),
             'context' => $this->context->all()
         ];
-
-        if ($integrationsOn) {
-            $c['integrations'] = ['All' => true];
-        }
         return $c;
     }
 
@@ -90,8 +92,8 @@ abstract class BaseEvent {
 
     public function setContext(EventContext $tc) {
         $tc->finalize();
-        $user = array_intersect_key($tc['user'], array_flip(['ip', 'user_agent']));
-        $camp = array_intersect_key($tc['campaign'], array_flip(['keyword', 'ad']));
+        $user = array_intersect_key($tc['user'], array_flip(self::FILTER_CONTEXT_USER));
+        $camp = array_intersect_key($tc['campaign'], array_flip(self::FILTER_CONTEXT_CAMPAIGN));
         if (isset($tc['campaign']['utm'])) {
             $camp = array_merge($camp, $tc['campaign']['utm']);
         }
@@ -129,5 +131,27 @@ abstract class BaseEvent {
             'offer.source' => $this->lander->offers[1]->product->source
         ]);
     }
+
+    public function toLibrato(LibratoStorage $librato) {
+        $librato->total(self::LIBRATO_KEY);
+        $landerId = isset($this->lander) ? $this->lander->id : null;
+        $keyword = $this->context->get('keyword');
+        $ad = $this->context->get('ad');
+
+        if (isset($landerId)) {
+            $librato->breakout('lander', $landerId, self::LIBRATO_KEY);
+        }
+        if (isset($keyword)) {
+            $librato->breakout('keyword', $keyword, self::LIBRATO_KEY);
+        }
+        if (isset($ad)) {
+            $librato->breakout('ad', $ad, self::LIBRATO_KEY);
+        }
+    }
+
+    // public function toSegment(SegmentStorage $segment) {
+    //     $method = self::SEGMENT_METHOD;
+    //     $segment->$method($this->getSegmentArray());
+    // }
 }
 

@@ -20,8 +20,8 @@ class View extends BaseEvent {
         ]);
     }
 
-    public function getSegmentArray($ignored = false) {
-        $s = parent::getSegmentArray(true);
+    public function getSegmentArray() {
+        $s = parent::getSegmentArray();
         $s['name'] = self::SEGMENT_NAME;
         return $s;
     }

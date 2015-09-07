@@ -4,31 +4,6 @@ use League\Url\Url;
 
 
 
-function landerIdFromRequest($req) {
-    $qs    = $req->get('fp_lid');
-    $refer = $req->getReferrer();
-    if (isset($refer)) {
-        $refer = Url::createFromUrl($refer);
-        $path = $refer->getPath()->toArray();
-        $id = array_pop($path);
-        if ($refer->getHost() == $req->getHost()) {
-            return $id;
-        }
-    } elseif (isset($qs)) {
-        return $qs;
-    }
-}
-
-function landerFromRequest($landers, $req) {
-    if (isset($_SESSION['last_lander'])) {
-        return $_SESSION['last_lander'];
-    } else {
-        $id = landerIdFromRequest($req);
-        return (isset($id)) ? $landers->fetch($id) : null;
-    }
-}
-
-
 $app->get('/click/:stepId', $app->container['route_middleware.click'], function ($stepId) use ($app, $centrifuge) {
     $req = $app->request;
 
@@ -40,21 +15,24 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
         $tracking['cookie']->setLastOfferClickTime(time());
     }
 
+    $click = $app->environment['click'];
+    $click->toLibrato($centrifuge['librato.performance']);
+
     // Lander Tracking
-    $centrifuge['librato.performance']->total("clicks");
+    // $centrifuge['librato.performance']->total("clicks");
     // $lander = landerFromRequest($centrifuge['landers'], $req);
-    $lander = $app->environment['click']->lander;
-    if (isset($lander)) {
+    // $lander = $app->environment['click']->lander;
+    // if (isset($lander)) {
         // $centrifuge['logger']->info('Lander', [$lander->id]);
-        $centrifuge['librato.performance']->breakout('lander', $lander->id, 'clicks');
-        $centrifuge['segment']->offerClick($tracking, $lander);
-    }
+    //     $centrifuge['librato.performance']->breakout('lander', $lander->id, 'clicks');
+    //     $centrifuge['segment']->offerClick($tracking, $lander);
+    // }
 
     // Keyword Tracking
-    $keyword = $req->get('keyword');
-    if (isset($keyword)) {
-        $centrifuge['librato.performance']->breakout('keyword', $keyword, 'clicks');
-    }
+    // $keyword = $req->get('keyword');
+    // if (isset($keyword)) {
+    //     $centrifuge['librato.performance']->breakout('keyword', $keyword, 'clicks');
+    // }
 
     // Now we redirect to cpv.flagshippromotions.com/base2.php
     // Eventually it will go to our campaign managment system

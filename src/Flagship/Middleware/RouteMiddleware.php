@@ -83,7 +83,7 @@ class RouteMiddleware {
     }
 
     public static function landerFromRequest($landers, $req) {
-        $id = landerIdFromRequest($req);
+        $id = self::landerIdFromRequest($req);
         if (is_null($id) && isset($_SESSION['last_lander'])) {
             return $_SESSION['last_lander'];
         }

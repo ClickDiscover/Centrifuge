@@ -4,7 +4,8 @@
 $app->get('/content/:id', $app->container['route_middleware.view'], function ($id) use ($app, $centrifuge) {
 
     // $lander = $centrifuge['landers']->fetch($id);
-    $lander = $app->environment['view']->lander;
+    $view = $app->environment['view'];
+    $lander = $view->lander;
 
     // if (!$lander) {
     //     $app->notFound();
@@ -15,14 +16,16 @@ $app->get('/content/:id', $app->container['route_middleware.view'], function ($i
     $tracking = $app->environment['tracking'];
     $context = $tracking['context'];
 
+    $view->toLibrato($centrifuge['librato.performance']);
+
     // Campaign + Keyword Tracking
-    $centrifuge['librato.performance']->total("views");
-    $centrifuge['librato.performance']->breakout('lander', $lander->id, 'views');
-    $keyword = $context->get('campaign', 'keyword', $app->request->params('keyword'));
-    if (isset($keyword)) {
-        $centrifuge['librato.performance']->breakout('keyword', $keyword, 'views');
-    }
-    $ad = $context->get('campaign', 'ad', $app->request->params('ad'));
+    // $centrifuge['librato.performance']->total("views");
+    // $centrifuge['librato.performance']->breakout('lander', $lander->id, 'views');
+    // $keyword = $context->get('campaign', 'keyword', $app->request->params('keyword'));
+    // if (isset($keyword)) {
+    //     $centrifuge['librato.performance']->breakout('keyword', $keyword, 'views');
+    // }
+    // $ad = $context->get('campaign', 'ad', $app->request->params('ad'));
 
     // User tracking
     // $_SESSION['last_lander'] = $lander;

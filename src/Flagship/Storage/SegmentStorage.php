@@ -19,6 +19,15 @@ class SegmentStorage {
         $this->log = $log;
     }
 
+    public function page($arr) {
+        \Segment::page($arr);
+    }
+
+    public function track($arr) {
+        // $arr['integrations'] = ['All' => true];
+        \Segment::track($arr);
+    }
+
     public function offerClick($tracking, $lander) {
         if(!$this->identify($tracking)) {
             return false;
