@@ -20,6 +20,7 @@ class SlimBootstrap {
     public function bootstrap() {
         $app = $this->app;
         $container = $this->container;
+        $app->setName($container['config']['name']);
 
         $container['slim.urlFor'] = $container->protect(function ($destination, $params) use ($app) {
             $getParams = $app->request->get();
