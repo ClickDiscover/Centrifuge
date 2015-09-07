@@ -30,14 +30,6 @@ class EventContextFactory {
 }
 
 class EventContext extends \ArrayObject {
-    // Event ID
-    // protected $id = false;
-
-    // User Data
-    // protected $userId = false;
-    // protected $gaId = false;
-    // protected $cookie = false;
-
     // Init is array of Contexts.. they need an interface...
     public function __construct($init) {
         parent::__construct($init, \ArrayObject::ARRAY_AS_PROPS);

@@ -159,14 +159,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
 
-        $out .= "\ngetHost " . $app->request->getHost() . "\n";
-        $out .= "\ngetHostWithPort " . $app->request->getHostWithPort() . "\n";
-        $out .= "\ngetScriptName " . $app->request->getScriptName() . "\n";
-        $out .= "\ngetPath " . $app->request->getPath() . "\n";
-        $out .= "\ngetPathInfo " . $app->request->getPathInfo() . "\n";
-        $out .= "\ngetResourceUri " . $app->request->getResourceUri() . "\n";
-        $out .= "\ngetUrl " . $app->request->getUrl() . "\n";
-
         echo $centrifuge['plates']->render('admin::models/layout', [
             'title' => 'Tracking',
             'data' => $out
