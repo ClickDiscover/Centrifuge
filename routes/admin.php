@@ -142,13 +142,26 @@ $app->group('/admin', function() use ($app, $centrifuge) {
     });
 
 
-    $app->get('/tracking', function () use ($app, $centrifuge) {
-        $out  = "Session\n";
+    $app->get('/tracking', $app->container['route_middleware.clickAdmin'], function () use ($app, $centrifuge) {
+        // $lander = isset($_SESSION['last_lander']) ? $_SESSION['last_lander'] : null;
+        $view = $app->environment['click'];
+        $lander = $centrifuge['landers']->fetch($app->request->get('lid', 1));
+        if (isset($lander)) {
+            $view->setStepId(1);
+            $view->setLander($lander);
+        }
+        $out  = "View\n";
+        $out .= print_r($view, true);
+        $out .= "View::getSegmentArray\n";
+        $out .= print_r($view->getSegmentArray(), true);
+        $out .= "Session\n";
         $out .= print_r($_SESSION, true);
         $out .= "\nTracking\n";
         $out .= print_r($app->environment['tracking'], true);
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
+        $lander = isset($_SESSION['last_lander']) ? $_SESSION['last_lander'] : null;
+
         echo $centrifuge['plates']->render('admin::models/layout', [
             'title' => 'Tracking',
             'data' => $out

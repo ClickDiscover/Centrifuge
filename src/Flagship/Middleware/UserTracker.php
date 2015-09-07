@@ -38,7 +38,9 @@ class UserTracker extends Middleware {
         $tracking = [];
         $ev = $this->events->createFromRequest($req);
         $ev->finalize();
+        $tracking['test.context'] = $this->events->createFromRequest($req);
         $tracking['context'] = $ev;
+        $tracking['debug']['context'] = $ev;
         $tracking['google.id'] = $this->checkGACookie();
 
         // Get or create tracking cookie
@@ -47,15 +49,18 @@ class UserTracker extends Middleware {
             $this->app->log->warn('Warning tracking cookie is not set');
         } else {
             $this->trackingCookie = $tc;
-            $tracking['debug'] = ['cookie' => $this->trackingCookie->pretty()];
+            $tracking['debug']['cookie'] = $this->trackingCookie->pretty();
             $tracking['cookie'] = $this->trackingCookie;
             $tracking['flagship.id']    = $this->trackingCookie->getId();
         }
 
         // New Event Stuff
-        // $ev = $this->events->createFromRequest($req);
-        // $eventId = $this->cookieJar->getRandomId();
-        // $userId = $tc->getId();
+        // $eventId = $this
+        // $view = new \Flagship\Event\View($eventId, $userId);
+        // $view->setContext($this->events->createFromRequest($req));
+        // $view->setGoogleId($this->checkGACookie());
+        // $view->setCookie($tc);
+
         // $trackingEvent = new BaseEvent(,$tc->getId(), $ev, $tc)
 
         // Set tracking information on app environment

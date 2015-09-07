@@ -63,12 +63,14 @@ class SlimBootstrap {
             };
         };
 
-        $app->container['route_middleware.click'] = function () use ($app, $container) {
-            return function ($route) use ($app, $container) {
-                return RouteMiddleware::click($app, $container, $route);
-            };
-        };
+        RouteMiddleware::register($app, $container);
+        // $app->container['route_middleware.click'] = RouteMiddleware::closure($app, $container, "click");
 
+        // $app->container['route_middleware.click'] = function () use ($app, $container) {
+        //     return function ($route) use ($app, $container) {
+        //         return RouteMiddleware::click($app, $container, $route);
+        //     };
+        // };
 
         $app->container['custom.routes'] = function () use ($container) {
             return $container['custom.routes']->fetchAll();

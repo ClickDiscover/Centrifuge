@@ -29,7 +29,7 @@ function landerFromRequest($landers, $req) {
 }
 
 
-$app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
+$app->get('/click/:stepId', $app->container['route_middleware.click'], function ($stepId) use ($app, $centrifuge) {
     $req = $app->request;
 
 
@@ -42,7 +42,8 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
 
     // Lander Tracking
     $centrifuge['librato.performance']->total("clicks");
-    $lander = landerFromRequest($centrifuge['landers'], $req);
+    // $lander = landerFromRequest($centrifuge['landers'], $req);
+    $lander = $app->environment['click']->lander;
     if (isset($lander)) {
         // $centrifuge['logger']->info('Lander', [$lander->id]);
         $centrifuge['librato.performance']->breakout('lander', $lander->id, 'clicks');

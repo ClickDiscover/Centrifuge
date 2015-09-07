@@ -1,13 +1,14 @@
 <?php
 
 
-$app->get('/content/:id', function ($id) use ($app, $centrifuge) {
+$app->get('/content/:id', $app->container['route_middleware.view'], function ($id) use ($app, $centrifuge) {
 
-    $lander = $centrifuge['landers']->fetch($id);
+    // $lander = $centrifuge['landers']->fetch($id);
+    $lander = $app->environment['view']->lander;
 
-    if (!$lander) {
-        $app->notFound();
-    }
+    // if (!$lander) {
+    //     $app->notFound();
+    // }
 
     // View tracking
     // Old rotator did do bot tracking here if ($req->isBot()) {
@@ -24,7 +25,7 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
     $ad = $context->get('campaign', 'ad', $app->request->params('ad'));
 
     // User tracking
-    $_SESSION['last_lander'] = $lander;
+    // $_SESSION['last_lander'] = $lander;
     if (isset($tracking['cookie'])) {
         $tracking['cookie']->setLastVisitTime(time());
     }
