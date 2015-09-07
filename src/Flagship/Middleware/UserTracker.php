@@ -28,39 +28,17 @@ class UserTracker extends Middleware {
     }
 
     public function before() {
-        $req = $this->app->request;
-        $env = $this->app->environment();
-
-        $tracking = [];
-        $ev = $this->events->createFromRequest($req);
-        $ev->finalize();
-        $tracking['test.context'] = $this->events->createFromRequest($req);
-        $tracking['context'] = $ev;
-        $tracking['debug']['context'] = $ev;
-        $tracking['google.id'] = $this->checkGACookie();
-
-        // Get or create tracking cookie
-        $tc = $this->cookieJar->getOrCreateTracking();
-        if (empty($tc)) {
+        $this->trackingCookie = $this->cookieJar->getOrCreateTracking();
+        if (empty($this->trackingCookie)) {
             $this->app->log->warn('Warning tracking cookie is not set');
-        } else {
-            $this->trackingCookie = $tc;
-            $tracking['debug']['cookie'] = $this->trackingCookie->pretty();
-            $tracking['cookie'] = $this->trackingCookie;
-            $tracking['flagship.id']    = $this->trackingCookie->getId();
+            return false;
         }
 
-        // New Event Stuff
-        // $eventId = $this
-        // $view = new \Flagship\Event\View($eventId, $userId);
-        // $view->setContext($this->events->createFromRequest($req));
-        // $view->setGoogleId($this->checkGACookie());
-        // $view->setCookie($tc);
-
-        // $trackingEvent = new BaseEvent(,$tc->getId(), $ev, $tc)
-
-        // Set tracking information on app environment
-        $env['tracking'] = $tracking;
+        $this->app->environment['user.tracker'] = new UserTrackerContext(
+            $this->trackingCookie,
+            $this->events->createFromRequest($this->app->request),
+            $this->checkGACookie()
+        );
     }
 
     public function after () {
@@ -78,5 +56,17 @@ class UserTracker extends Middleware {
             $gaID = $parts[count($parts)-2].'.'.$parts[count($parts)-1];
             return $gaID;
         }
+    }
+}
+
+class UserTrackerContext {
+    public $context;
+    public $googleId;
+    public $cookie;
+
+    public function __construct($cookie, $context, $googleId = null) {
+        $this->cookie = $cookie;
+        $this->context = $context;
+        $this->googleId = $googleId;
     }
 }

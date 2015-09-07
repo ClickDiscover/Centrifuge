@@ -131,6 +131,8 @@ abstract class BaseEvent {
             'title' => $this->lander->notes,
             'website' => $this->lander->website->name,
             'website.id' => $this->lander->website->id,
+            'country' => $this->lander->geo->name,
+            'geo.id' => $this->lander->geo->id,
             'vertical' => $this->lander->offers[1]->product->vertical,
             'offer.source' => $this->lander->offers[1]->product->source
         ]);

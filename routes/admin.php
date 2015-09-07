@@ -141,21 +141,24 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 
 
     $app->get('/tracking', $app->container['route_middleware.clickAdmin'], function () use ($app, $centrifuge) {
-        // $lander = isset($_SESSION['last_lander']) ? $_SESSION['last_lander'] : null;
+        $eventType = "Click";
         $view = $app->environment['click'];
         $lander = $centrifuge['landers']->fetch($app->request->get('lid', 1));
         if (isset($lander)) {
             $view->setStepId(2);
             $view->setLander($lander);
         }
-        $out  = "Click\n";
-        $out .= print_r($view, true);
-        $out .= "Click::toSegmetn\n";
+
+        $out  = "\n\n" . $eventType ."::getSegmentArray\n";
         $out .= print_r($view->getSegmentArray(), true);
-        $out .= "Session\n";
+        $out .= "\n\n\n" . $eventType . "\n";
+        $out .= print_r($view, true);
+        $out .= "\nTrackingCookie\n";
+        $out .= print_r($view->getCookie()->pretty(), true);
+        $out .= "\n\n\nSession\n";
         $out .= print_r($_SESSION, true);
-        $out .= "\nTracking\n";
-        $out .= print_r($app->environment['tracking'], true);
+        // $out .= "\nTracking\n";
+        // $out .= print_r($app->environment['user.tracker'], true);
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
 
@@ -195,73 +198,73 @@ $app->get('/conversions', function() use ($app, $centrifuge) {
 });
 
 
-$app->group('/admin/aero', function () use($app, $centrifuge) {
-    $config = [
-        "hosts" => [
-            ["addr" => "localhost", "port" => 3000]
-        ]
-    ];
-    $db = new Aerospike($config);
+// $app->group('/admin/aero', function () use($app, $centrifuge) {
+//     $config = [
+//         "hosts" => [
+//             ["addr" => "localhost", "port" => 3000]
+//         ]
+//     ];
+//     $db = new Aerospike($config);
 
-    $app->get('/put', function () use ($app, $db) {
-        echo '<pre>';
-        $tracking = $app->environment['tracking'];
-        $id = $tracking['flagship.id'];
-        $key = $db->initKey('test', 'users', $id);
+//     $app->get('/put', function () use ($app, $db) {
+//         echo '<pre>';
+//         $tracking = $app->environment['tracking'];
+//         $id = $tracking['flagship.id'];
+//         $key = $db->initKey('test', 'users', $id);
 
-        $option = [Aerospike::OPT_POLICY_KEY => Aerospike::POLICY_KEY_SEND];
-        $lander = isset($_SESSION['last_lander']) ? $_SESSION['last_lander'] : null;
-        if (isset($lander)) {
-            $lkey = $db->initKey('test', 'landers', $lander->id);
-            $db->increment($lkey, 'num_hits', 1, $option);
-        }
+//         $option = [Aerospike::OPT_POLICY_KEY => Aerospike::POLICY_KEY_SEND];
+//         $lander = isset($_SESSION['last_lander']) ? $_SESSION['last_lander'] : null;
+//         if (isset($lander)) {
+//             $lkey = $db->initKey('test', 'landers', $lander->id);
+//             $db->increment($lkey, 'num_hits', 1, $option);
+//         }
 
-        $tc = $tracking['cookie'];
-        $bins = [
-            'created' => $tc->getCreationTime(),
-            'numVisits' => $tc->getVisitCount()
-        ];
-        $status = $db->put($key, $bins, 0, $option);
-        if ($status == Aerospike::OK) {
-            echo "Record written.\n";
-        } else {
-            echo "[{$db->errorno()}] ".$db->error();
-        }
-        echo 'Key: ' . print_r($key, 1) . PHP_EOL;
-        echo 'bins: ' . print_r($bins, 1) . PHP_EOL;
-        echo 'Status: ';
-        var_dump($status);
-        echo '</pre>';
-    });
+//         $tc = $tracking['cookie'];
+//         $bins = [
+//             'created' => $tc->getCreationTime(),
+//             'numVisits' => $tc->getVisitCount()
+//         ];
+//         $status = $db->put($key, $bins, 0, $option);
+//         if ($status == Aerospike::OK) {
+//             echo "Record written.\n";
+//         } else {
+//             echo "[{$db->errorno()}] ".$db->error();
+//         }
+//         echo 'Key: ' . print_r($key, 1) . PHP_EOL;
+//         echo 'bins: ' . print_r($bins, 1) . PHP_EOL;
+//         echo 'Status: ';
+//         var_dump($status);
+//         echo '</pre>';
+//     });
 
-    $app->get('/get', function () use ($app, $db) {
-        echo '<pre>';
-        $tracking = $app->environment['tracking'];
-        $id = $tracking['flagship.id'];
-        $key = $db->initKey('test', 'users', $id);
-        $status = $db->get($key, $record);
-        if ($status == Aerospike::OK) {
-            print_r($record);
-        } elseif ($status == Aerospike::ERR_RECORD_NOT_FOUND) {
-            echo "A user with key ". $key['key']. " does not exist in the database\n";
-        } else {
-            echo "[{$db->errorno()}] ".$db->error();
-        }
+//     $app->get('/get', function () use ($app, $db) {
+//         echo '<pre>';
+//         $tracking = $app->environment['tracking'];
+//         $id = $tracking['flagship.id'];
+//         $key = $db->initKey('test', 'users', $id);
+//         $status = $db->get($key, $record);
+//         if ($status == Aerospike::OK) {
+//             print_r($record);
+//         } elseif ($status == Aerospike::ERR_RECORD_NOT_FOUND) {
+//             echo "A user with key ". $key['key']. " does not exist in the database\n";
+//         } else {
+//             echo "[{$db->errorno()}] ".$db->error();
+//         }
 
 
-        // echo PHP_EOL . PHP_EOL . 'Cookies: ' . PHP_EOL;
-        // $db->scan('test', 'cookies', function ($x) use ($db) {
-        //     print_r($x);
-        // });
+//         // echo PHP_EOL . PHP_EOL . 'Cookies: ' . PHP_EOL;
+//         // $db->scan('test', 'cookies', function ($x) use ($db) {
+//         //     print_r($x);
+//         // });
 
-        echo PHP_EOL . PHP_EOL . 'Landers: ' . PHP_EOL;
-        $db->scan('test', 'users', function ($x) use ($db) {
-            print_r($x);
-            // $key = $db->initKey($x['key']['ns'], $x['key']['set'], $x['key']['digest'], true);
-            // $status = $db->remove($key);
-            // echo "Removed " . $status;
-        });
-    });
-});
+//         echo PHP_EOL . PHP_EOL . 'Landers: ' . PHP_EOL;
+//         $db->scan('test', 'users', function ($x) use ($db) {
+//             print_r($x);
+//             // $key = $db->initKey($x['key']['ns'], $x['key']['set'], $x['key']['digest'], true);
+//             // $status = $db->remove($key);
+//             // echo "Removed " . $status;
+//         });
+//     });
+// });
 
 

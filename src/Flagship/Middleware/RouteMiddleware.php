@@ -28,12 +28,12 @@ class RouteMiddleware {
 
     public static function base(Slim $app, Container $c, $eventClass) {
         $eventId = $c['random.id'];
-        $tracking  = $app->environment['tracking'];
-        $cookie  = $tracking['cookie'];
+        $tracking  = $app->environment['user.tracker'];
+        $cookie  = $tracking->cookie;
         $userId = $cookie->getId();
         $event = new $eventClass($eventId, $userId);
-        $event->setContext($tracking['test.context']);
-        $event->setGoogleId($tracking['google.id']);
+        $event->setContext($tracking->context);
+        $event->setGoogleId($tracking->googleId);
         $event->setCookie($cookie);
         return $event;
     }
