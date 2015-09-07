@@ -12,7 +12,6 @@ use Flagship\Storage\CookieJar;
 
 class UserTracker extends Middleware {
 
-    protected $config;
     protected $cookieJar;
     protected $trackingCookie = null;
     protected $events;
@@ -23,9 +22,6 @@ class UserTracker extends Middleware {
     }
 
     public function call() {
-        // A little bit of a kludge, should be in Container.php
-        $this->config = $this->app->config('tracking');
-
         $this->app->hook('slim.before', [$this, 'before']);
         $this->next->call();
         $this->after();

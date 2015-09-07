@@ -160,7 +160,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         $out .= print_r($app->environment['tracking'], true);
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
-        $lander = isset($_SESSION['last_lander']) ? $_SESSION['last_lander'] : null;
 
         echo $centrifuge['plates']->render('admin::models/layout', [
             'title' => 'Tracking',

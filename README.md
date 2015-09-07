@@ -2,6 +2,36 @@
 
 PHP Application for building landing pages and tracking events.
 
+## Request Path (Middlewares & Hooks)
+
+1. [Session](src/Flagship/Middleware/Session.php)
+  * Construct: Registers session storage handler. Configures Session.
+  * Middleware: call() - Registers hook for slim.before
+
+2. [UserTracker](src/Flagship/Middleware/UserTracker.php)
+  * Middleware: call() - Registers hooks for slim.before and slim.after
+
+3. [SlimBootstrap](src/Flagship/SlimBootstrap.php)
+  * Hook: slim.before - Librato system metric recording (num_requests, request_time)
+  * Hook: slim.before - Custom Routes (From routes table)
+
+4. [Session](src/Flagship/Middleware/Session.php)
+  * Hook: slim.before - session_start() and sets the session_id in session with key Session::SESSION_ID
+
+5. [UserTracker](src/Flagship/Middleware/UserTracker.php)
+  * Hook: slim.before - Creates $tracking array and gets or creates the tracking cookie
+  * Hook: slim.after  - Sets the tracking cookie on user
+
+6. [RouteMiddleware](src/Flagship/Middleware/RouteMiddleware.php)
+  * Route Middleware (view/click) - Creates the Event for the current action
+    * [View](src/Flagship/Event/View.php) for /content/:id
+    * [Click](src/Flagship/Event/Click.php) for /click/:stepId
+
+7. Route handlers (eg: app.get('/foo'))
+  * Save tracking events to storage
+  * Render landing page for /content/:id
+  * Redirect Clicks for /click/:stepId
+
 ## Routes
 
 ### Production
@@ -29,3 +59,26 @@ PHP Application for building landing pages and tracking events.
 ### Status
 
 * /admin/ping & /admin/phpinfo - Used for monitoring
+
+
+## TODO
+
+### Big Projects
+
+- [ ] User Profile Store - Aerospike
+
+- [ ] Event Store - Also Aerospike (Maybe..?). Alternatives are Kafka/Kinesis
+
+- [ ] Cloaker Integration - Integrate cloaker with Centrifuge. Perhaps interacting with the fp cookie
+
+- [ ] Replace CPV Lab by allowing campaign creation/split percentages/etc..
+
+
+### Small Projects
+
+- [ ] Custom Routes hook should use query like SELECT * FROM routes WHERE url = "{$request->getPathInfo()}" and add index on routes table (url column)
+- [ ] Need to add postgres migration for vertical on products table
+- [ ] Use source column of product table for affiliate company (eg: Oasis)
+- [x] OfferServices now add vertical information to product models
+
+

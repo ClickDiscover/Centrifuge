@@ -39,9 +39,6 @@ class RouteMiddleware {
     }
 
     public static function viewAdmin(Slim $app, Container $c, Route $route) {
-        // echo '<pre>';
-        // var_dump($route->getParams()) . PHP_EOL . PHP_EOL;
-        // echo '</pre>';
         $app->environment['view'] = self::base($app, $c, "\Flagship\Event\View");
     }
 
