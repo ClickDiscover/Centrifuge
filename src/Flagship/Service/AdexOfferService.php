@@ -28,15 +28,15 @@ class AdexOfferService {
         if ($p) {
             $r = $this->curlFetch($p);
             return array(
-                $this->makeProduct($r['step1_name'], $r['step1']),
-                $this->makeProduct($r['step2_name'], $r['step2'])
+                $this->makeProduct($r['step1_name'], $r['step1'], $p->vertical),
+                $this->makeProduct($r['step2_name'], $r['step2'], $p->vertical)
             );
         }
     }
 
-    protected function makeProduct($name, $imageId) {
+    protected function makeProduct($name, $imageId, $vertical) {
         $url = $this->imageUrlRoot . $imageId . $this->imageFileExt;
-        return new Product($imageId, $name, $url, 'adexchange');
+        return new Product($imageId, $name, $url, 'adexchange', $vertical);
     }
 
     public function paramFetch($paramId) {

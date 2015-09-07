@@ -24,11 +24,13 @@ class NetworkOfferService {
 
     protected function fromRow($row) {
         $url = $this->rootPath . $row['image_url'];
+        $vert = isset($row['vertical']) ? $row['vertical'] : 'NONE';
         return new Product(
             $row['id'],
             $row['name'],
             $url,
-            $row['source']
+            $row['source'],
+            $vert
         );
     }
 

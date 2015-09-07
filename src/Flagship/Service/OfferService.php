@@ -3,6 +3,8 @@
 namespace Flagship\Service;
 
 use Flagship\Model\OfferLink;
+use Flagship\Service\AdexOfferService;
+use Flagship\Service\NetworkOfferService;
 
 class OfferService {
 
@@ -13,7 +15,7 @@ class OfferService {
     protected $adex;
     protected $urlFor;
 
-    public function __construct($network, $adex, $urlForCallback = false) {
+    public function __construct(NetworkOfferService $network, AdexOfferService $adex, $urlForCallback = false) {
         $this->network = $network;
         $this->adex = $adex;
         $this->urlFor = $urlForCallback;
