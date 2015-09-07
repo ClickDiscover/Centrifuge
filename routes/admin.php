@@ -55,9 +55,7 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             return array_map(function ($x) { return $x->toArray(); }, $centrifuge['landers']->fetchAllGeos());
         };
         $centrifuge['admin.landers'] = function () use ($centrifuge) {
-            return array_map(function ($x) {
-                return \Flagship\Util\FlattenObjects::lander($x);
-            }, $centrifuge['landers']->fetchAll());
+            return $centrifuge['landers']->fetchAll(true);
         };
         $centrifuge['admin.bundle'] = function () use ($centrifuge) {
             return array(
@@ -153,13 +151,21 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         $out  = "Click\n";
         $out .= print_r($view, true);
         $out .= "Click::toSegmetn\n";
-        $out .= print_r($view->toSegment($centrifuge['segment']), true);
+        $out .= print_r($view->getSegmentArray(), true);
         $out .= "Session\n";
         $out .= print_r($_SESSION, true);
         $out .= "\nTracking\n";
         $out .= print_r($app->environment['tracking'], true);
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
+
+        $out .= "\ngetHost " . $app->request->getHost() . "\n";
+        $out .= "\ngetHostWithPort " . $app->request->getHostWithPort() . "\n";
+        $out .= "\ngetScriptName " . $app->request->getScriptName() . "\n";
+        $out .= "\ngetPath " . $app->request->getPath() . "\n";
+        $out .= "\ngetPathInfo " . $app->request->getPathInfo() . "\n";
+        $out .= "\ngetResourceUri " . $app->request->getResourceUri() . "\n";
+        $out .= "\ngetUrl " . $app->request->getUrl() . "\n";
 
         echo $centrifuge['plates']->render('admin::models/layout', [
             'title' => 'Tracking',

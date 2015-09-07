@@ -65,10 +65,11 @@ SQL;
     // Changing because this is only in admin interface
     const SQL_SELECT_ALL = self::SQL_BASE . " WHERE l.active = TRUE ORDER BY id DESC";
 
-    public function fetchAll() {
+    public function fetchAll($pretty = false) {
         $rows = $this->db->uncachedFetchAll(self::SQL_SELECT_ALL);
-        return array_map(function ($x) {
-            return $this->fromRow($x);
+        return array_map(function ($x) use ($pretty) {
+            $r = $this->fromRow($x);
+            return ($pretty) ?  $this->prettyLander($r) : $r;
         }, $rows);
     }
 
@@ -130,6 +131,22 @@ SQL;
             $arr['active'] = true;
         }
         return $this->db->insertArray($this->namespace, $arr);
+    }
+
+
+    protected function prettyLander(Lander $lander) {
+        $row = array(
+            'ID' => $lander->id,
+            'Notes' => $lander->notes
+        );
+        $row['Type'] = $lander->offers[1]->product->source;
+        $row['Product 1'] = $lander->offers[1]->getName();
+        $row['Product 2'] = $lander->offers[2]->getName();
+        $row['Website'] = $lander->website->name;
+        $row['Geo'] = $lander->geo->name;
+        $row['Variants'] = json_encode($lander->variants);
+        $row['Active'] = 'True';
+        return $row;
     }
 
 }

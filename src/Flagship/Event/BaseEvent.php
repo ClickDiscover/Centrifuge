@@ -18,6 +18,7 @@ abstract class BaseEvent {
 
     const FILTER_CONTEXT_CAMPAIGN = ['ad', 'keyword']; // UTM dealt with seperatly
     const FILTER_CONTEXT_USER     = ['ip', 'user_agent'];
+    const FILTER_CONTEXT_URL      = ['url', 'path'];
 
     protected $id;
     public $context;
@@ -99,6 +100,9 @@ abstract class BaseEvent {
         }
 
         $this->context->replace(array_merge($user, $camp));
+
+        $url = array_intersect_key($tc['url'], array_flip(static::FILTER_CONTEXT_URL));
+        $this->properties->replace($url);
     }
 
     // public function setUserId($x) {

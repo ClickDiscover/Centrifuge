@@ -1,6 +1,7 @@
 <?php
 namespace Flagship\Event;
 
+use League\Url\Url;
 
 
 class Click extends BaseEvent {
@@ -41,4 +42,5 @@ class Click extends BaseEvent {
         $s['event'] = static::SEGMENT_NAME;
         return $s;
     }
+
 }
