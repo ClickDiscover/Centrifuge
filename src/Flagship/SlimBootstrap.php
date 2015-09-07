@@ -3,6 +3,7 @@
 namespace Flagship;
 
 use Flagship\Container;
+use Flagship\Middleware\RouteMiddleware;
 use Slim\Slim;
 use \Stash\Session as StashSession;
 
@@ -56,14 +57,26 @@ class SlimBootstrap {
         $app->log->setWriter($container['logger']);
         $app->view($container['plates']);
 
+        $app->container['route_middleware.view'] = function () use ($app, $container) {
+            return function ($route) use ($app, $container) {
+                return RouteMiddleware::view($app, $container, $route);
+            };
+        };
+
+        $app->container['route_middleware.click'] = function () use ($app, $container) {
+            return function ($route) use ($app, $container) {
+                return RouteMiddleware::click($app, $container, $route);
+            };
+        };
+
+
         $app->container['custom.routes'] = function () use ($container) {
             return $container['custom.routes']->fetchAll();
         };
 
         $app->add(new \Flagship\Middleware\UserTracker(
             $container['cookie.jar'],
-            new \Flagship\Event\EventContextFactory($app->config('tracking'))
-            // new \Flagship\Test\MockHasher
+            $container['context.factory']
         ));
 
         $app->add(new \Flagship\Middleware\Session(

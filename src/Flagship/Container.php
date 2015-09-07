@@ -23,6 +23,7 @@ use Flagship\Service\CustomRouteService;
 use Flagship\Storage\LibratoStorage;
 use Flagship\Storage\CookieJar;
 use Flagship\Storage\SegmentStorage;
+use \Flagship\Event\EventContextFactory;
 
 
 class Container extends \Pimple\Container {
@@ -102,6 +103,13 @@ class Container extends \Pimple\Container {
             );
         };
 
+        $this['random.id'] = $this->factory(function ($c) {
+            return $c['cookie.jar']->getRandomId();
+        });
+
+        $this['context.factory'] = function ($c) {
+            return new EventContextFactory($c['config']['application']['tracking']);
+        };
 
         // Plates
         $this['plates'] = function ($c) {
