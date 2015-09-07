@@ -14,7 +14,7 @@ abstract class BaseEvent {
     const SEGMENT_NAME = "";
     const SEGMENT_METHOD = "";
     const AEROSPIKE_KEY = "";
-    const LIBRATO_KEY = self::AEROSPIKE_KEY;
+    const LIBRATO_KEY = "";
 
     const FILTER_CONTEXT_CAMPAIGN = ['ad', 'keyword']; // UTM dealt with seperatly
     const FILTER_CONTEXT_USER     = ['ip', 'user_agent'];
@@ -92,8 +92,8 @@ abstract class BaseEvent {
 
     public function setContext(EventContext $tc) {
         $tc->finalize();
-        $user = array_intersect_key($tc['user'], array_flip(self::FILTER_CONTEXT_USER));
-        $camp = array_intersect_key($tc['campaign'], array_flip(self::FILTER_CONTEXT_CAMPAIGN));
+        $user = array_intersect_key($tc['user'], array_flip(static::FILTER_CONTEXT_USER));
+        $camp = array_intersect_key($tc['campaign'], array_flip(static::FILTER_CONTEXT_CAMPAIGN));
         if (isset($tc['campaign']['utm'])) {
             $camp = array_merge($camp, $tc['campaign']['utm']);
         }
@@ -133,25 +133,26 @@ abstract class BaseEvent {
     }
 
     public function toLibrato(LibratoStorage $librato) {
-        $librato->total(self::LIBRATO_KEY);
+        $librato->total(static::LIBRATO_KEY);
         $landerId = isset($this->lander) ? $this->lander->id : null;
         $keyword = $this->context->get('keyword');
         $ad = $this->context->get('ad');
 
         if (isset($landerId)) {
-            $librato->breakout('lander', $landerId, self::LIBRATO_KEY);
+            $librato->breakout('lander', $landerId, static::LIBRATO_KEY);
         }
         if (isset($keyword)) {
-            $librato->breakout('keyword', $keyword, self::LIBRATO_KEY);
+            $librato->breakout('keyword', $keyword, static::LIBRATO_KEY);
         }
         if (isset($ad)) {
-            $librato->breakout('ad', $ad, self::LIBRATO_KEY);
+            $librato->breakout('ad', $ad, static::LIBRATO_KEY);
         }
     }
 
-    // public function toSegment(SegmentStorage $segment) {
-    //     $method = self::SEGMENT_METHOD;
-    //     $segment->$method($this->getSegmentArray());
-    // }
+    public function toSegment(SegmentStorage $segment) {
+        $method = static::SEGMENT_METHOD;
+        echo static::SEGMENT_METHOD;
+        return $segment->$method($this->getSegmentArray());
+    }
 }
 

@@ -62,6 +62,10 @@ class SlimBootstrap {
             return $container['custom.routes']->fetchAll();
         };
 
+        ////////////////
+        // Middleware //
+        ////////////////
+
         RouteMiddleware::register($app, $container);
 
         $app->add(new \Flagship\Middleware\UserTracker(

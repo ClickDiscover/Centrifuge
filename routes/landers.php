@@ -29,10 +29,11 @@ $app->get('/content/:id', $app->container['route_middleware.view'], function ($i
 
     // User tracking
     // $_SESSION['last_lander'] = $lander;
-    if (isset($tracking['cookie'])) {
-        $tracking['cookie']->setLastVisitTime(time());
+    $cookie = $view->getCookie();
+    if (isset($cookie)) {
+        $cookie->setLastVisitTime(time());
     }
-    $pg = $centrifuge['segment']->landingPage($tracking, $lander);
+    $view->toSegment($centrifuge['segment']);
 
     // Rendering
     $centrifuge['plates']->landerRender($app, $lander);

@@ -8,6 +8,7 @@ class Click extends BaseEvent {
     const SEGMENT_NAME = "Offer Click";
     const SEGMENT_METHOD = "track";
     const AEROSPIKE_KEY = "clicks";
+    const LIBRATO_KEY = "clicks";
 
     protected $stepId;
 
@@ -35,9 +36,9 @@ class Click extends BaseEvent {
         }
     }
 
-    public function getSegmentArray($ignored = false) {
-        $s = parent::getSegmentArray(true);
-        $s['name'] = self::SEGMENT_NAME;
+    public function getSegmentArray() {
+        $s = parent::getSegmentArray();
+        $s['event'] = static::SEGMENT_NAME;
         return $s;
     }
 }

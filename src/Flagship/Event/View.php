@@ -8,6 +8,7 @@ class View extends BaseEvent {
     const SEGMENT_NAME = "Landing Pageview";
     const SEGMENT_METHOD = "page";
     const AEROSPIKE_KEY = "views";
+    const LIBRATO_KEY = "views";
 
 
     public function setLander($x) {
@@ -22,7 +23,7 @@ class View extends BaseEvent {
 
     public function getSegmentArray() {
         $s = parent::getSegmentArray();
-        $s['name'] = self::SEGMENT_NAME;
+        $s['name'] = static::SEGMENT_NAME;
         return $s;
     }
 }

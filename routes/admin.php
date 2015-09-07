@@ -147,13 +147,13 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         $view = $app->environment['click'];
         $lander = $centrifuge['landers']->fetch($app->request->get('lid', 1));
         if (isset($lander)) {
-            $view->setStepId(1);
+            $view->setStepId(2);
             $view->setLander($lander);
         }
-        $out  = "View\n";
+        $out  = "Click\n";
         $out .= print_r($view, true);
-        $out .= "View::getSegmentArray\n";
-        $out .= print_r($view->getSegmentArray(), true);
+        $out .= "Click::toSegmetn\n";
+        $out .= print_r($view->toSegment($centrifuge['segment']), true);
         $out .= "Session\n";
         $out .= print_r($_SESSION, true);
         $out .= "\nTracking\n";
