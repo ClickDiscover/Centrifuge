@@ -206,6 +206,10 @@ class Container extends \Pimple\Container {
                 $c['logger']
             );
         };
+
+        $this['aerospike'] = function ($c) {
+            return new \Aerospike($c['config']['database']['aerospike']);
+        };
     }
 }
 

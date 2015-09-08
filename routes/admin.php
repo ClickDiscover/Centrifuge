@@ -162,6 +162,8 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
 
+        $view->toAerospike($centrifuge['aerospike']);
+
         echo $centrifuge['plates']->render('admin::models/layout', [
             'title' => 'Tracking',
             'data' => $out
@@ -197,6 +199,14 @@ $app->get('/conversions', function() use ($app, $centrifuge) {
     ]);
 });
 
+$app->get('/test', function() use ($app, $centrifuge) {
+    $db = $centrifuge['aerospike'];
+    echo '<pre>';
+    $db->scan('test', 'clicks', function ($x) use ($db) {
+        print_r($x);
+    });
+    echo '</pre>';
+});
 
 // $app->group('/admin/aero', function () use($app, $centrifuge) {
 //     $config = [

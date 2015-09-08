@@ -32,7 +32,10 @@ class Click extends BaseEvent {
             $view = $tc->getLastVisitTime();
             $click = $tc->getLastOfferClickTime();
             if (isset($view) && isset($click)) {
-                $this->properties->set('time_to_click', $click - $view);
+                $td = $click - $view;
+                if ($td > 0) {
+                    $this->properties->set('time_to_click', $td);
+                }
             }
         }
     }

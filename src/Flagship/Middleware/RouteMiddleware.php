@@ -86,6 +86,4 @@ class RouteMiddleware {
         }
         return (isset($id)) ? $landers->fetch($id) : null;
     }
-
-
 }

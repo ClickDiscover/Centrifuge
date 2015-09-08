@@ -1,10 +1,30 @@
 <?php
 use Jenssegers\Agent\Agent;
 
-
 date_default_timezone_set('UTC');
 
 require dirname(__DIR__) . '/vendor/autoload.php';
+
+
+
+
+
+$config = array(
+    "region" => "us-east-1",
+    "version" => "latest",
+    "credentials" => [
+        "key" => "AKIAITCZFDXHYHEVBGEA",
+        "secret" => "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",
+    ],
+);
+$baseDir = 's3://events.flagshippromotions.com/segment-logs/GsDiILK8mG/';
+// $dir = $baseDir . '1441324800000'; // Yesterday
+// $dir = $baseDir . '1441238400000'; // 2 Days ago
+// $dir = $baseDir . '1441411200000'; // Today
+$dir = $baseDir; // All
+echo "Starting for " . $dir . PHP_EOL;
+$client = new Aws\S3\S3Client($config);
+$client->registerStreamWrapper();
 
 function stream($iterator) {
 
@@ -83,49 +103,42 @@ function userAgentCounts($total, $dkey) {
 
 
 
-
-$config = array(
-    "region" => "us-east-1",
-    "version" => "latest",
-    "credentials" => [
-        "key" => "AKIAITCZFDXHYHEVBGEA",
-        "secret" => "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",
-    ],
-);
-$baseDir = 's3://events.flagshippromotions.com/segment-logs/GsDiILK8mG/';
-// $dir = $baseDir . '1441324800000'; // Yesterday
-// $dir = $baseDir . '1441238400000'; // 2 Days ago
-// $dir = $baseDir . '1441411200000'; // Today
-$dir = $baseDir; // All
-
-echo "Starting for " . $dir . PHP_EOL;
-$client = new Aws\S3\S3Client($config);
-$client->registerStreamWrapper();
-$max = 10000000;
-$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
-
-
-list($views, $viewEvents) = select(stream($iterator), $max, 'page', 'properties', 'website');
-echo 'Views' . PHP_EOL;
-// print_r($raw);
-// print_r($viewEvents);
-$landerViews = array_count_values($views);
-
+$max = 10000;
 
 $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
-list($clicks, $clickEvents) = select(stream($iterator), $max, 'track', 'properties', 'website');
-echo 'Clicks' . PHP_EOL;
-$landerClicks = array_count_values($clicks);
-
-foreach (array_keys($landerViews) as $id) {
-    $v = $landerViews[$id];
-    $c = isset($landerClicks[$id]) ? $landerClicks[$id] : 0;
-    $ctr = ($v == 0) ? 0 : ($c / (double) $v);
-
-    if ($c != 0) {
-        echo "ID: " . $id . " Views: " . $v . " Clicks " . $c . " CTR " . $ctr . PHP_EOL;
+// list($views, $viewEvents) = select(stream($iterator), $max, 'page', 'context', 'utm_campaign');
+foreach (stream($iterator) as $v) {
+    if (isset($v['context']['utm_campaign'])) {
+        print_r($v);
+        // echo $v['timestamp'] . '    ' .  $v['context']['utm_campaign'] . PHP_EOL;
     }
 }
+
+// $max = 10000000;
+// $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+
+
+// list($views, $viewEvents) = select(stream($iterator), $max, 'page', 'properties', 'website');
+// echo 'Views' . PHP_EOL;
+// // print_r($raw);
+// // print_r($viewEvents);
+// $landerViews = array_count_values($views);
+
+
+// $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+// list($clicks, $clickEvents) = select(stream($iterator), $max, 'track', 'properties', 'website');
+// echo 'Clicks' . PHP_EOL;
+// $landerClicks = array_count_values($clicks);
+
+// foreach (array_keys($landerViews) as $id) {
+//     $v = $landerViews[$id];
+//     $c = isset($landerClicks[$id]) ? $landerClicks[$id] : 0;
+//     $ctr = ($v == 0) ? 0 : ($c / (double) $v);
+
+//     if ($c != 0) {
+//         echo "ID: " . $id . " Views: " . $v . " Clicks " . $c . " CTR " . $ctr . PHP_EOL;
+//     }
+// }
 
 // print_r($viewEvents);
 // print_r(userAgentCounts($views, 'device'));

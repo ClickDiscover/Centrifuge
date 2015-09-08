@@ -20,10 +20,13 @@ abstract class BaseEvent {
     const FILTER_CONTEXT_USER     = ['ip', 'user_agent'];
     const FILTER_CONTEXT_URL      = ['url', 'path'];
 
+    protected $timestamp;
     protected $id;
     public $context;
     public $properties;
     public $lander;
+
+    protected $eventContexts = [];
 
     // User Data
     protected $userId;
@@ -34,7 +37,8 @@ abstract class BaseEvent {
         $id,
         $userId,
         $cookie = null,
-        $gaId = null
+        $gaId = null,
+        $timestamp = null
     ) {
         $this->id = $id;
         $this->userId = $userId;
@@ -42,6 +46,7 @@ abstract class BaseEvent {
         $this->context = new Set();
         $this->properties = new Set();
         $this->gaId = $gaId;
+        $this->timestamp = isset($timestamp) ? $timestamp : time();
     }
 
 
@@ -87,12 +92,12 @@ abstract class BaseEvent {
     // Setters //
     /////////////
 
-    // public function setId($x) {
-    //     $this->id = $x;
-    // }
-
     public function setContext(EventContext $tc) {
         $tc->finalize();
+        $this->eventContexts['user'] = $tc['user'];
+        $this->eventContexts['campaign'] = $tc['campaign'];
+        $this->eventContexts['url'] = $tc['url'];
+
         $user = array_intersect_key($tc['user'], array_flip(static::FILTER_CONTEXT_USER));
         $camp = array_intersect_key($tc['campaign'], array_flip(static::FILTER_CONTEXT_CAMPAIGN));
         if (isset($tc['campaign']['utm'])) {
@@ -104,14 +109,6 @@ abstract class BaseEvent {
         $url = array_intersect_key($tc['url'], array_flip(static::FILTER_CONTEXT_URL));
         $this->properties->replace($url);
     }
-
-    // public function setUserId($x) {
-    //     $this->userId = $x;
-    // }
-
-    // public function setProperties($x) {
-    //     $this->properties = $x;
-    // }
 
     public function setCookie($x) {
         $this->cookie = $x;
@@ -138,6 +135,14 @@ abstract class BaseEvent {
         ]);
     }
 
+    // public function setUserId($x) {
+    //     $this->userId = $x;
+    // }
+
+    //////////////////////
+    // Storage Handlers //
+    //////////////////////
+
     public function toLibrato(LibratoStorage $librato) {
         $librato->total(static::LIBRATO_KEY);
         $landerId = isset($this->lander) ? $this->lander->id : null;
@@ -159,6 +164,22 @@ abstract class BaseEvent {
         $method = static::SEGMENT_METHOD;
         echo static::SEGMENT_METHOD;
         return $segment->$method($this->getSegmentArray());
+    }
+
+    public function toAerospike(\Aerospike $db) {
+        $key = $db->initKey('test', static::AEROSPIKE_KEY, $this->getId());
+
+        $rec = [
+            'id' => $this->getId(),
+            'userId' => $this->getUserId(),
+            'ts' => $this->timestamp
+        ];
+        if (isset($this->eventContexts['campaign'])) {
+            $rec['campaign'] = $this->eventContexts['campaign'];
+        }
+        $rec = array_merge($rec, $this->properties->all());
+        $status = $db->put($key, $rec);
+        // if ($status != Aerospike::OK) { }
     }
 }
 
