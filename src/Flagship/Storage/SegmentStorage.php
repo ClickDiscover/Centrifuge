@@ -114,11 +114,13 @@ class SegmentStorage {
                 $traits['createdAt'] = $tc->getCreationTime();
                 $traits['visits'] = $tc->getVisitId();
                 $traits['lastVisit'] = $tc->getLastVisitTime();
-                if (isset($tc->getLastVisitTime())) {
+                $lvt = $tc->getLastVisitTime();
+                if (isset($lvt)) {
                     $traits['lastVisitTime'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());
                 }
 
-                if (isset($tc->getLastOfferClickTime())) {
+                $loct = $tc->getLastOfferClickTime();
+                if (isset($loct)) {
                     $traits['lastOfferClickTime'] = date("Y-m-d H:i:s", $tc->getLastOfferClickTime());
                 }
             }
