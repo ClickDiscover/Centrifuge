@@ -112,7 +112,7 @@ class SegmentStorage {
             if (isset($tracking['cookie'])) {
                 $tc = $tracking['cookie'];
                 $traits['createdAt'] = date("Y-m-d H:i:s", $tc->getCreationTime());
-                $traits['visits'] = $tc->getVisitId();
+                $traits['visits'] = $tc->getVisitCount();
                 $traits['lastVisit'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());
                 $lvt = $tc->getLastVisitTime();
                 if (isset($lvt)) {
