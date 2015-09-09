@@ -96,7 +96,7 @@ class SegmentStorage {
                 'Google Analytics' => ['clientId' => $tracking['google.id']]
             ];
         }
-
+        $user['campaign'] = $camp;
         return array_merge($user, $camp);
     }
 
@@ -108,8 +108,26 @@ class SegmentStorage {
 
         $userId = $tracking['flagship.id'];
         if (empty($_SESSION['_fp_segment'])) {
+            $traits = [];
+            if (isset($tracking['cookie'])) {
+                $tc = $tracking['cookie'];
+                $traits['createdAt'] = $tc->getCreationTime();
+                $traits['visits'] = $tc->getVisitId();
+                $traits['lastVisit'] = $tc->getLastVisitTime();
+                if (isset($tc->getLastVisitTime())) {
+                    $traits['lastVisitTime'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());
+                }
+
+                if (isset($tc->getLastOfferClickTime())) {
+                    $traits['lastOfferClickTime'] = date("Y-m-d H:i:s", $tc->getLastOfferClickTime());
+                }
+            }
+
+            $context = $this->buildContext($tracking);
             \Segment::identify([
-                'userId' => $userId
+                'userId' => $userId,
+                'context' => $context,
+                'traits' => $traits
             ]);
             $_SESSION['_fp_segment'] = $userId;
             // $this->jar->setCookie('_fp_segment', $userId, CookieJar::MONTHS);
