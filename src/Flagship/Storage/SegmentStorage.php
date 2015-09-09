@@ -2,6 +2,9 @@
 
 namespace Flagship\Storage;
 
+use Flagship\Event\BaseEvent;
+use Flagship\Event\View;
+use Flagship\Event\Click;
 
 class SegmentStorage {
 
@@ -19,37 +22,87 @@ class SegmentStorage {
         $this->log = $log;
     }
 
-    public function page($arr) {
-        if(!$this->identify($arr)) {
+    public function page(View $view) {
+        if(!$this->identify($view)) {
             return false;
         }
-        $arr['integrations'] = ['All' => true];
+        $context = $this->buildContext($view);
+        $properties = $view->properties->all();
+        $integrations = ['All' => true];
+
+        $arr = [
+            'userId' => $view->getUserId(),
+            'name' => $view::SEGMENT_NAME,
+            'context' => $context,
+            'properties' => $properties,
+            'integrations' => $integrations
+        ];
         \Segment::page($arr);
         return $arr;
     }
 
-    public function track($arr) {
-        if(!$this->identify($arr)) {
+    public function click($click) {
+        if(!$this->identify($click)) {
             return false;
         }
-        $arr['integrations'] = ['All' => true];
+        $context = $this->buildContext($click);
+        $properties = $click->properties->all();
+        $integrations = ['All' => true];
+
+        $arr = [
+            'userId' => $click->getUserId(),
+            'event' => $click::SEGMENT_NAME,
+            'context' => $context,
+            'properties' => $properties,
+            'integrations' => $integrations
+        ];
         \Segment::track($arr);
         return $arr;
     }
 
-    protected function identify($arr) {
-        if (empty($arr['userId'])) {
+    protected function identify(BaseEvent $ev) {
+        $userId = $ev->getUserId();
+        if (empty($userId)) {
             return false;
         }
 
-        $userId = $arr['userId'];
         if (empty($_SESSION['_fp_segment'])) {
+            $traits = [];
+            $tc = $ev->getCookie();
+            if (isset($tc)) {
+                $traits['visits'] = $tc->getVisitCount();
+                $traits['createdAt'] = date("Y-m-d H:i:s", $tc->getCreationTime());
+                $traits['lastVisit'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());
+                $lvt = $tc->getLastVisitTime();
+                if (isset($lvt)) {
+                    $traits['lastVisitTime'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());
+                }
+                $loct = $tc->getLastOfferClickTime();
+                if (isset($loct)) {
+                    $traits['lastOfferClickTime'] = date("Y-m-d H:i:s", $tc->getLastOfferClickTime());
+                }
+            }
+
+            $context = $this->buildContext($ev);
             \Segment::identify([
-                'userId' => $userId
+                'userId' => $userId,
+                'context' => $context,
+                'traits' => $traits
             ]);
             $_SESSION['_fp_segment'] = $userId;
         }
         return true;
+    }
+
+    protected function buildContext(BaseEvent $ev) {
+        $context = $ev->context->all();
+        $ga = $ev->getGoogleId();
+        if (isset($ga)) {
+            $context['integrations'] = [
+                'Google Analytics' => ['clientId' => $ga]
+            ];
+        }
+        return $context;
     }
 
     public function scriptTag() {

@@ -140,18 +140,19 @@ $app->group('/admin', function() use ($app, $centrifuge) {
     });
 
 
-    $app->get('/tracking', $app->container['route_middleware.clickAdmin'], function () use ($app, $centrifuge) {
-        $eventType = "Click";
-        $view = $app->environment['click'];
+    // $app->get('/tracking', $app->container['route_middleware.clickAdmin'], function () use ($app, $centrifuge) {
+    $app->get('/tracking', $app->container['route_middleware.viewAdmin'], function () use ($app, $centrifuge) {
+        $eventType = "view";
+        $view = $app->environment[$eventType];
         $lander = $centrifuge['landers']->fetch($app->request->get('lid', 1));
         if (isset($lander)) {
-            $view->setStepId(2);
+            ($eventType == 'click') ? $view->setStepId(2) : null;
             $view->setLander($lander);
         }
 
-        $out  = "\n\n" . $eventType ."::getSegmentArray\n";
-        $out .= print_r($view->getSegmentArray(), true);
-        $out .= "\n\n\n" . $eventType . "\n";
+        // $out  = "\n\n" . $eventType ."::getSegmentArray\n";
+        // $out .= print_r($view->getSegmentArray(), true);
+        $out = "\n\n\n" . $eventType . "\n";
         $out .= print_r($view, true);
         $out .= "\nTrackingCookie\n";
         $out .= print_r($view->getCookie()->pretty(), true);
@@ -199,10 +200,10 @@ $app->get('/conversions', function() use ($app, $centrifuge) {
     ]);
 });
 
-$app->get('/test', function() use ($app, $centrifuge) {
+$app->get('/test/:what', function($what) use ($app, $centrifuge) {
     $db = $centrifuge['aerospike'];
     echo '<pre>';
-    $db->scan('test', 'clicks', function ($x) use ($db) {
+    $db->scan('test', $what, function ($x) use ($db) {
         print_r($x);
     });
     echo '</pre>';

@@ -20,10 +20,4 @@ class View extends BaseEvent {
             'offer2.id' => $this->lander->offers[2]->product->id
         ]);
     }
-
-    public function getSegmentArray() {
-        $s = parent::getSegmentArray();
-        $s['name'] = static::SEGMENT_NAME;
-        return $s;
-    }
 }

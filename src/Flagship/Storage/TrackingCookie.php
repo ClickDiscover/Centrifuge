@@ -57,10 +57,6 @@ class TrackingCookie {
         return $this->lastVisitTime;
     }
 
-    // public function getVisitTime() {
-    //     return $this->visitTime;
-    // }
-
     public function getLastOfferClickTime() {
         return $this->lastOfferClickTime;
     }

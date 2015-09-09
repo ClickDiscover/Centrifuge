@@ -71,21 +71,8 @@ abstract class BaseEvent {
         return $this->cookie;
     }
 
-    // public function getProperties() {
-    //     return $this->properties;
-    // }
-
     public function getGoogleId() {
         return $this->gaId;
-    }
-
-    public function getSegmentArray() {
-        $c = [
-            'userId' => $this->getUserId(),
-            'properties' => $this->properties->all(),
-            'context' => $this->context->all()
-        ];
-        return $c;
     }
 
     /////////////
@@ -104,8 +91,10 @@ abstract class BaseEvent {
             $camp = array_merge($camp, $tc['campaign']['utm']);
         }
 
-        $this->context->replace(array_merge($user, $camp));
-
+        if (count($camp) > 0) {
+            $user['campaign'] = $camp;
+        }
+        $this->context->replace($user);
         $url = array_intersect_key($tc['url'], array_flip(static::FILTER_CONTEXT_URL));
         $this->properties->replace($url);
     }
@@ -117,7 +106,6 @@ abstract class BaseEvent {
     public function setGoogleId($x) {
         if(isset($x)) {
             $this->gaId = $x;
-            $this->context->set("Google Analytics", ['clientId' => $this->gaId]);
         }
     }
 
@@ -134,10 +122,6 @@ abstract class BaseEvent {
             'offer.source' => $this->lander->offers[1]->product->source
         ]);
     }
-
-    // public function setUserId($x) {
-    //     $this->userId = $x;
-    // }
 
     //////////////////////
     // Storage Handlers //
@@ -162,8 +146,7 @@ abstract class BaseEvent {
 
     public function toSegment(SegmentStorage $segment) {
         $method = static::SEGMENT_METHOD;
-        echo static::SEGMENT_METHOD;
-        return $segment->$method($this->getSegmentArray());
+        return $segment->$method($this);
     }
 
     public function toAerospike(\Aerospike $db) {
@@ -177,6 +160,7 @@ abstract class BaseEvent {
         if (isset($this->eventContexts['campaign'])) {
             $rec['campaign'] = $this->eventContexts['campaign'];
         }
+
         $rec = array_merge($rec, $this->properties->all());
         $status = $db->put($key, $rec);
         // if ($status != Aerospike::OK) { }

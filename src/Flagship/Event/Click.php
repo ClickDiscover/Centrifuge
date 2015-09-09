@@ -7,7 +7,7 @@ use League\Url\Url;
 class Click extends BaseEvent {
     const NAME = "OFFER_CLICK";
     const SEGMENT_NAME = "Offer Click";
-    const SEGMENT_METHOD = "track";
+    const SEGMENT_METHOD = "click";
     const AEROSPIKE_KEY = "clicks";
     const LIBRATO_KEY = "clicks";
 
@@ -39,11 +39,4 @@ class Click extends BaseEvent {
             }
         }
     }
-
-    public function getSegmentArray() {
-        $s = parent::getSegmentArray();
-        $s['event'] = static::SEGMENT_NAME;
-        return $s;
-    }
-
 }
