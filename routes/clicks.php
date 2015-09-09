@@ -59,6 +59,7 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     $url = null;
     $clickMethod = $app->config('click_method');
     $clickUrl = $app->config('click_url');
+    $stepName = $app->config('click_step_name');
     if ($clickMethod === 'direct') {
         $url = Url::createFromServer($_SERVER);
         $url->setPath($clickUrl);
@@ -66,7 +67,7 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
         $url = Url::createFromUrl($clickUrl);
     }
     $currentQuery = $req->get();
-    $currentQuery['id'] = $stepId;
+    $currentQuery[$stepName] = $stepId;
     $url->getQuery()->modify($currentQuery);
 
     $app->redirect($url);

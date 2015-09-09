@@ -43,6 +43,7 @@ class SegmentStorage {
             'userId' => $tracking['flagship.id'],
             'event' => 'Offer Click',
             'properties' => $properties,
+            'integrations' => ['All' => true],
             'context' => $context
        );
        \Segment::track($pg);
@@ -91,7 +92,9 @@ class SegmentStorage {
         }
 
         if (isset($tracking['google.id'])) {
-            $user['Google Analytics'] = array('clientId' => $tracking['google.id']);
+            $user['integrations'] = [
+                'Google Analytics' => ['clientId' => $tracking['google.id']]
+            ]
         }
 
         return array_merge($user, $camp);
