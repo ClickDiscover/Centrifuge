@@ -72,7 +72,6 @@ class SegmentStorage {
             if (isset($tc)) {
                 $traits['visits'] = $tc->getVisitCount();
                 $traits['createdAt'] = date("Y-m-d H:i:s", $tc->getCreationTime());
-                $traits['lastVisit'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());
                 $lvt = $tc->getLastVisitTime();
                 if (isset($lvt)) {
                     $traits['lastVisitTime'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());

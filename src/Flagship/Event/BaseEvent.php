@@ -152,17 +152,23 @@ abstract class BaseEvent {
     public function toAerospike(\Aerospike $db) {
         $key = $db->initKey('test', static::AEROSPIKE_KEY, $this->getId());
 
-        $rec = [
+        $record = [
             'id' => $this->getId(),
             'userId' => $this->getUserId(),
             'ts' => $this->timestamp
         ];
-        if (isset($this->eventContexts['campaign'])) {
-            $rec['campaign'] = $this->eventContexts['campaign'];
+
+        if (isset($this->gaId)) {
+            $data['google.id'] = $this->gaId;
         }
 
-        $rec = array_merge($rec, $this->properties->all());
-        $status = $db->put($key, $rec);
+        if (isset($this->eventContexts['campaign'])) {
+            $data['campaign'] = $this->eventContexts['campaign'];
+        }
+
+        $data = array_merge($data, $this->properties->all());
+        $record = array_merge($record, $data);
+        $status = $db->put($key, $record);
         // if ($status != Aerospike::OK) { }
     }
 }

@@ -208,7 +208,14 @@ class Container extends \Pimple\Container {
         };
 
         $this['aerospike'] = function ($c) {
-            return new \Aerospike($c['config']['database']['aerospike']);
+            $conf = $c['config']['database']['aerospike'];
+            $db = new \Aerospike($conf['client']);
+            // $db->setLogLevel($conf['log_level']);
+            // $db->setLogHandler(function ($level, $file, $function, $line) use ($c) {
+            //     var_dump([$level, $file, $function, $line]);
+            //     $c['logger']->info('Aerospike: ', [$level, $file, $function, $line]);
+            // });
+            return $db;
         };
     }
 }
