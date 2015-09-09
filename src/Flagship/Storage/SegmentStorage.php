@@ -94,7 +94,7 @@ class SegmentStorage {
         if (isset($tracking['google.id'])) {
             $user['integrations'] = [
                 'Google Analytics' => ['clientId' => $tracking['google.id']]
-            ]
+            ];
         }
 
         return array_merge($user, $camp);
