@@ -64,6 +64,14 @@ class RouteMiddleware {
         $app->environment['click']->setLander($lander);
     }
 
+    private static function landerFromRequest($landers, $req) {
+        $id = self::landerIdFromRequest($req);
+        if (is_null($id) && isset($_SESSION['last_lander'])) {
+            return $_SESSION['last_lander'];
+        }
+        return (isset($id)) ? $landers->fetch($id) : null;
+    }
+
     protected static function landerIdFromRequest($req) {
         $qs    = $req->get('fp_lid');
         $refer = $req->getReferrer();
@@ -79,11 +87,4 @@ class RouteMiddleware {
         }
     }
 
-    public static function landerFromRequest($landers, $req) {
-        $id = self::landerIdFromRequest($req);
-        if (is_null($id) && isset($_SESSION['last_lander'])) {
-            return $_SESSION['last_lander'];
-        }
-        return (isset($id)) ? $landers->fetch($id) : null;
-    }
 }

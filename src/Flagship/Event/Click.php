@@ -12,6 +12,7 @@ class Click extends BaseEvent {
     const LIBRATO_KEY = "clicks";
 
     protected $stepId;
+    protected $viewId;
 
     public function setStepId($x) {
         $this->stepId = $x;
@@ -20,11 +21,13 @@ class Click extends BaseEvent {
     public function setLander($x) {
         parent::setLander($x);
         $offer = $this->lander->offers[$this->stepId];
+        $this->viewId = $x->id;
 
         $this->properties->replace([
-            'offer' => $offer->getName(),
-            'offer.id' => $offer->product->id,
+            'offer'       => $offer->getName(),
+            'offer.id'    => $offer->product->id,
             'step.number' => $this->stepId,
+            'visit.id'    => $this->viewId
         ]);
 
         if (isset($this->cookie)) {

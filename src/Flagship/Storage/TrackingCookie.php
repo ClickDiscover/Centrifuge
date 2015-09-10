@@ -109,6 +109,22 @@ class TrackingCookie {
         );
     }
 
+    public function toAerospikeArray() {
+        $rec = [
+            'id' => $this->id,
+            'creation.ts' => $this->creationTime,
+            'visit.count' => $this->visitCount
+        ];
+        if (isset($this->lastVisitTime)) {
+            $rec['visit.ts'] = $this->lastVisitTime;
+        }
+        if (isset($this->lastOfferClickTime)) {
+            $rec['offer.ts'] = $this->lastOfferClickTime;
+        }
+        return $rec;
+    }
+
+
     public function pretty() {
         $out = [];
         $out['Cookie Value'] = $this->toCookie();

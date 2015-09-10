@@ -35,10 +35,6 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
     // Set Cookie Data before tracking anything
     $cookie = $click->getCookie();
     if (isset($cookie)) {
-        $cookie->setLastVisitTime(time());
-    }
-    $cookie = $click->getCookie();
-    if (isset($cookie)) {
         $cookie->setLastOfferClickTime(time());
     }
 

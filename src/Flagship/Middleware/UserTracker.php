@@ -8,17 +8,20 @@ use Flagship\Event\BaseEvent;
 use Flagship\Event\EventContextFactory;
 use Flagship\Middleware\Session;
 use Flagship\Storage\CookieJar;
+use Flagship\Model\User;
 
 
 class UserTracker extends Middleware {
 
+    protected $aerospike;
     protected $cookieJar;
     protected $trackingCookie = null;
     protected $events;
 
-    public function __construct(CookieJar $cookieJar, EventContextFactory $events) {
+    public function __construct(CookieJar $cookieJar, EventContextFactory $events, \Aerospike $aerospike) {
         $this->cookieJar = $cookieJar;
         $this->events = $events;
+        $this->aerospike = $aerospike;
     }
 
     public function call() {
@@ -34,11 +37,19 @@ class UserTracker extends Middleware {
             return false;
         }
 
-        $this->app->environment['user.tracker'] = new UserTrackerContext(
+        $ga = $this->checkGACookie();
+        $utc = new UserTrackerContext(
             $this->trackingCookie,
             $this->events->createFromRequest($this->app->request),
-            $this->checkGACookie()
+            $ga
         );
+        $user = User::fromAerospike(
+            $this->aerospike,
+            $this->trackingCookie,
+            $ga
+        );
+        $this->app->environment['user'] = $user;
+        $this->app->environment['user.tracker'] = $utc;
     }
 
     public function after () {

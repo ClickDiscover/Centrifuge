@@ -71,7 +71,8 @@ class SlimBootstrap {
 
         $app->add(new \Flagship\Middleware\UserTracker(
             $container['cookie.jar'],
-            $container['context.factory']
+            $container['context.factory'],
+            $container['aerospike']
         ));
 
         $app->add(new \Flagship\Middleware\Session(
