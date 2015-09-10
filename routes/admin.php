@@ -140,9 +140,9 @@ $app->group('/admin', function() use ($app, $centrifuge) {
     });
 
 
-    // $app->get('/tracking', $app->container['route_middleware.clickAdmin'], function () use ($app, $centrifuge) {
-    $app->get('/tracking', $app->container['route_middleware.viewAdmin'], function () use ($app, $centrifuge) {
-        $eventType = "view";
+    // $app->get('/tracking', $app->container['route_middleware.viewAdmin'], function () use ($app, $centrifuge) {
+    $app->get('/tracking', $app->container['route_middleware.clickAdmin'], function () use ($app, $centrifuge) {
+        $eventType = "click";
         $view = $app->environment[$eventType];
         $lander = $centrifuge['landers']->fetch($app->request->get('lid', 1));
         if (isset($lander)) {
@@ -160,9 +160,10 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         $out .= print_r($_SESSION, true);
         // $out .= "\nTracking\n";
         // $out .= print_r($app->environment['user.tracker'], true);
+        $response = $centrifuge['aerospike']->getNodes();
+        $out .= '\n' . print_r($response);
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
-
         $view->toAerospike($centrifuge['aerospike']);
 
         echo $centrifuge['plates']->render('admin::models/layout', [
