@@ -5,8 +5,14 @@ namespace Flagship\Storage;
 use Flagship\Event\BaseEvent;
 use Flagship\Event\View;
 use Flagship\Event\Click;
+use Flagship\Model\User;
+use Flagship\Util\FunctionQueueInterface;
+use Flagship\Util\FunctionQueueTrait;
 
-class SegmentStorage {
+
+class SegmentStorage implements FunctionQueueInterface {
+
+    use FunctionQueueTrait;
 
     protected $writeKey;
     protected $jar;
@@ -37,7 +43,9 @@ class SegmentStorage {
             'properties' => $properties,
             'integrations' => $integrations
         ];
-        \Segment::page($arr);
+        $this->enqueue(function () use ($arr) {
+            \Segment::page($arr);
+        });
         return $arr;
     }
 
@@ -56,19 +64,23 @@ class SegmentStorage {
             'properties' => $properties,
             'integrations' => $integrations
         ];
-        \Segment::track($arr);
+        $this->enqueue(function () use ($arr) {
+            \Segment::track($arr);
+        });
         return $arr;
     }
 
     protected function identify(BaseEvent $ev) {
-        $userId = $ev->getUserId();
+        $user = $ev->getUser();
+        $userId = $user->getId();
         if (empty($userId)) {
             return false;
         }
 
-        if (empty($_SESSION['_fp_segment'])) {
+        $identifiedBefore = $user->getSegmentId();
+        if (empty($identifiedBefore) && empty($_SESSION['_fp_segment'])) {
             $traits = [];
-            $tc = $ev->getCookie();
+            $tc = $user->getCookie();
             if (isset($tc)) {
                 $traits['visits'] = $tc->getVisitCount();
                 $traits['createdAt'] = date("Y-m-d H:i:s", $tc->getCreationTime());
@@ -83,12 +95,15 @@ class SegmentStorage {
             }
 
             $context = $this->buildContext($ev);
-            \Segment::identify([
-                'userId' => $userId,
-                'context' => $context,
-                'traits' => $traits
-            ]);
-            $_SESSION['_fp_segment'] = $userId;
+            $this->enqueue(function () use ($user, $context, $traits) {
+                \Segment::identify([
+                    'userId' => $user->getId(),
+                    'context' => $context,
+                    'traits' => $traits
+                ]);
+                $user->setSegmentId($user->getId());
+                $_SESSION['_fp_segment'] = $user->getId();
+            });
         }
         return true;
     }

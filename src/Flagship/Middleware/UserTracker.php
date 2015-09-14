@@ -38,18 +38,13 @@ class UserTracker extends Middleware {
         }
 
         $ga = $this->checkGACookie();
-        $utc = new UserTrackerContext(
-            $this->trackingCookie,
-            $this->events->createFromRequest($this->app->request),
-            $ga
-        );
         $this->user = User::fromAerospike(
             $this->aerospike,
             $this->trackingCookie,
             $ga
         );
         $this->app->environment['user'] = $this->user;
-        $this->app->environment['user.tracker'] = $utc;
+        $this->app->environment['contexts'] = $this->events->createFromRequest($this->app->request);
     }
 
     public function after () {
@@ -59,7 +54,7 @@ class UserTracker extends Middleware {
         }
 
         if (isset($this->user)) {
-            $this->user->toAerospike($this->aerospike);
+            $rc = $this->user->toAerospike($this->aerospike);
         }
     }
 

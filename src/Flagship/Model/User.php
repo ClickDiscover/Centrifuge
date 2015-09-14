@@ -179,40 +179,41 @@ class User {
         }
 
         $status = $db->put($key, $data);
+        return $status;
     }
 
     public static function fromAerospike(\Aerospike $db, $cookie, $ga = null) {
         $id = $cookie->getId();
+        $user = new User($id, $cookie);
         $key = $db->initKey('test', self::AEROSPIKE_KEY, $id);
         $rc = $db->get($key, $rec);
-        $rec = $rec['bins'];
-        $user = new User($id, $cookie);
+        if ($rc == \Aerospike::OK) {
+            $rec = $rec['bins'];
 
-        if (isset($rec['google.id'])) {
-            $user->setGoogleId($rec['google.id']);
-        } elseif (isset($ga)) {
-            $user->setGoogleId($ga);
-        }
+            if (isset($rec['google.id'])) {
+                $user->setGoogleId($rec['google.id']);
+            } elseif (isset($ga)) {
+                $user->setGoogleId($ga);
+            }
 
-        if (isset($rec['segment.id'])) {
-            $user->setSegmentId($rec['segment.id']);
-        }
+            if (isset($rec['segment.id'])) {
+                $user->setSegmentId($rec['segment.id']);
+            }
 
-        if (isset($rec['creation.time'])) {
-            // $serverTime = $rec['creation.time'];
-            // $clientTime = $cookie->getCreationTime();
-            // $oldest = ($serverTime > $clientTime) ? $clientTime : $serverTime;
-            $user->setCreationTime($rec['creation.time']);
-        } else {
-            $user->setCreationTime($cookie->getCreationTime());
-        }
+            if (isset($rec['creation.time'])) {
+                $user->setCreationTime($rec['creation.time']);
+            } else {
+                $user->setCreationTime($cookie->getCreationTime());
+            }
 
-        if (isset($rec['views'])) {
-            $user->setViews($rec['views']);
+            if (isset($rec['views'])) {
+                $user->setViews($rec['views']);
+            }
+            if (isset($rec['clicks'])) {
+                $user->setClicks($rec['clicks']);
+            }
         }
-        if (isset($rec['clicks'])) {
-            $user->setClicks($rec['clicks']);
-        }
+        // if ($rc == Aerospike::ERR_RECORD_NOT_FOUND)
 
         return $user;
     }

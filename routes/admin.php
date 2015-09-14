@@ -172,7 +172,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             $user->appendView($view);
         }
         $view->toAerospike($centrifuge['aerospike']);
-        // $user->toAerospike($centrifuge['aerospike']);
 
         echo $centrifuge['plates']->render('admin::models/layout', [
             'title' => 'Tracking',
@@ -214,7 +213,9 @@ $app->get('/user/:id', function($id) use ($app, $centrifuge) {
     echo '<pre>';
     $key = $db->initKey('test', 'users', $id);
     $db->get($key, $user);
+    $user['bins']['segment.id'] = null;
     print_r($user);
+    $db->put($key, $user);
     echo '</pre>';
 });
 

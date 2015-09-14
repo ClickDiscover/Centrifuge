@@ -22,6 +22,14 @@ class SlimBootstrap {
         $container = $this->container;
         $app->setName($container['config']['name']);
 
+        $this->setupHooks();
+        $this->configureDevelopmentMode();
+        $this->configureProductionMode();
+
+        //////////////////////////
+        // Object Configuration //
+        //////////////////////////
+
         $container['slim.urlFor'] = $container->protect(function ($destination, $params) use ($app) {
             $getParams = $app->request->get();
             $url = $app->urlFor($destination, $params);
@@ -32,10 +40,6 @@ class SlimBootstrap {
                 return $url . "?" . $query;
             }
         });
-
-        $this->setupHooks();
-        $this->configureDevelopmentMode();
-        $this->configureProductionMode();
 
         $container->extend('offers', function ($offers, $c) use ($container) {
             $offers->setUrlFor(function ($route, $params) use ($container) {
@@ -83,6 +87,35 @@ class SlimBootstrap {
         return $app;
     }
 
+    public function setupHooks() {
+        $app = $this->app;
+        $container = $this->container;
+
+        // Statsd Reporting
+        $timerMetricName = $container['librato.system']->totalName('request_time');
+        $app->hook("slim.before", function () use ($container, $timerMetricName) {
+            $container['librato.system']->total('num_requests');
+            $container['statsd']->startTiming($timerMetricName);
+        });
+
+        $app->hook("slim.after", function () use ($container, $timerMetricName) {
+            $container['statsd']->endTiming($timerMetricName);
+            $container['segment']->flushQueue();
+        });
+
+        // Custom URL handler
+        $app->hook("slim.before", function () use ($app, $container) {
+            $uri = $app->environment['PATH_INFO'];
+            $custom = $app->container['custom.routes'];
+            foreach ($custom as $c) {
+                if ($c['url'] === $uri) {
+                    $newUrl = $app->urlFor('landers', array('id' => $c['lander_id']));
+                    $app->environment['PATH_INFO'] = $newUrl;
+                }
+            }
+        });
+    }
+
     public function configureDevelopmentMode() {
         $app = $this->app;
         $container = $this->container;
@@ -109,31 +142,4 @@ class SlimBootstrap {
         });
     }
 
-    public function setupHooks() {
-        $app = $this->app;
-        $container = $this->container;
-
-        // Statsd Reporting
-        $timerMetricName = $container['librato.system']->totalName('request_time');
-        $app->hook("slim.before", function () use ($container, $timerMetricName) {
-            $container['librato.system']->total('num_requests');
-            $container['statsd']->startTiming($timerMetricName);
-        });
-
-        $app->hook("slim.after", function () use ($container, $timerMetricName) {
-            $container['statsd']->endTiming($timerMetricName);
-        });
-
-        // Custom URL handler
-        $app->hook("slim.before", function () use ($app, $container) {
-            $uri = $app->environment['PATH_INFO'];
-            $custom = $app->container['custom.routes'];
-            foreach ($custom as $c) {
-                if ($c['url'] === $uri) {
-                    $newUrl = $app->urlFor('landers', array('id' => $c['lander_id']));
-                    $app->environment['PATH_INFO'] = $newUrl;
-                }
-            }
-        });
-    }
 }

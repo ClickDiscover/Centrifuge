@@ -28,18 +28,10 @@ class RouteMiddleware {
 
     public static function base(Slim $app, Container $c, $eventClass) {
         $eventId = $c['random.id'];
-        $tracking  = $app->environment['user.tracker'];
-        $cookie  = $tracking->cookie;
-        $userId = $cookie->getId();
-        $event = new $eventClass($eventId, $userId);
-        $event->setContext($tracking->context);
-        $event->setGoogleId($tracking->googleId);
-        $event->setCookie($cookie);
+        $user = $app->environment['user'];
+        $event = new $eventClass($eventId, $user);
+        $event->setContext($app->environment['contexts']);
         return $event;
-    }
-
-    public static function viewAdmin(Slim $app, Container $c, Route $route) {
-        $app->environment['view'] = self::base($app, $c, "\Flagship\Event\View");
     }
 
     public static function view(Slim $app, Container $c, Route $route) {
@@ -53,15 +45,19 @@ class RouteMiddleware {
         $_SESSION['last_lander'] = $lander;
     }
 
-    public static function clickAdmin(Slim $app, Container $c, Route $route) {
-        $app->environment['click'] = self::base($app, $c, "\Flagship\Event\Click");
-    }
-
     public static function click(Slim $app, Container $c, Route $route) {
         self::clickAdmin($app, $c, $route);
         $lander = self::landerFromRequest($c['landers'], $app->request);
         $app->environment['click']->setStepId($route->getParam('stepId'));
         $app->environment['click']->setLander($lander);
+    }
+
+    public static function viewAdmin(Slim $app, Container $c, Route $route) {
+        $app->environment['view'] = self::base($app, $c, "\Flagship\Event\View");
+    }
+
+    public static function clickAdmin(Slim $app, Container $c, Route $route) {
+        $app->environment['click'] = self::base($app, $c, "\Flagship\Event\Click");
     }
 
     private static function landerFromRequest($landers, $req) {

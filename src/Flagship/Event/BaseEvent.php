@@ -29,23 +29,16 @@ abstract class BaseEvent {
     protected $eventContexts = [];
 
     // User Data
-    protected $userId;
-    protected $gaId;
-    protected $cookie;
+    protected $user;
 
     public function __construct(
         $id,
-        $userId,
-        $cookie = null,
-        $gaId = null,
-        $timestamp = null
+        $user
     ) {
         $this->id = $id;
-        $this->userId = $userId;
-        $this->cookie = $cookie;
+        $this->user = $user;
         $this->context = new Set();
         $this->properties = new Set();
-        $this->gaId = $gaId;
         $this->timestamp = isset($timestamp) ? $timestamp : time();
     }
 
@@ -63,16 +56,19 @@ abstract class BaseEvent {
     }
 
     public function getUserId() {
-        return $this->userId;
+        return $this->user->getId();
     }
 
+    public function getUser() {
+        return $this->user;
+    }
 
     public function getCookie() {
-        return $this->cookie;
+        return $this->user->getCookie();
     }
 
     public function getGoogleId() {
-        return $this->gaId;
+        return $this->user->getGoogleId();
     }
 
     /////////////
@@ -97,16 +93,6 @@ abstract class BaseEvent {
         $this->context->replace($user);
         $url = array_intersect_key($tc['url'], array_flip(static::FILTER_CONTEXT_URL));
         $this->properties->replace($url);
-    }
-
-    public function setCookie($x) {
-        $this->cookie = $x;
-    }
-
-    public function setGoogleId($x) {
-        if(isset($x)) {
-            $this->gaId = $x;
-        }
     }
 
     public function setLander($x) {
