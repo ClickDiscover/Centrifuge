@@ -155,6 +155,11 @@ class User {
             $data['cookie'] = $this->cookie->toAerospikeArray();
         }
 
+        $cs = $this->clicks;
+        if (isset($cs) && count($cs) > 0) {
+            echo "Foo";
+        }
+
         $ga = $this->getGoogleId();
         if (isset($ga)) {
             $data['google.id'] = $ga;
