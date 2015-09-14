@@ -171,8 +171,8 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         } else {
             $user->appendView($view);
         }
-        // $view->toAerospike($centrifuge['aerospike']);
-        $user->toAerospike($centrifuge['aerospike']);
+        $view->toAerospike($centrifuge['aerospike']);
+        // $user->toAerospike($centrifuge['aerospike']);
 
         echo $centrifuge['plates']->render('admin::models/layout', [
             'title' => 'Tracking',
@@ -209,11 +209,21 @@ $app->get('/conversions', function() use ($app, $centrifuge) {
     ]);
 });
 
+$app->get('/user/:id', function($id) use ($app, $centrifuge) {
+    $db = $centrifuge['aerospike'];
+    echo '<pre>';
+    $key = $db->initKey('test', 'users', $id);
+    $db->get($key, $user);
+    print_r($user);
+    echo '</pre>';
+});
+
+
 $app->get('/test/:what', function($what) use ($app, $centrifuge) {
     $db = $centrifuge['aerospike'];
     echo '<pre>';
     $db->scan('test', $what, function ($x) use ($db) {
-        print_r($x);
+        print_r($x['bins']);
     });
     echo '</pre>';
 });

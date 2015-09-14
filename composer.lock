@@ -58,28 +58,29 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.3.3",
+            "version": "3.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "7584caf58d3b168f8c1f85d97c1d94be55dc2ee8"
+                "reference": "bae73eb3673228b95329ecf0a8fd75a262004d66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/7584caf58d3b168f8c1f85d97c1d94be55dc2ee8",
-                "reference": "7584caf58d3b168f8c1f85d97c1d94be55dc2ee8",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bae73eb3673228b95329ecf0a8fd75a262004d66",
+                "reference": "bae73eb3673228b95329ecf0a8fd75a262004d66",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": ">=5.3|~6.0.1|~6.1",
+                "guzzlehttp/guzzle": "~5.3|~6.0.1|~6.1",
                 "guzzlehttp/promises": "~1.0",
                 "guzzlehttp/psr7": "~1.0",
                 "mtdowling/jmespath.php": "~2.2",
                 "php": ">=5.5"
             },
             "require-dev": {
-                "aws/aws-php-sns-message-validator": "^1.0",
+                "aws/aws-php-sns-message-validator": "~1.0",
                 "behat/behat": "~3.0",
+                "doctrine/cache": "~1.4",
                 "ext-dom": "*",
                 "ext-json": "*",
                 "ext-openssl": "*",
@@ -89,6 +90,7 @@
                 "phpunit/phpunit": "~4.0"
             },
             "suggest": {
+                "doctrine/cache": "To use the DoctrineCacheAdapter",
                 "ext-curl": "To send requests using cURL",
                 "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages"
             },
@@ -128,7 +130,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2015-08-31 23:16:37"
+            "time": "2015-09-10 19:12:33"
         },
         {
             "name": "danielstjules/stringy",
@@ -397,16 +399,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.0.2",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "a8dfeff00eb84616a17fea7a4d72af35e750410f"
+                "reference": "66fd14b4d0b8f2389eaf37c5458608c7cb793a81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a8dfeff00eb84616a17fea7a4d72af35e750410f",
-                "reference": "a8dfeff00eb84616a17fea7a4d72af35e750410f",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/66fd14b4d0b8f2389eaf37c5458608c7cb793a81",
+                "reference": "66fd14b4d0b8f2389eaf37c5458608c7cb793a81",
                 "shasum": ""
             },
             "require": {
@@ -422,7 +424,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.0-dev"
+                    "dev-master": "6.1-dev"
                 }
             },
             "autoload": {
@@ -455,7 +457,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-07-04 20:09:24"
+            "time": "2015-09-08 17:36:26"
         },
         {
             "name": "guzzlehttp/promises",
@@ -625,16 +627,16 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.1.8",
+            "version": "v5.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "140dd18acb6be297fbd9870f8dda9d9d0a17c460"
+                "reference": "610aea16e3d91dfd85db4cf43703403a83b7cba2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/140dd18acb6be297fbd9870f8dda9d9d0a17c460",
-                "reference": "140dd18acb6be297fbd9870f8dda9d9d0a17c460",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/610aea16e3d91dfd85db4cf43703403a83b7cba2",
+                "reference": "610aea16e3d91dfd85db4cf43703403a83b7cba2",
                 "shasum": ""
             },
             "require": {
@@ -663,20 +665,20 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2015-07-14 01:36:14"
+            "time": "2015-08-31 12:59:22"
         },
         {
             "name": "illuminate/support",
-            "version": "v5.1.8",
+            "version": "v5.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "2ba8a22a554aee9a412baa2e16e4387262d6d57c"
+                "reference": "c5389968d48517b3b51cfd8cd4abd72f0cc1575b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/2ba8a22a554aee9a412baa2e16e4387262d6d57c",
-                "reference": "2ba8a22a554aee9a412baa2e16e4387262d6d57c",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/c5389968d48517b3b51cfd8cd4abd72f0cc1575b",
+                "reference": "c5389968d48517b3b51cfd8cd4abd72f0cc1575b",
                 "shasum": ""
             },
             "require": {
@@ -716,7 +718,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2015-07-20 16:31:36"
+            "time": "2015-09-03 15:47:41"
         },
         {
             "name": "jenssegers/agent",
@@ -874,16 +876,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.11",
+            "version": "1.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "c16222fdc02467eaa12cb6d6d0e65527741f6040"
+                "reference": "7323424a9d39c24e597ed3f2144419dfbb52e086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/c16222fdc02467eaa12cb6d6d0e65527741f6040",
-                "reference": "c16222fdc02467eaa12cb6d6d0e65527741f6040",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/7323424a9d39c24e597ed3f2144419dfbb52e086",
+                "reference": "7323424a9d39c24e597ed3f2144419dfbb52e086",
                 "shasum": ""
             },
             "require": {
@@ -951,7 +953,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-07-28 20:41:58"
+            "time": "2015-09-05 12:06:41"
         },
         {
             "name": "league/plates",
@@ -1117,16 +1119,16 @@
         },
         {
             "name": "mobiledetect/mobiledetectlib",
-            "version": "2.8.15",
+            "version": "2.8.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "6495567afe1486353bec82d6b2de6f98553d60a5"
+                "reference": "9a8b6c6b259924a7c80021da8ba167766a9fd5b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/6495567afe1486353bec82d6b2de6f98553d60a5",
-                "reference": "6495567afe1486353bec82d6b2de6f98553d60a5",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/9a8b6c6b259924a7c80021da8ba167766a9fd5b6",
+                "reference": "9a8b6c6b259924a7c80021da8ba167766a9fd5b6",
                 "shasum": ""
             },
             "require": {
@@ -1167,20 +1169,20 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2015-06-18 09:43:23"
+            "time": "2015-08-31 13:30:54"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.16.0",
+            "version": "1.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "c0c0b4bee3aabce7182876b0d912ef2595563db7"
+                "reference": "0524c87587ab85bc4c2d6f5b41253ccb930a5422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c0c0b4bee3aabce7182876b0d912ef2595563db7",
-                "reference": "c0c0b4bee3aabce7182876b0d912ef2595563db7",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/0524c87587ab85bc4c2d6f5b41253ccb930a5422",
+                "reference": "0524c87587ab85bc4c2d6f5b41253ccb930a5422",
                 "shasum": ""
             },
             "require": {
@@ -1197,7 +1199,7 @@
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
-                "raven/raven": "~0.8",
+                "raven/raven": "~0.11",
                 "ruflin/elastica": ">=0.90 <3.0",
                 "swiftmailer/swiftmailer": "~5.3",
                 "videlalvaro/php-amqplib": "~2.4"
@@ -1243,7 +1245,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-08-09 17:44:44"
+            "time": "2015-08-31 09:17:37"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -1404,16 +1406,16 @@
         },
         {
             "name": "pimple/pimple",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "3313af5935dbc560fab845b76a1ca351b47855af"
+                "reference": "a30f7d6e57565a2e1a316e1baf2a483f788b258a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/3313af5935dbc560fab845b76a1ca351b47855af",
-                "reference": "3313af5935dbc560fab845b76a1ca351b47855af",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/a30f7d6e57565a2e1a316e1baf2a483f788b258a",
+                "reference": "a30f7d6e57565a2e1a316e1baf2a483f788b258a",
                 "shasum": ""
             },
             "require": {
@@ -1440,13 +1442,13 @@
                     "email": "fabien@symfony.com"
                 }
             ],
-            "description": "Pimple is a simple Dependency Injection Container for PHP 5.3",
+            "description": "Pimple, a simple Dependency Injection Container",
             "homepage": "http://pimple.sensiolabs.org",
             "keywords": [
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-07-30 09:57:46"
+            "time": "2015-09-11 15:10:35"
         },
         {
             "name": "predis/predis",
@@ -1743,16 +1745,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.7.3",
+            "version": "v2.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "863af6898081b34c65d42100c370b9f3c51b70ca"
+                "reference": "7253c2041652353e71560bbd300d6256d170ddaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/863af6898081b34c65d42100c370b9f3c51b70ca",
-                "reference": "863af6898081b34c65d42100c370b9f3c51b70ca",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/7253c2041652353e71560bbd300d6256d170ddaf",
+                "reference": "7253c2041652353e71560bbd300d6256d170ddaf",
                 "shasum": ""
             },
             "require": {
@@ -1792,20 +1794,20 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-22 10:11:00"
+            "time": "2015-08-27 06:45:45"
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v2.7.3",
+            "version": "v2.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "e8903ebba5eb019f5886ffce739ea9e3b7519579"
+                "reference": "b39221998ff5fc26ba63f96d2b833dfddc233d57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/e8903ebba5eb019f5886ffce739ea9e3b7519579",
-                "reference": "e8903ebba5eb019f5886ffce739ea9e3b7519579",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/b39221998ff5fc26ba63f96d2b833dfddc233d57",
+                "reference": "b39221998ff5fc26ba63f96d2b833dfddc233d57",
                 "shasum": ""
             },
             "require": {
@@ -1851,7 +1853,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2015-07-28 15:18:12"
+            "time": "2015-08-31 12:28:11"
         },
         {
             "name": "tedivm/stash",
@@ -1957,16 +1959,16 @@
         },
         {
             "name": "true/punycode",
-            "version": "2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/true/php-punycode.git",
-                "reference": "13d3aada7d7d5d1812316031d8d85f5d97178c4e"
+                "reference": "b672918d992b84f8016bbe353a42516928393c63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/true/php-punycode/zipball/13d3aada7d7d5d1812316031d8d85f5d97178c4e",
-                "reference": "13d3aada7d7d5d1812316031d8d85f5d97178c4e",
+                "url": "https://api.github.com/repos/true/php-punycode/zipball/b672918d992b84f8016bbe353a42516928393c63",
+                "reference": "b672918d992b84f8016bbe353a42516928393c63",
                 "shasum": ""
             },
             "require": {
@@ -1999,7 +2001,7 @@
                 "idna",
                 "punycode"
             ],
-            "time": "2015-06-24 09:36:39"
+            "time": "2015-09-01 14:53:31"
         },
         {
             "name": "wilmoore/attributes.php",

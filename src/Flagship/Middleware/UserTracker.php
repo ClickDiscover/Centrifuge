@@ -27,7 +27,7 @@ class UserTracker extends Middleware {
     public function call() {
         $this->app->hook('slim.before', [$this, 'before']);
         $this->next->call();
-        $this->after();
+        $this->app->hook('slim.after', [$this, 'after']);
     }
 
     public function before() {
@@ -43,12 +43,12 @@ class UserTracker extends Middleware {
             $this->events->createFromRequest($this->app->request),
             $ga
         );
-        $user = User::fromAerospike(
+        $this->user = User::fromAerospike(
             $this->aerospike,
             $this->trackingCookie,
             $ga
         );
-        $this->app->environment['user'] = $user;
+        $this->app->environment['user'] = $this->user;
         $this->app->environment['user.tracker'] = $utc;
     }
 
@@ -56,6 +56,10 @@ class UserTracker extends Middleware {
         if(isset($this->trackingCookie)) {
             $this->trackingCookie->incrementVisitCount();
             $this->cookieJar->setTracking($this->trackingCookie);
+        }
+
+        if (isset($this->user)) {
+            $this->user->toAerospike($this->aerospike);
         }
     }
 

@@ -148,8 +148,7 @@ class User {
         $key = $db->initKey('test', self::AEROSPIKE_KEY, $this->id);
 
         $data = [
-            'id' => $this->id,
-            'creation.time' => $this->getCreationTime()
+            'id' => $this->id
         ];
 
         if (isset($this->cookie)) {
@@ -179,7 +178,6 @@ class User {
             $data['clicks'] = $clicks;
         }
 
-
         $status = $db->put($key, $data);
     }
 
@@ -187,11 +185,15 @@ class User {
         $id = $cookie->getId();
         $key = $db->initKey('test', self::AEROSPIKE_KEY, $id);
         $rc = $db->get($key, $rec);
+        $rec = $rec['bins'];
         $user = new User($id, $cookie);
 
         if (isset($rec['google.id'])) {
             $user->setGoogleId($rec['google.id']);
+        } elseif (isset($ga)) {
+            $user->setGoogleId($ga);
         }
+
         if (isset($rec['segment.id'])) {
             $user->setSegmentId($rec['segment.id']);
         }
@@ -201,6 +203,8 @@ class User {
             // $clientTime = $cookie->getCreationTime();
             // $oldest = ($serverTime > $clientTime) ? $clientTime : $serverTime;
             $user->setCreationTime($rec['creation.time']);
+        } else {
+            $user->setCreationTime($cookie->getCreationTime());
         }
 
         if (isset($rec['views'])) {
