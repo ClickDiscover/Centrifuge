@@ -13,6 +13,7 @@ use League\Plates\Engine;
 use Slim\Middleware\DebugBar;
 
 use Flagship\Util\Logger;
+use Flagship\Event\EventQueueManager;
 use Flagship\Plates\VariantExtension;
 use Flagship\Plates\HtmlExtension;
 use Flagship\Plates\ViewEngine;
@@ -200,18 +201,26 @@ class Container extends \Pimple\Container {
             return $librato;
         };
 
+        $this['event.queue'] = function ($c) {
+            return new EventQueueManager;
+        };
+
         $this['segment'] = function ($c) {
-            return new SegmentStorage(
+            $segment = new SegmentStorage(
                 $c['config'],
                 $c['cookie.jar'],
                 $c['logger']
             );
+            $c['event.queue']->addStorage($segment);
+            return $segment;
         };
 
         $this['aerospike'] = function ($c) {
             $conf = $c['config']['database']['aerospike'];
             $db = new \Aerospike($conf['client']);
-            return new AerospikeNamespace($db, $conf['namespace']);
+            $aero = new AerospikeNamespace($db, $conf['namespace']);
+            $c['event.queue']->addStorage($aero);
+            return $aero;
         };
     }
 }
