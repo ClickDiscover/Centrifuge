@@ -8,6 +8,7 @@ use Flagship\Event\BaseEvent;
 use Flagship\Event\EventContextFactory;
 use Flagship\Middleware\Session;
 use Flagship\Storage\CookieJar;
+use \Flagship\Storage\AerospikeNamespace;
 use Flagship\Model\User;
 
 
@@ -18,7 +19,7 @@ class UserTracker extends Middleware {
     protected $trackingCookie = null;
     protected $events;
 
-    public function __construct(CookieJar $cookieJar, EventContextFactory $events, \Aerospike $aerospike) {
+    public function __construct(CookieJar $cookieJar, EventContextFactory $events, AerospikeNamespace $aerospike) {
         $this->cookieJar = $cookieJar;
         $this->events = $events;
         $this->aerospike = $aerospike;

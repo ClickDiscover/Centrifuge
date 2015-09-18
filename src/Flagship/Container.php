@@ -23,6 +23,7 @@ use Flagship\Service\CustomRouteService;
 use Flagship\Storage\LibratoStorage;
 use Flagship\Storage\CookieJar;
 use Flagship\Storage\SegmentStorage;
+use Flagship\Storage\AerospikeNamespace;
 use \Flagship\Event\EventContextFactory;
 
 
@@ -210,12 +211,7 @@ class Container extends \Pimple\Container {
         $this['aerospike'] = function ($c) {
             $conf = $c['config']['database']['aerospike'];
             $db = new \Aerospike($conf['client']);
-            // $db->setLogLevel($conf['log_level']);
-            // $db->setLogHandler(function ($level, $file, $function, $line) use ($c) {
-            //     var_dump([$level, $file, $function, $line]);
-            //     $c['logger']->info('Aerospike: ', [$level, $file, $function, $line]);
-            // });
-            return $db;
+            return new AerospikeNamespace($db, $conf['namespace']);
         };
     }
 }

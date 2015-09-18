@@ -7,6 +7,7 @@ use \Slim\Helper\Set;
 
 use \Flagship\Storage\LibratoStorage;
 use \Flagship\Storage\SegmentStorage;
+use \Flagship\Storage\AerospikeNamespace;
 
 abstract class BaseEvent {
 
@@ -98,14 +99,17 @@ abstract class BaseEvent {
     public function setLander($x) {
         $this->lander = $x;
         $this->properties->replace([
-            'lander.id' => $this->lander->id,
+            'lander_id' => $this->lander->id,
             'title' => $this->lander->notes,
+            'variants' => $this->lander->variants,
             'website' => $this->lander->website->name,
-            'website.id' => $this->lander->website->id,
+            'website_id' => $this->lander->website->id,
+            'web_namespace' => $this->lander->website->namespace,
+            'web_template' => $this->lander->website->templateFile,
             'country' => $this->lander->geo->name,
-            'geo.id' => $this->lander->geo->id,
+            'geo_id' => $this->lander->geo->id,
             'vertical' => $this->lander->offers[1]->product->vertical,
-            'offer.source' => $this->lander->offers[1]->product->source
+            'offer_source' => $this->lander->offers[1]->product->source
         ]);
     }
 
@@ -135,8 +139,7 @@ abstract class BaseEvent {
         return $segment->$method($this);
     }
 
-    public function toAerospike(\Aerospike $db) {
-        $key = $db->initKey('test', static::AEROSPIKE_KEY, $this->getId());
+    public function toAerospike(AerospikeNamespace $db) {
 
         $record = [
             'id' => $this->getId(),
@@ -145,7 +148,7 @@ abstract class BaseEvent {
         ];
 
         if (isset($this->gaId)) {
-            $data['google.id'] = $this->gaId;
+            $data['google_id'] = $this->gaId;
         }
 
         if (isset($this->eventContexts['campaign'])) {
@@ -154,8 +157,7 @@ abstract class BaseEvent {
 
         $data = array_merge($data, $this->properties->all());
         $record = array_merge($record, $data);
-        $status = $db->put($key, $record);
-        // if ($status != Aerospike::OK) { }
+        $status = $db->putById(static::AEROSPIKE_KEY, $this->getId(), $record);
     }
 }
 

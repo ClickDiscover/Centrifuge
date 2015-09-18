@@ -42,6 +42,7 @@ class RouteMiddleware {
             $app->notFound();
         }
         $app->environment['view']->setLander($lander);
+        $app->environment['user']->appendView($app->environment['view']);
         $_SESSION['last_lander'] = $lander;
     }
 
@@ -50,6 +51,7 @@ class RouteMiddleware {
         $lander = self::landerFromRequest($c['landers'], $app->request);
         $app->environment['click']->setStepId($route->getParam('stepId'));
         $app->environment['click']->setLander($lander);
+        $app->environment['user']->appendClick($app->environment['click']);
     }
 
     public static function viewAdmin(Slim $app, Container $c, Route $route) {

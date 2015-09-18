@@ -108,9 +108,8 @@ $max = 10000;
 $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
 // list($views, $viewEvents) = select(stream($iterator), $max, 'page', 'context', 'utm_campaign');
 foreach (stream($iterator) as $v) {
-    if (isset($v['context']['utm_campaign'])) {
+    if ($v['type'] !== 'page' && $v['type'] !== 'identify') {
         print_r($v);
-        // echo $v['timestamp'] . '    ' .  $v['context']['utm_campaign'] . PHP_EOL;
     }
 }
 

@@ -166,13 +166,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
 
-        if ($eventType == 'click') {
-            $user->appendClick($view);
-        } else {
-            $user->appendView($view);
-        }
-        $view->toAerospike($centrifuge['aerospike']);
-
         echo $centrifuge['plates']->render('admin::models/layout', [
             'title' => 'Tracking',
             'data' => $out
@@ -208,23 +201,38 @@ $app->get('/conversions', function() use ($app, $centrifuge) {
     ]);
 });
 
-$app->get('/user/:id', function($id) use ($app, $centrifuge) {
+$app->group('/aerospike', function () use ($app, $centrifuge) {
     $db = $centrifuge['aerospike'];
-    echo '<pre>';
-    $key = $db->initKey('test', 'users', $id);
-    $db->get($key, $user);
-    $user['bins']['segment.id'] = null;
-    print_r($user);
-    $db->put($key, $user);
-    echo '</pre>';
-});
 
-
-$app->get('/test/:what', function($what) use ($app, $centrifuge) {
-    $db = $centrifuge['aerospike'];
-    echo '<pre>';
-    $db->scan('test', $what, function ($x) use ($db) {
-        print_r($x['bins']);
+    $app->get('/user/:id', function($id) use ($app, $db) {
+        echo '<pre>';
+        $user = $db->fetchById('users', $id);
+        // $user['bins']['segment.id'] = null;
+        print_r($user);
+        // $db->put($key, $user);
+        echo '</pre>';
     });
-    echo '</pre>';
+
+
+    $app->get('/delete/:what', function($what) use ($app, $db) {
+        $db = $db->db();
+        $count = 0;
+        echo '<pre>';
+        $db->scan('test', $what, function ($x) use ($db, $what, $count) {
+            $count++;
+            $key = $db->initKey('test', $what, $x['bins']['id']);
+            $rc = $db->remove($key);
+            print_r([$rc, $db->error(), $db->errorno()]);
+        });
+        echo '</pre>Deleted ' . $count . ' records';
+    });
+
+    $app->get('/:what', function($what) use ($app, $db) {
+        $db = $db->db();
+        echo '<pre>';
+        $db->scan('test', $what, function ($x) use ($db, $what) {
+            print_r($x['bins']);
+        });
+        echo '</pre>';
+    });
 });

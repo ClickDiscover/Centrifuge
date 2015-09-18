@@ -15,9 +15,9 @@ class View extends BaseEvent {
         parent::setLander($x);
         $this->properties->replace([
             'offer1' => $this->lander->offers[1]->getName(),
-            'offer1.id' => $this->lander->offers[1]->product->id,
+            'offer1_id' => $this->lander->offers[1]->product->id,
             'offer2' => $this->lander->offers[2]->getName(),
-            'offer2.id' => $this->lander->offers[2]->product->id
+            'offer2_id' => $this->lander->offers[2]->product->id
         ]);
     }
 }

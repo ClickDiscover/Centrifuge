@@ -6,6 +6,7 @@ use \Slim\Helper\Set;
 use \Flagship\Event\EventContext;
 use \Flagship\Event\Click;
 use \Flagship\Event\View;
+use \Flagship\Storage\AerospikeNamespace;
 
 class User {
 
@@ -144,8 +145,7 @@ class User {
         }
     }
 
-    public function toAerospike(\Aerospike $db) {
-        $key = $db->initKey('test', self::AEROSPIKE_KEY, $this->id);
+    public function toAerospike(AerospikeNamespace $db) {
 
         $data = [
             'id' => $this->id
@@ -155,23 +155,18 @@ class User {
             $data['cookie'] = $this->cookie->toAerospikeArray();
         }
 
-        $cs = $this->clicks;
-        if (isset($cs) && count($cs) > 0) {
-            echo "Foo";
-        }
-
         $ga = $this->getGoogleId();
         if (isset($ga)) {
-            $data['google.id'] = $ga;
+            $data['google_id'] = $ga;
         }
         $seg = $this->getSegmentId();
         if (isset($seg)) {
-            $data['segment.id'] = $seg;
+            $data['segment_id'] = $seg;
         }
 
         $ct = $this->getCreationTime();
         if (isset($ct)) {
-            $data['creation.time'] = $ct;
+            $data['creation_time'] = $ct;
         }
 
         $views = $this->views;
@@ -183,30 +178,30 @@ class User {
             $data['clicks'] = $clicks;
         }
 
-        $status = $db->put($key, $data);
+        $status = $db->putById(self::AEROSPIKE_KEY, $this->id, $data);
         return $status;
     }
 
-    public static function fromAerospike(\Aerospike $db, $cookie, $ga = null) {
+    public static function fromAerospike(AerospikeNamespace $db, $cookie, $ga = null) {
         $id = $cookie->getId();
         $user = new User($id, $cookie);
-        $key = $db->initKey('test', self::AEROSPIKE_KEY, $id);
-        $rc = $db->get($key, $rec);
-        if ($rc == \Aerospike::OK) {
+        $rec = $db->fetchById(self::AEROSPIKE_KEY, $id);
+
+        if (isset($rec)) {
             $rec = $rec['bins'];
 
-            if (isset($rec['google.id'])) {
-                $user->setGoogleId($rec['google.id']);
+            if (isset($rec['google_id'])) {
+                $user->setGoogleId($rec['google_id']);
             } elseif (isset($ga)) {
                 $user->setGoogleId($ga);
             }
 
-            if (isset($rec['segment.id'])) {
-                $user->setSegmentId($rec['segment.id']);
+            if (isset($rec['segment_id'])) {
+                $user->setSegmentId($rec['segment_id']);
             }
 
-            if (isset($rec['creation.time'])) {
-                $user->setCreationTime($rec['creation.time']);
+            if (isset($rec['creation_time'])) {
+                $user->setCreationTime($rec['creation_time']);
             } else {
                 $user->setCreationTime($cookie->getCreationTime());
             }

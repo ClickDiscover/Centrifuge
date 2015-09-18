@@ -25,9 +25,9 @@ class Click extends BaseEvent {
 
         $this->properties->replace([
             'offer'       => $offer->getName(),
-            'offer.id'    => $offer->product->id,
-            'step.number' => $this->stepId,
-            'visit.id'    => $this->viewId
+            'offer_id'    => $offer->product->id,
+            'step_number' => $this->stepId,
+            'visit_id'    => $this->viewId
         ]);
 
         if (isset($this->cookie)) {
