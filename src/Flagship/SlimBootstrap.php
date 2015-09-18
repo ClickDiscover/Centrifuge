@@ -101,7 +101,8 @@ class SlimBootstrap {
         $app->hook("slim.after", function () use ($container, $timerMetricName) {
             $container['statsd']->endTiming($timerMetricName);
             $container['segment']->flushQueue();
-        });
+            $container['aerospike']->flushQueue();
+        }, 10);
 
         // Custom URL handler
         $app->hook("slim.before", function () use ($app, $container) {

@@ -9,4 +9,11 @@ trait Logging {
     public function setLogger($logger) {
         $this->log = $logger;
     }
+
+    protected function getLogger() {
+        if (isset($this->log)) {
+            return $this->log;
+        }
+        return Logger::getInstance();
+    }
 }

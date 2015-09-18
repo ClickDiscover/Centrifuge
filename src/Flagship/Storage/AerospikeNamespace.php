@@ -2,8 +2,15 @@
 
 namespace Flagship\Storage;
 
+use Flagship\Util\Logging;
+use Flagship\Util\FunctionQueueInterface;
+use Flagship\Util\FunctionQueueTrait;
 
-class AerospikeNamespace {
+
+class AerospikeNamespace implements FunctionQueueInterface {
+
+    use FunctionQueueTrait;
+    use Logging;
 
     protected $namespace;
     protected $db;
@@ -16,7 +23,7 @@ class AerospikeNamespace {
     public function fetchById($key, $id) {
         $key = $this->db->initKey($this->namespace, $key, $id);
         $rc = $this->db->get($key, $rec);
-        if ($rc == \Aerospike::OK) {
+        if ($this->checkResponseCode($rc)) {
             return $rec;
         }
         return null;
@@ -24,14 +31,20 @@ class AerospikeNamespace {
 
     public function putById($key, $id, $arr) {
         $key = $this->db->initKey($this->namespace, $key, $id);
-        $rc = $this->db->put($key, $arr);
+        $this->enqueue(function () use ($key, $arr) {
+            $rc = $this->db->put($key, $arr);
+            $this->checkResponseCode($rc);
+        });
+    }
+
+    protected function checkResponseCode($rc) {
         if ($rc == \Aerospike::OK) {
             return true;
         } else {
-            $log = \Flagship\Util\Logger::getInstance();
-            $log->warn('Error', [$this->db->error(), $this->db->errorno()]);
+            $log = $this->getLogger();
+            $log->warn('Aerospike not OK', [$this->db->error(), $this->db->errorno()]);
+            return false;
         }
-        return null;
     }
 
     public function db() {

@@ -28,7 +28,9 @@ class UserTracker extends Middleware {
     public function call() {
         $this->app->hook('slim.before', [$this, 'before']);
         $this->next->call();
-        $this->app->hook('slim.after', [$this, 'after']);
+        // This can cause serious ordering issues.
+        // Was using slim.after to flush queues to aerospike but User object wwas getting sent before user
+        $this->app->hook('slim.after', [$this, 'after'], 1);
     }
 
     public function before() {
