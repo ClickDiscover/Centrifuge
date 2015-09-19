@@ -5,12 +5,6 @@ $app->get('/content/:id', $app->container['route_middleware.view'], function ($i
     $view = $app->environment['view'];
     $lander = $view->lander;
 
-    // Set Cookie Data before tracking anything
-    $cookie = $view->getCookie();
-    if (isset($cookie)) {
-        $cookie->setLastVisitTime(time());
-    }
-
     // Track then render page
     $view->toLibrato($centrifuge['librato.performance']);
     $view->toSegment($centrifuge['segment']);
@@ -34,12 +28,6 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
     $req = $app->request;
     $click = $app->environment['click'];
 
-    // Set Cookie Data before tracking anything
-    $cookie = $click->getCookie();
-    if (isset($cookie)) {
-        $cookie->setLastOfferClickTime(time());
-    }
-
     // Track then redirect click
     $click->toLibrato($centrifuge['librato.performance']);
     $click->toSegment($centrifuge['segment']);
@@ -52,6 +40,7 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
     $get = $app->request->get();
     $get[$stepName] = $stepId;
     $url .= "?" . http_build_query($get);
-    $app->redirect($url);
+    // app::redirect halts the call stack so pending hooks don't fire
+    $app->response->redirect($url);
 
 })->name('click')->conditions(array('stepId' => '[0-9]+'));

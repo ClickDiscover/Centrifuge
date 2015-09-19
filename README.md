@@ -23,7 +23,7 @@ PHP Application for building landing pages and tracking events.
   * Hook: slim.after  - Sets the tracking cookie on user
 
 6. [RouteMiddleware](src/Flagship/Middleware/RouteMiddleware.php)
-  * Route Middleware (view/click) - Creates the Event for the current action
+  * base() - Creates the Event for the current action
     * [View](src/Flagship/Event/View.php) for /content/:id
     * [Click](src/Flagship/Event/Click.php) for /click/:stepId
 

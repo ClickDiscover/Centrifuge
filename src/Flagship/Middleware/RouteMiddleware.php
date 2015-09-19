@@ -26,6 +26,10 @@ class RouteMiddleware {
         };
     }
 
+    //////////////
+    // Tracking //
+    //////////////
+
     public static function base(Slim $app, Container $c, $eventClass) {
         $eventId = $c['random.id'];
         $user = $app->environment['user'];
@@ -34,32 +38,60 @@ class RouteMiddleware {
         return $event;
     }
 
+    // public static function track(BaseEvent $ev, Container $centrifuge) {
+    //     $ev->toLibrato($centrifuge['librato.performance']);
+    //     $ev->toSegment($centrifuge['segment']);
+    //     $ev->toAerospike($centrifuge['aerospike']);
+    // }
+
     public static function view(Slim $app, Container $c, Route $route) {
-        self::viewAdmin($app, $c, $route);
+        $view = self::base($app, $c, "\Flagship\Event\View");
         $id = $route->getParam("id");
         $lander = $c['landers']->fetch($id);
         if (!$lander) {
             $app->notFound();
         }
-        $app->environment['view']->setLander($lander);
-        $app->environment['user']->appendView($app->environment['view']);
+        $view->setLander($lander);
+        $app->environment['user']->appendView($view);
         $_SESSION['last_lander'] = $lander;
+        // $this->track($view, $c);
+        self::callCookieMethod($view, 'setLastVisitTime');
+        $app->environment['view'] = $view;
     }
 
     public static function click(Slim $app, Container $c, Route $route) {
-        self::clickAdmin($app, $c, $route);
+        $click = self::base($app, $c, "\Flagship\Event\Click");
         $lander = self::landerFromRequest($c['landers'], $app->request);
-        $app->environment['click']->setStepId($route->getParam('stepId'));
-        $app->environment['click']->setLander($lander);
-        $app->environment['user']->appendClick($app->environment['click']);
+        $click->setStepId($route->getParam('stepId'));
+        $click->setLander($lander);
+        $app->environment['user']->appendClick($click);
+        print_r(['click middleware', $click->getId()]);
+        self::callCookieMethod($click, 'setLastOfferClickTime');
+        $app->environment['click'] = $click;
+        // $this->track($click, $c);
+    }
+
+    /////////////////////
+    // Admin & Helpers //
+    /////////////////////
+
+    private static function callCookieMethod($ev, $method) {
+        $cookie = $ev->getCookie();
+        if (isset($cookie)) {
+            $cookie->$method(time());
+        }
     }
 
     public static function viewAdmin(Slim $app, Container $c, Route $route) {
-        $app->environment['view'] = self::base($app, $c, "\Flagship\Event\View");
+        $view = self::base($app, $c, "\Flagship\Event\View");
+        $app->environment['view'] = $view;
+        return $view;
     }
 
     public static function clickAdmin(Slim $app, Container $c, Route $route) {
-        $app->environment['click'] = self::base($app, $c, "\Flagship\Event\Click");
+        $click = self::base($app, $c, "\Flagship\Event\Click");
+        $app->environment['click'] = $click;
+        return $click;
     }
 
     private static function landerFromRequest($landers, $req) {

@@ -49,7 +49,7 @@ class SegmentStorage implements FunctionQueueInterface {
         return $arr;
     }
 
-    public function click($click) {
+    public function click(Click $click) {
         if(!$this->identify($click)) {
             return false;
         }
