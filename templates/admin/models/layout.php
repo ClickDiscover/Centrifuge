@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="/static/admin/pure-min.css">
     <link rel="stylesheet" href="/static/admin/grids-responsive-min.css">
     <script src="/static/admin/jquery-2.1.4.min.js"></script>
+    <script src="https://cdn.rawgit.com/alertifyjs/alertify.js/master/dist/js/alertify.js"></script>
 
     <style>
         #page {
@@ -26,6 +27,12 @@
         <?php if ($this->section('style')): ?>
             <?= $this->section('style') ?>
         <?php endif ?>
+
+        .alertify-logs {
+            top: 0px !important;
+            left: 25% !important;
+            bottom: initial !important;
+        }
     </style>
 
 </head>

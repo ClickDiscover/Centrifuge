@@ -7,7 +7,7 @@ $(function() {
     function postButton(url) {
         return function () {
             $.post(url, function (res) {
-                $('#messages').append(res + " <br>");
+                alertify.success("Success: " + res);
             });
         };
     }
