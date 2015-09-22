@@ -69,15 +69,3 @@ class UserTracker extends Middleware {
         }
     }
 }
-
-class UserTrackerContext {
-    public $context;
-    public $googleId;
-    public $cookie;
-
-    public function __construct($cookie, $context, $googleId = null) {
-        $this->cookie = $cookie;
-        $this->context = $context;
-        $this->googleId = $googleId;
-    }
-}

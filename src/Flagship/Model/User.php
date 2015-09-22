@@ -67,21 +67,9 @@ class User {
         return $this->clickCount;
     }
 
-    // public function getVisitId() {
-    //     return $this->cookie->getVisitId();
-    // }
-
     public function getCreationTime() {
         return $this->creationTime;
     }
-
-    // public function getLastVisitTime() {
-    //     return $this->cookie->getLastVisitTime();
-    // }
-
-    // public function getLastOfferClickTime() {
-    //     return $this->cookie->getLastOfferClickTime();
-    // }
 
     /////////////
     // Setters //
@@ -213,7 +201,6 @@ class User {
                 $user->setClicks($rec['clicks']);
             }
         }
-        // if ($rc == Aerospike::ERR_RECORD_NOT_FOUND)
 
         return $user;
     }
