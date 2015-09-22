@@ -78,7 +78,11 @@ class SegmentStorage implements FunctionQueueInterface {
         }
 
         $identifiedBefore = $user->getSegmentId();
-        if (empty($identifiedBefore) && empty($_SESSION['_fp_segment'])) {
+        if (empty($identifiedBefore)) {
+            $user->setSegmentId($user->getId());
+        }
+
+        if (empty($_SESSION['_fp_segment'])) {
             $traits = [];
             $tc = $user->getCookie();
             if (isset($tc)) {
@@ -101,7 +105,6 @@ class SegmentStorage implements FunctionQueueInterface {
                     'context' => $context,
                     'traits' => $traits
                 ]);
-                $user->setSegmentId($user->getId());
                 $_SESSION['_fp_segment'] = $user->getId();
             });
         }
