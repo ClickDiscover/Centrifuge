@@ -230,8 +230,9 @@ $app->group('/aerospike', function () use ($app, $centrifuge) {
     $app->get('/:what', function($what) use ($app, $db) {
         $db = $db->db();
         echo '<pre>';
-        $db->scan('test', $what, function ($x) use ($db, $what) {
-            print_r($x['bins']);
+        $db->scan('test', $what, function ($x) use ($app, $db, $what) {
+            $rec = $app->request->params('meta', false) ? $x : $x['bins'];
+            print_r($rec);
         });
         echo '</pre>';
     });

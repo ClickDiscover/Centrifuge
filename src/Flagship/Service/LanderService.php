@@ -24,6 +24,10 @@ class LanderService {
     }
 
     public function fromRow($row) {
+        if (!$row) {
+            return false;
+        }
+
         $website = $this->websiteFromArray($row);
         $offers = $this->offers->fetch(
             $row['offer'],
