@@ -172,6 +172,42 @@ $app->group('/admin', function() use ($app, $centrifuge) {
         ]);
     });
 
+    $app->group('/control', function() use ($app, $centrifuge) {
+        $app->get('/', function () use ($app, $centrifuge) {
+            exec('cd '.CENTRIFUGE_ROOT.' && git log -1', $lcCmd);
+            exec('cd '.CENTRIFUGE_WEB_ROOT.'/static && git log -1', $landerCmd);
+
+            $centrifugeVersion = exec('cd '.CENTRIFUGE_ROOT.' && git describe --always');
+            $landerVersion = exec('cd '.CENTRIFUGE_WEB_ROOT.'/static && git describe --always');
+
+            $bundle = [
+                'centrifuge_lc' => $lcCmd,
+                'landers_lc' => $landerCmd,
+                'centrifuge_version' => $centrifugeVersion,
+                'lander_version' => $landerVersion
+            ];
+            $bundle['config'] = $centrifuge['config'];
+            $app->render('admin::models/control', $bundle);
+        });
+
+        $app->post('/cache/clear', function () use ($app, $centrifuge) {
+            $res = $app->response;
+            $out  = 'Cleared Cache ';
+            $out .= $centrifuge['cache']->flush();
+            $res->setBody($out);
+            // $res->headers['Content-Type'] = 'application/json';
+            $res->finalize();
+        });
+        $app->post('/session/clear', function () use ($app, $centrifuge) {
+            $res = $app->response;
+            $out  = 'Cleared Session Cache';
+            $out .= $centrifuge['session.cache']->flush();
+            $res->setBody($out);
+            // $res->headers['Content-Type'] = 'application/json';
+            $res->finalize();
+        });
+    });
+
 });
 
 
@@ -237,3 +273,4 @@ $app->group('/aerospike', function () use ($app, $centrifuge) {
         echo '</pre>';
     });
 });
+
