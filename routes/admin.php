@@ -195,7 +195,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             $out  = 'Cleared Cache ';
             $out .= $centrifuge['cache']->flush();
             $res->setBody($out);
-            // $res->headers['Content-Type'] = 'application/json';
             $res->finalize();
         });
         $app->post('/session/clear', function () use ($app, $centrifuge) {
@@ -203,7 +202,6 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             $out  = 'Cleared Session Cache';
             $out .= $centrifuge['session.cache']->flush();
             $res->setBody($out);
-            // $res->headers['Content-Type'] = 'application/json';
             $res->finalize();
         });
     });
