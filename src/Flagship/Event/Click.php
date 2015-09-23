@@ -20,11 +20,10 @@ class Click extends BaseEvent {
         $id,
         User $user,
         EventContext $context,
-        Lander $lander,
         $stepId
     ) {
         $this->setStepId($stepId);
-        parent::__construct($id, $user, $context, $lander);
+        parent::__construct($id, $user, $context);
         $this->callCookieMethod('setLastOfferClickTime', time());
         $this->user->appendClick($this);
     }
@@ -34,7 +33,8 @@ class Click extends BaseEvent {
         $this->stepId = $x;
     }
 
-    public function setLander($x) {
+    // setStepId should be called before this
+    public function setLander(Lander $x) {
         parent::setLander($x);
         $offer = $this->lander->offers[$this->stepId];
         $this->viewId = $x->id;

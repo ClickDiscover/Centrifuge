@@ -16,15 +16,14 @@ class View extends BaseEvent {
     public function __construct(
         $id,
         User $user,
-        EventContext $context,
-        Lander $lander
+        EventContext $context
     ) {
-        parent::__construct($id, $user, $context, $lander);
+        parent::__construct($id, $user, $context);
         $this->callCookieMethod('setLastVisitTime', time());
         $this->user->appendView($this);
     }
 
-    public function setLander($x) {
+    public function setLander(Lander $x) {
         parent::setLander($x);
         $this->properties->replace([
             'offer1' => $this->lander->offers[1]->getName(),

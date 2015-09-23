@@ -29,7 +29,7 @@ class EventBuilder {
         return $this;
     }
 
-    public function setLander(Lander $lander) {
+    public function setLander($lander) {
         $this->lander = $lander;
         return $this;
     }
@@ -43,18 +43,20 @@ class EventBuilder {
         if (
             empty($this->id)      ||
             empty($this->user)    ||
-            empty($this->context) ||
-            empty($this->lander)
+            empty($this->context)
         ) {
             throw new \InvalidArgumentException("EventBuilder::buildView is missing something");
         }
 
-        return new View(
+        $ev = new View(
             $this->id,
             $this->user,
-            $this->context,
-            $this->lander
+            $this->context
         );
+        if (isset($this->lander)) {
+            $ev->setLander($this->lander);
+        }
+        return $ev;
     }
 
     public function buildClick() {
@@ -62,19 +64,21 @@ class EventBuilder {
             empty($this->id)      ||
             empty($this->user)    ||
             empty($this->context) ||
-            empty($this->lander)  ||
             empty($this->stepId)
         ) {
             throw new \InvalidArgumentException("EventBuilder::buildClick is missing something: ". print_r(array_keys(get_object_vars($this)), 1));
         }
 
-        return new Click(
+        $ev = new Click(
             $this->id,
             $this->user,
             $this->context,
-            $this->lander,
             $this->stepId
         );
+        if (isset($this->lander)) {
+            $ev->setLander($this->lander);
+        }
+        return $ev;
     }
 }
 

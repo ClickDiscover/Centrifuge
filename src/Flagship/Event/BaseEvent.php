@@ -38,8 +38,7 @@ abstract class BaseEvent {
     public function __construct(
         $id,
         User $user,
-        EventContext $context,
-        Lander $lander
+        EventContext $context
     ) {
         $this->id = $id;
         $this->user = $user;
@@ -47,7 +46,6 @@ abstract class BaseEvent {
         $this->properties = new Set();
         $this->timestamp = isset($timestamp) ? $timestamp : time();
         $this->setContext($context);
-        $this->setLander($lander);
     }
 
     /////////////
@@ -102,7 +100,7 @@ abstract class BaseEvent {
         $this->properties->replace($url);
     }
 
-    public function setLander($x) {
+    public function setLander(Lander $x) {
         $this->lander = $x;
         $this->properties->replace([
             'lander_id' => $this->lander->id,
