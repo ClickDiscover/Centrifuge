@@ -14,10 +14,7 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
         ->buildView();
 
     // Track then render page
-    $view->toLibrato($centrifuge['librato.performance']);
-    $view->toSegment($centrifuge['segment']);
-    $view->toAerospike($centrifuge['aerospike']);
-
+    $view->track($centrifuge);
     $centrifuge['plates']->landerRender($app, $lander);
 
 })->name('landers')->conditions(array(
@@ -41,10 +38,7 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
         ->setStepId($stepId)
         ->buildClick();
 
-    // Track then redirect click
-    $click->toLibrato($centrifuge['librato.performance']);
-    $click->toSegment($centrifuge['segment']);
-    $click->toAerospike($centrifuge['aerospike']);
+    $click->track($centrifuge);
 
     // Now we redirect to cpv.flagshippromotions.com/base2.php
     // Eventually it will go to our campaign managment system
@@ -53,6 +47,7 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
     $get = $app->request->get();
     $get[$stepName] = $stepId;
     $url .= "?" . http_build_query($get);
+
     // app::redirect halts the call stack so pending hooks don't fire
     $app->response->redirect($url);
 

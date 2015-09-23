@@ -5,6 +5,7 @@ namespace Flagship\Event;
 
 use \Slim\Helper\Set;
 
+use \Flagship\Container;
 use \Flagship\Model\Lander;
 use \Flagship\Model\User;
 use \Flagship\Storage\LibratoStorage;
@@ -120,6 +121,12 @@ abstract class BaseEvent {
     //////////////////////
     // Storage Handlers //
     //////////////////////
+
+    public function track(Container $centrifuge) {
+        $this->toLibrato  ($centrifuge['librato.performance']);
+        $this->toSegment  ($centrifuge['segment']);
+        $this->toAerospike($centrifuge['aerospike']);
+    }
 
     public function toLibrato(LibratoStorage $librato) {
         $librato->total(static::LIBRATO_KEY);
