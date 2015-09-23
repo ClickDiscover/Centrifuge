@@ -5,9 +5,12 @@ namespace Flagship\Event;
 
 use \Slim\Helper\Set;
 
+use \Flagship\Model\Lander;
+use \Flagship\Model\User;
 use \Flagship\Storage\LibratoStorage;
 use \Flagship\Storage\SegmentStorage;
 use \Flagship\Storage\AerospikeNamespace;
+
 
 abstract class BaseEvent {
 
@@ -34,15 +37,18 @@ abstract class BaseEvent {
 
     public function __construct(
         $id,
-        $user
+        User $user,
+        EventContext $context,
+        Lander $lander
     ) {
         $this->id = $id;
         $this->user = $user;
         $this->context = new Set();
         $this->properties = new Set();
         $this->timestamp = isset($timestamp) ? $timestamp : time();
+        $this->setContext($context);
+        $this->setLander($lander);
     }
-
 
     /////////////
     // Getters //
@@ -158,6 +164,17 @@ abstract class BaseEvent {
         $data = array_merge($data, $this->properties->all());
         $record = array_merge($record, $data);
         $status = $db->putById(static::AEROSPIKE_KEY, $this->getId(), $record);
+    }
+
+    /////////////
+    // Helpers //
+    /////////////
+
+    protected function callCookieMethod($method, $arg) {
+        $cookie = $this->getCookie();
+        if (isset($cookie)) {
+            $cookie->$method($arg);
+        }
     }
 }
 

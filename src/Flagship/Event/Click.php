@@ -2,6 +2,8 @@
 namespace Flagship\Event;
 
 use League\Url\Url;
+use Flagship\Model\Lander;
+use Flagship\Model\User;
 
 
 class Click extends BaseEvent {
@@ -13,6 +15,20 @@ class Click extends BaseEvent {
 
     protected $stepId;
     protected $viewId;
+
+    public function __construct(
+        $id,
+        User $user,
+        EventContext $context,
+        Lander $lander,
+        $stepId
+    ) {
+        $this->setStepId($stepId);
+        parent::__construct($id, $user, $context, $lander);
+        $this->callCookieMethod('setLastOfferClickTime', time());
+        $this->user->appendClick($this);
+    }
+
 
     public function setStepId($x) {
         $this->stepId = $x;

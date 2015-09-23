@@ -4,11 +4,13 @@ namespace Flagship\Middleware;
 
 use \Slim\Middleware;
 
+use Flagship\Container;
 use Flagship\Event\BaseEvent;
 use Flagship\Event\EventContextFactory;
+use Flagship\Event\EventBuilder;
 use Flagship\Middleware\Session;
 use Flagship\Storage\CookieJar;
-use \Flagship\Storage\AerospikeNamespace;
+use Flagship\Storage\AerospikeNamespace;
 use Flagship\Model\User;
 
 
@@ -17,16 +19,18 @@ class UserTracker extends Middleware {
     protected $aerospike;
     protected $cookieJar;
     protected $trackingCookie = null;
+    protected $centrifuge;
     protected $events;
 
-    public function __construct(CookieJar $cookieJar, EventContextFactory $events, AerospikeNamespace $aerospike) {
-        $this->cookieJar = $cookieJar;
-        $this->events = $events;
-        $this->aerospike = $aerospike;
+    public function __construct(Container $c) {
+        $this->cookieJar = $c['cookie.jar'];
+        $this->events = $c['context.factory'];
+        $this->aerospike = $c['aerospike'];
+        $this->centrifuge = $c;
     }
 
     public function call() {
-        $this->app->hook('slim.before', [$this, 'before']);
+        $this->app->hook('slim.before.dispatch', [$this, 'before']);
         $this->app->hook('slim.after.dispatch', [$this, 'after'], 1);
         $this->next->call();
     }
@@ -44,8 +48,17 @@ class UserTracker extends Middleware {
             $this->trackingCookie,
             $ga
         );
+
+        $contexts = $this->events->createFromRequest($this->app->request);
+
+        $build = new EventBuilder();
+        $build
+            ->setId($this->centrifuge['random.id'])
+            ->setUser($this->user)
+            ->setContext($contexts);
+
         $this->app->environment['user'] = $this->user;
-        $this->app->environment['contexts'] = $this->events->createFromRequest($this->app->request);
+        $this->app->environment['event.builder'] = $build;
     }
 
     public function after () {

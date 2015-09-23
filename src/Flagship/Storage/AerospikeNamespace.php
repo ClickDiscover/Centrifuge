@@ -23,7 +23,7 @@ class AerospikeNamespace implements FunctionQueueInterface {
     public function fetchById($key, $id) {
         $key = $this->db->initKey($this->namespace, $key, $id);
         $rc = $this->db->get($key, $rec);
-        if ($this->checkResponseCode($rc)) {
+        if ($this->checkResponseCode("fetchById", $rc)) {
             return $rec;
         }
         return null;
@@ -33,16 +33,16 @@ class AerospikeNamespace implements FunctionQueueInterface {
         $key = $this->db->initKey($this->namespace, $key, $id);
         $this->enqueue(function () use ($key, $arr) {
             $rc = $this->db->put($key, $arr);
-            $this->checkResponseCode($rc);
+            $this->checkResponseCode("putById", $rc);
         });
     }
 
-    protected function checkResponseCode($rc) {
+    protected function checkResponseCode($funcName, $rc) {
         if ($rc == \Aerospike::OK) {
             return true;
         } else {
             $log = $this->getLogger();
-            $log->warn('Aerospike not OK', [$this->db->error(), $this->db->errorno()]);
+            $log->warn('Aerospike not OK', [$funcName, $this->db->error(), $this->db->errorno()]);
             return false;
         }
     }

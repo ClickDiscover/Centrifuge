@@ -19,7 +19,7 @@ PHP Application for building landing pages and tracking events.
   * Hook: slim.before - session_start() and sets the session_id in session with key Session::SESSION_ID
 
 5. [UserTracker](src/Flagship/Middleware/UserTracker.php)
-  * Hook: slim.before - Creates $tracking array and gets or creates the tracking cookie. Gets or creates User (aerospike)
+  * Hook: slim.before.dispatch - Creates $tracking array and gets or creates the tracking cookie. Gets or creates User (aerospike)
   * Hook: slim.after  - Sets the tracking cookie on user
 
 6. [RouteMiddleware](src/Flagship/Middleware/RouteMiddleware.php)
@@ -33,7 +33,7 @@ PHP Application for building landing pages and tracking events.
   * Redirect Clicks for /click/:stepId
 
 3. [SlimBootstrap](src/Flagship/SlimBootstrap.php)
-  * Hook: slim.after - Flushes Segment/Aerospike to storage. _IMPORTANT_: Must run last
+  * Hook: slim.after - Flushes EventQueue to storage. _IMPORTANT_: Must run last
 
 ## Routes
 

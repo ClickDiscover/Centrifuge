@@ -1,9 +1,17 @@
 <?php
 
+use Flagship\Event\Click;
+use Flagship\Event\View;
 
-$app->get('/content/:id', $app->container['route_middleware.view'], function ($id) use ($app, $centrifuge) {
-    $view = $app->environment['view'];
-    $lander = $view->lander;
+$app->get('/content/:id', function ($id) use ($app, $centrifuge) {
+    $lander = $centrifuge['landers']->fetch($id);
+    if (!$lander) {
+        $app->notFound();
+    }
+    $view = $app
+        ->environment['event.builder']
+        ->setLander($lander)
+        ->buildView();
 
     // Track then render page
     $view->toLibrato($centrifuge['librato.performance']);
@@ -26,7 +34,12 @@ $app->get('/landers/:id', function ($id) use ($app, $centrifuge) {
 
 $app->get('/click/:stepId', $app->container['route_middleware.click'], function ($stepId) use ($app, $centrifuge) {
     $req = $app->request;
-    $click = $app->environment['click'];
+    $lander = $app->environment['referring.lander'];
+    $click = $app
+        ->environment['event.builder']
+        ->setLander($lander)
+        ->setStepId($stepId)
+        ->buildClick();
 
     // Track then redirect click
     $click->toLibrato($centrifuge['librato.performance']);

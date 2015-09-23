@@ -141,28 +141,25 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 
 
     // $app->get('/tracking', $app->container['route_middleware.viewAdmin'], function () use ($app, $centrifuge) {
-    $app->get('/tracking', $app->container['route_middleware.clickAdmin'], function () use ($app, $centrifuge) {
+    $app->get('/tracking', function () use ($app, $centrifuge) {
         $user = $app->environment['user'];
-        $eventType = "click";
-        $view = $app->environment[$eventType];
-        $lander = $centrifuge['landers']->fetch($app->request->get('lid', 1));
-        if (isset($lander)) {
-            ($eventType == 'click') ? $view->setStepId(2) : null;
-            $view->setLander($lander);
-        }
+        // $eventType = "view";
+        // $lander = $centrifuge['landers']->fetch($app->request->get('lid', 1));
+        // $view = new \Flagship\Event\View($centrifuge['random.id'], $user, $app->environment['contexts'], $lander);
+        // if (isset($lander)) {
+        //     ($eventType == 'click') ? $view->setStepId(2) : null;
+        //     $view->setLander($lander);
+        // }
 
         // $out  = "\n\n" . $eventType ."::getSegmentArray\n";
         // $out .= print_r($view->getSegmentArray(), true);
         $out  = "\nUser\n";
         $out .= print_r($user, true);
-        $out .= "\n\n\n" . $eventType . "\n";
-        $out .= print_r($view, true);
+        // $out .= print_r($view, true);
         $out .= "\nTrackingCookie\n";
-        $out .= print_r($view->getCookie()->pretty(), true);
+        $out .= print_r($user->getCookie()->pretty(), true);
         $out .= "\n\n\nSession\n";
         $out .= print_r($_SESSION, true);
-        $out .= "\nTracking\n";
-        $out .= print_r($app->environment['user.tracker'], true);
         $out .= "\nCookies\n";
         $out .= print_r($app->request->cookies->all(), true);
 
@@ -246,7 +243,6 @@ $app->group('/aerospike', function () use ($app, $centrifuge) {
         // $db->put($key, $user);
         echo '</pre>';
     });
-
 
     $app->get('/delete/:what', function($what) use ($app, $db) {
         $db = $db->db();

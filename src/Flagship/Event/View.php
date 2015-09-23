@@ -1,6 +1,8 @@
 <?php
 namespace Flagship\Event;
 
+use Flagship\Model\User;
+use Flagship\Model\Lander;
 
 
 class View extends BaseEvent {
@@ -10,6 +12,17 @@ class View extends BaseEvent {
     const AEROSPIKE_KEY = "views";
     const LIBRATO_KEY = "views";
 
+
+    public function __construct(
+        $id,
+        User $user,
+        EventContext $context,
+        Lander $lander
+    ) {
+        parent::__construct($id, $user, $context, $lander);
+        $this->callCookieMethod('setLastVisitTime', time());
+        $this->user->appendView($this);
+    }
 
     public function setLander($x) {
         parent::setLander($x);
