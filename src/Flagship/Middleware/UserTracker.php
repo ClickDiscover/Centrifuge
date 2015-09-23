@@ -21,11 +21,14 @@ class UserTracker extends Middleware {
     protected $trackingCookie = null;
     protected $centrifuge;
     protected $events;
+    protected $routeWhitelist;
 
     public function __construct(Container $c) {
         $this->cookieJar = $c['cookie.jar'];
         $this->events = $c['context.factory'];
         $this->aerospike = $c['aerospike'];
+        // $this->routeWhitelist = $c['config']['application']['routeWhitelist'];
+        $this->routeWhitelist = ['/content/:id', '/click/:id'];
         $this->centrifuge = $c;
     }
 
@@ -36,6 +39,11 @@ class UserTracker extends Middleware {
     }
 
     public function before() {
+        $route = $this->app->router->getCurrentRoute()->getPattern();
+        if (!in_array($route, $this->routeWhitelist)) {
+            return false;
+        }
+
         $this->trackingCookie = $this->cookieJar->getOrCreateTracking();
         if (empty($this->trackingCookie)) {
             $this->app->log->warn('Warning tracking cookie is not set');

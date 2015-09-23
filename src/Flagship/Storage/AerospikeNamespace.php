@@ -31,7 +31,7 @@ class AerospikeNamespace implements FunctionQueueInterface {
 
     public function putById($key, $id, $arr) {
         $key = $this->db->initKey($this->namespace, $key, $id);
-        $this->enqueue(function () use ($key, $arr) {
+        $this->enqueue(function () use ($key, $arr, $id) {
             $rc = $this->db->put($key, $arr);
             $this->checkResponseCode("putById", $id, $rc);
         });
