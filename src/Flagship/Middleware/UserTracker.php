@@ -28,7 +28,7 @@ class UserTracker extends Middleware {
         $this->events = $c['context.factory'];
         $this->aerospike = $c['aerospike'];
         // $this->routeWhitelist = $c['config']['application']['routeWhitelist'];
-        $this->routeWhitelist = ['/content/:id', '/click/:id', '/admin/tracking'];
+        $this->routeWhitelist = ['/content/:id', '/click/:stepId', '/admin/tracking'];
         $this->centrifuge = $c;
     }
 
