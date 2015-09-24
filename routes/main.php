@@ -8,12 +8,13 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
     if (!$lander) {
         $app->notFound();
     }
+
     $view = $app
         ->environment['event.builder']
         ->setLander($lander)
         ->buildView();
-
     $view->track($centrifuge);
+
     $centrifuge['plates']->landerRender($app, $lander);
     $_SESSION['last_lander'] = $lander;
 
@@ -49,6 +50,7 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
     $url .= "?" . http_build_query($get);
 
     // app::redirect halts the call stack so pending hooks don't fire
-    $app->response->redirect($url);
+    // $app->response->redirect($url);
+    return "<html></html>";
 
 })->name('click')->conditions(array('stepId' => '[0-9]+'));

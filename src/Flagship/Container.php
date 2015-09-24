@@ -139,6 +139,7 @@ class Container extends \Pimple\Container {
             $plates->loadExtension(new HtmlExtension);
             $view = new ViewEngine($plates, $assetRoot);
             $view->addFolder('admin', $c['config']['application']['templates.path'] . '/admin');
+            $view->setProfiler($c['profiler']);
             return $view;
         };
 

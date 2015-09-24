@@ -11,9 +11,13 @@ use \Flagship\Model\User;
 use \Flagship\Storage\LibratoStorage;
 use \Flagship\Storage\SegmentStorage;
 use \Flagship\Storage\AerospikeNamespace;
+use Flagship\Util\Profiler\Profiling;
+
 
 
 abstract class BaseEvent {
+
+    use Profiling;
 
     const NAME = "";
     const SEGMENT_NAME = "";
@@ -47,6 +51,7 @@ abstract class BaseEvent {
         $this->properties = new Set();
         $this->timestamp = isset($timestamp) ? $timestamp : time();
         $this->setContext($context);
+        $this->setProfilingClass(static::AEROSPIKE_KEY);
     }
 
     /////////////
@@ -126,6 +131,7 @@ abstract class BaseEvent {
         $this->toLibrato  ($centrifuge['librato.performance']);
         $this->toSegment  ($centrifuge['segment']);
         $this->toAerospike($centrifuge['aerospike']);
+        $this->getProfiler()->stop(static::AEROSPIKE_KEY . '.createAndTrack');
     }
 
     public function toLibrato(LibratoStorage $librato) {

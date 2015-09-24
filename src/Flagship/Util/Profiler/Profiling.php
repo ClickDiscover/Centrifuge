@@ -24,9 +24,9 @@ trait Profiling {
         $this->_class = $c;
     }
 
-    // protected function setNamespace($c) {
-    //     $this->_namespace = $c;
-    // }
+    protected function setNamespace($c) {
+        $this->_namespace = $c;
+    }
 
     protected function _key($namespace, $key = null) {
         $namespace = empty($namespace) ? __CLASS__ : $namespace;

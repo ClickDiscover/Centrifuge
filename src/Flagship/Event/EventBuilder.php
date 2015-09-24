@@ -4,9 +4,12 @@ namespace Flagship\Event;
 
 use \Flagship\Model\Lander;
 use \Flagship\Model\User;
+use Flagship\Util\Profiler\Profiling;
 
 
 class EventBuilder {
+
+    use Profiling;
 
     protected $id;
     protected $user;
@@ -48,11 +51,16 @@ class EventBuilder {
             throw new \InvalidArgumentException("EventBuilder::buildView is missing something");
         }
 
+        print_r(array_map(function ($x) {  return $x['label']; }, $this->_profiler->timer->getMeasures()));
+
+        $this->getProfiler()->start(View::AEROSPIKE_KEY . '.createAndTrack');
         $ev = new View(
             $this->id,
             $this->user,
             $this->context
         );
+        $ev->setProfiler($this->getProfiler());
+
         if (isset($this->lander)) {
             $ev->setLander($this->lander);
         }
@@ -69,12 +77,14 @@ class EventBuilder {
             throw new \InvalidArgumentException("EventBuilder::buildClick is missing something: ". print_r(array_keys(get_object_vars($this)), 1));
         }
 
+        $this->getProfiler()->start(Click::AEROSPIKE_KEY . '.createAndTrack');
         $ev = new Click(
             $this->id,
             $this->user,
             $this->context,
             $this->stepId
         );
+        $ev->setProfiler($this->getProfiler());
         if (isset($this->lander)) {
             $ev->setLander($this->lander);
         }

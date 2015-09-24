@@ -65,6 +65,7 @@ class UserTracker extends Middleware {
         $contexts = $this->events->createFromRequest($this->app->request);
 
         $build = new EventBuilder();
+        $build->setProfiler($this->getProfiler());
         $build
             ->setId($this->centrifuge['random.id'])
             ->setUser($this->user)
