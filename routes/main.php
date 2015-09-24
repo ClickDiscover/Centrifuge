@@ -51,6 +51,6 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
 
     // app::redirect halts the call stack so pending hooks don't fire
     // $app->response->redirect($url);
-    return "<html></html>";
+    echo "<html></html>";
 
 })->name('click')->conditions(array('stepId' => '[0-9]+'));

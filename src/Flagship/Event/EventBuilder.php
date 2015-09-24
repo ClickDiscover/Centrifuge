@@ -51,8 +51,6 @@ class EventBuilder {
             throw new \InvalidArgumentException("EventBuilder::buildView is missing something");
         }
 
-        print_r(array_map(function ($x) {  return $x['label']; }, $this->_profiler->timer->getMeasures()));
-
         $this->getProfiler()->start(View::AEROSPIKE_KEY . '.createAndTrack');
         $ev = new View(
             $this->id,

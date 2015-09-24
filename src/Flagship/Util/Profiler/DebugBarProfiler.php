@@ -29,7 +29,7 @@ class DebugBarProfiler implements ProfilerInterface {
     public function shutdown() {
         $this->add('request.duration', $this->timer->getRequestStartTime(), microtime(true));
         $delta = 1000.0 * $this->timer->getRequestDuration();
-        $this->log->debug('Shutdown. Duration: '. $delta .' ms');
+        $this->log->info('Shutdown. Duration: '. $delta .' ms');
     }
 
     public function start($name) {
