@@ -67,7 +67,6 @@ class Container extends \Pimple\Container {
         $this['profiler'] = function ($c) {
             if ($c['mode'] === 'development') {
                 $timer = new DebugBarProfiler($c['debug.bar']->getDebugBar()['time'], $c['logger'], $this->constructTime);
-                Profiler::set($timer);
                 return $timer;
             } else {
                 return new NullProfiler();
