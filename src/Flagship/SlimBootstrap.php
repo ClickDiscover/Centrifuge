@@ -2,10 +2,12 @@
 
 namespace Flagship;
 
-use Flagship\Container;
-use Flagship\Middleware\RouteMiddleware;
 use Slim\Slim;
 use \Stash\Session as StashSession;
+
+use Flagship\Container;
+use Flagship\Middleware\RouteMiddleware;
+
 
 class SlimBootstrap {
 
@@ -15,6 +17,8 @@ class SlimBootstrap {
     public function __construct(Slim $app, Container $container) {
         $this->app = $app;
         $this->container = $container;
+        $this->container['logger']->debug('Path: ' . $this->app->request->getPathInfo());
+        $this->container['profiler']->start('bootstrap.run');
     }
 
     public function bootstrap() {
@@ -82,6 +86,7 @@ class SlimBootstrap {
             $container['cookie.jar']
         ));
 
+        $this->container['profiler']->stop('bootstrap.run');
         return $app;
     }
 
@@ -111,7 +116,7 @@ class SlimBootstrap {
                     $app->environment['PATH_INFO'] = $newUrl;
                 }
             }
-        });
+        }, 5);
     }
 
     public function configureDevelopmentMode() {
@@ -119,6 +124,15 @@ class SlimBootstrap {
         $container = $this->container;
         $app->configureMode('development', function () use ($app, $container) {
             $app->add($container['debug.bar']);
+
+            $app->hook("slim.before", function () use ($container) {
+                $container['profiler']->start('slim.hooks');
+            });
+
+            $app->hook("slim.after.dispatch", function () use ($container) {
+                $container['profiler']->stop('slim.hooks');
+                // $container['profiler']->sinceBeginning('slim.done');
+            }, 10);
         });
     }
 

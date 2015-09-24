@@ -26,7 +26,6 @@ use Flagship\Storage\CookieJar;
 use Flagship\Storage\SegmentStorage;
 use Flagship\Storage\AerospikeNamespace;
 use Flagship\Event\EventContextFactory;
-use Flagship\Util\Profiler\Profiler;
 use Flagship\Util\Profiler\NullProfiler;
 use Flagship\Util\Profiler\DebugBarProfiler;
 
