@@ -13,9 +13,9 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
         ->setLander($lander)
         ->buildView();
 
-    // Track then render page
     $view->track($centrifuge);
     $centrifuge['plates']->landerRender($app, $lander);
+    $_SESSION['last_lander'] = $lander;
 
 })->name('landers')->conditions(array(
     'id' => '[0-9]+'
