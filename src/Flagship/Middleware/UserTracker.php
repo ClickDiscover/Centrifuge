@@ -12,9 +12,12 @@ use Flagship\Middleware\Session;
 use Flagship\Storage\CookieJar;
 use Flagship\Storage\AerospikeNamespace;
 use Flagship\Model\User;
+use Flagship\Util\Profiler\Profiling;
 
 
 class UserTracker extends Middleware {
+
+    use Profiling;
 
     protected $aerospike;
     protected $cookieJar;
@@ -29,15 +32,18 @@ class UserTracker extends Middleware {
         $this->aerospike = $c['aerospike'];
         $this->routeWhitelist = ['/content/:id', '/click/:stepId', '/admin/tracking'];
         $this->centrifuge = $c;
+        $this->setProfiler($c['profiler']);
+        $this->setProfilingClass('UserTracker');
     }
 
     public function call() {
         $this->app->hook('slim.before.dispatch', [$this, 'before']);
-        $this->app->hook('slim.after.dispatch', [$this, 'after'], 1);
+        $this->app->hook('slim.after.dispatch', [$this, 'after'], 2);
         $this->next->call();
     }
 
     public function before() {
+        $this->startTiming(__FUNCTION__);
         $route = $this->app->router->getCurrentRoute()->getPattern();
         if (!in_array($route, $this->routeWhitelist)) {
             return false;
@@ -66,9 +72,11 @@ class UserTracker extends Middleware {
 
         $this->app->environment['user'] = $this->user;
         $this->app->environment['event.builder'] = $build;
+        $this->stopTiming(__FUNCTION__);
     }
 
     public function after () {
+        $this->startTiming(__FUNCTION__);
         if(isset($this->trackingCookie)) {
             $this->trackingCookie->incrementVisitCount();
             $this->cookieJar->setTracking($this->trackingCookie);
@@ -77,6 +85,7 @@ class UserTracker extends Middleware {
         if (isset($this->user)) {
             $rc = $this->user->toAerospike($this->aerospike);
         }
+        $this->stopTiming(__FUNCTION__);
     }
 
     // Set google analytics ID on env for segment integration

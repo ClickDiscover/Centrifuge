@@ -5,12 +5,12 @@ namespace Flagship\Storage;
 use Flagship\Util\Logging;
 use Flagship\Util\FunctionQueueInterface;
 use Flagship\Util\FunctionQueueTrait;
+use Flagship\Util\Profiler\Profiling;
 
 
 class AerospikeNamespace implements FunctionQueueInterface {
 
-    use FunctionQueueTrait;
-    use Logging;
+    use Logging, FunctionQueueTrait;
 
     protected $namespace;
     protected $db;
@@ -18,23 +18,29 @@ class AerospikeNamespace implements FunctionQueueInterface {
     public function __construct(\Aerospike $db, $namespace) {
         $this->db = $db;
         $this->namespace = $namespace;
+        $this->setProfilingClass('AerospikeNamespace');
     }
 
     public function fetchById($key, $id) {
-        $key = $this->db->initKey($this->namespace, $key, $id);
-        $rc = $this->db->get($key, $rec);
-        if ($this->checkResponseCode("fetchById", $id, $rc)) {
+        $digest = $this->db->initKey($this->namespace, $key, $id);
+
+        $key = 'fetch_'.$key;
+        $this->startTiming($key, $id);
+        $rc = $this->db->get($digest, $rec);
+        $this->stopTiming($key, $id);
+        if ($this->checkResponseCode(__FUNCTION__, $id, $rc)) {
             return $rec;
         }
         return null;
     }
 
     public function putById($key, $id, $arr) {
-        $key = $this->db->initKey($this->namespace, $key, $id);
-        $this->enqueue(function () use ($key, $arr, $id) {
-            $rc = $this->db->put($key, $arr);
-            $this->checkResponseCode("putById", $id, $rc);
-        });
+        // $this->startTiming($key, $id);
+        $digest = $this->db->initKey($this->namespace, $key, $id);
+        $this->enqueue(function () use ($digest, $arr, $id) {
+            $rc = $this->db->put($digest, $arr);
+            $this->checkResponseCode(__FUNCTION__, $id, $rc);
+        }, 'put_'.$key, $id);
     }
 
     protected function checkResponseCode($funcName, $id, $rc) {

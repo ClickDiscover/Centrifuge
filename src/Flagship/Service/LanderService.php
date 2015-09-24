@@ -5,8 +5,11 @@ namespace Flagship\Service;
 use Flagship\Model\Lander;
 use Flagship\Model\Website;
 use Flagship\Model\Geo;
+use Flagship\Util\Profiler\Profiling;
 
 class LanderService {
+
+    use Profiling;
 
     public $namespace = "landers";
 
@@ -16,11 +19,15 @@ class LanderService {
     public function __construct($db, $offers) {
         $this->db = $db;
         $this->offers = $offers;
+        $this->setProfilingClass('LanderService');
     }
 
     public function fetch($id) {
+        $this->startTiming(__FUNCTION__, $id);
         $row = $this->db->fetch($this->namespace, $id, self::SQL_SELECT);
-        return $this->fromRow($row);
+        $l = $this->fromRow($row);
+        $this->stopTiming(__FUNCTION__, $id);
+        return $l;
     }
 
     public function fromRow($row) {

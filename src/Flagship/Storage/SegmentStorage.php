@@ -23,6 +23,7 @@ class SegmentStorage implements FunctionQueueInterface {
         $options = isset($segconf['options']) ? $segconf['options'] : [];
         // $integrations = isset($segconf['options']) ? $segconf['options'] : [];
         $this->writeKey = $segconf['write.key'];
+        $this->setProfilingClass('Segment');
         \Segment::init($this->writeKey, $options);
         $this->jar = $jar;
         $this->log = $log;
@@ -45,7 +46,7 @@ class SegmentStorage implements FunctionQueueInterface {
         ];
         $this->enqueue(function () use ($arr) {
             \Segment::page($arr);
-        });
+        }, 'page', $view->getId());
         return $arr;
     }
 
@@ -66,7 +67,7 @@ class SegmentStorage implements FunctionQueueInterface {
         ];
         $this->enqueue(function () use ($arr) {
             \Segment::track($arr);
-        });
+        }, 'click', $click->getId());
         return $arr;
     }
 
@@ -106,7 +107,7 @@ class SegmentStorage implements FunctionQueueInterface {
                     'traits' => $traits
                 ]);
                 $_SESSION['_fp_segment'] = $user->getId();
-            });
+            }, 'identify', $user->getId());
         }
         return true;
     }
