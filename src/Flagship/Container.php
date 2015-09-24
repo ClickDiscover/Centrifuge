@@ -25,15 +25,23 @@ use Flagship\Storage\LibratoStorage;
 use Flagship\Storage\CookieJar;
 use Flagship\Storage\SegmentStorage;
 use Flagship\Storage\AerospikeNamespace;
-use \Flagship\Event\EventContextFactory;
+use Flagship\Event\EventContextFactory;
+use Flagship\Util\Profiler\Profiler;
+use Flagship\Util\Profiler\NullProfiler;
+use Flagship\Util\Profiler\DebugBarProfiler;
 
 
 class Container extends \Pimple\Container {
 
+    protected $constructTime;
+
     public function __construct(array $config) {
+        $this->constructTime = microtime(true);
         parent::__construct();
         $this['config'] = $config;
+        $this['mode'] = $this['config']['application']['mode'];
         $this->configure();
+        $this['profiler']->add('container.create', $this->constructTime, microtime(true));
     }
 
 
@@ -54,6 +62,16 @@ class Container extends \Pimple\Container {
             ));
             $debug->addCollector(new \DebugBar\Bridge\MonologCollector($c['logger']));
             return $debug;
+        };
+
+        $this['profiler'] = function ($c) {
+            if ($c['mode'] === 'development') {
+                $timer = new DebugBarProfiler($c['debug.bar']->getDebugBar()['time'], $c['logger'], $this->constructTime);
+                Profiler::set($timer);
+                return $timer;
+            } else {
+                return new NullProfiler();
+            }
         };
 
         // Logging
@@ -138,6 +156,7 @@ class Container extends \Pimple\Container {
                 $c['config']['cache']['expiration']
             );
             $db->setLogger($c['logger']);
+            $db->setProfiler($c['profiler']);
             return $db;
         };
 
@@ -163,7 +182,9 @@ class Container extends \Pimple\Container {
         };
 
         $this['landers'] = function ($c) {
-            return new \Flagship\Service\LanderService($c['db'], $c['offers']);
+            $landers = new \Flagship\Service\LanderService($c['db'], $c['offers']);
+            $landers->setProfiler($c['profiler']);
+            return $landers;
         };
 
         // Conversions
@@ -211,6 +232,7 @@ class Container extends \Pimple\Container {
                 $c['cookie.jar'],
                 $c['logger']
             );
+            $segment->setProfiler($c['profiler']);
             $c['event.queue']->addStorage($segment);
             return $segment;
         };
@@ -219,20 +241,22 @@ class Container extends \Pimple\Container {
             $conf = $c['config']['database']['aerospike'];
             $db = new \Aerospike($conf['client']);
             $aero = new AerospikeNamespace($db, $conf['namespace']);
+            $aero->setProfiler($c['profiler']);
             $c['event.queue']->addStorage($aero);
             return $aero;
         };
     }
+
 }
 
 
 class DebugContainer extends Container {
     public function __construct(array $config) {
-        parent::__construct();
         $this->clog = new \Monolog\Logger('container');
         $this->clog->pushHandler(new StreamHandler(
             '/tmp/container.log', \Monolog\Logger::INFO
         ));
+        parent::__construct($config);
     }
     public function offsetGet($id) {
         $config = [$id];
@@ -243,5 +267,25 @@ class DebugContainer extends Container {
         return parent::offsetGet($id);
     }
 }
+
+
+// class ProfileContainer extends Container {
+//     public function __construct(array $config) {
+//         parent::__construct($config);
+//         Profiler::set(parent::offsetGet('profiler'));
+//     }
+//     public function offsetGet($id) {
+//         if ($id === 'profiler') {
+//             return parent::offsetGet($id);
+//         }
+
+//         $dtime = Profiler::get();
+//         $dtime->start('container::' . $id);
+//         $get = parent::offsetGet($id);
+//         $dtime->stop('container::' . $id);
+//         return $get;
+//     }
+// }
+
 
 
