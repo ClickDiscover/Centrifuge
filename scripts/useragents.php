@@ -6,7 +6,7 @@ date_default_timezone_set('UTC');
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $file = "/Users/patrick/src/flagship/tmp/ua_cloaker.csv";
-$limit = 10000;
+$limit = 1000000;
 $devices = [
     'browser' => [],
     'device' => [],
@@ -30,10 +30,15 @@ if (($handle = fopen($file, "r")) !== FALSE) {
         $platform = $agent->platform();
         $total++;
 
-        $version = $agent->version($browser);
-        if (isset($version)) {
-            $version = $browser . ' ' . $version;
-        }
+        // $version = $agent->version($browser);
+        // if (isset($version)) {
+        //     $version = $browser . ' ' . $version;
+        // }
+        // if (empty($devices['version'][$version])) {
+        //     $devices['version'][$version] = 0;
+        // }
+        // $devices['version'][$version]++;
+
 
         if (empty($devices['browser'][$browser])) {
             $devices['browser'][$browser] = 0;
@@ -49,11 +54,6 @@ if (($handle = fopen($file, "r")) !== FALSE) {
             $devices['platform'][$platform] = 0;
         }
         $devices['platform'][$platform]++;
-
-        if (empty($devices['version'][$version])) {
-            $devices['version'][$version] = 0;
-        }
-        $devices['version'][$version]++;
 
 
         if ($agent->isRobot()) {
