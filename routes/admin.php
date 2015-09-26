@@ -209,7 +209,7 @@ $app->group('/admin', function() use ($app, $centrifuge) {
 $app->get('/admin/phpinfo', function() {
     return phpinfo();
 });
-$app->get('/admin/ping', function () use ($app) {
+$app->get('/status/ping', function () use ($app) {
     echo "pong!";
 });
 
