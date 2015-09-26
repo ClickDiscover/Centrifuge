@@ -5,21 +5,30 @@ date_default_timezone_set('UTC');
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$file = "/Users/patrick/src/flagship/tmp/user_agents.csv";
+$file = "/Users/patrick/src/flagship/tmp/ua_cloaker.csv";
+$limit = 10000;
 $devices = [
     'browser' => [],
     'device' => [],
     'platform' => [],
+    'bots' => []
 ];
 $robots = [];
+$total = 0;
 
+$row = 0;
 if (($handle = fopen($file, "r")) !== FALSE) {
     while (($data = fgetcsv($handle)) !== FALSE) {
+        $row++;
+        if ($row > $limit) {
+            break;
+        }
         $agent = new Agent();
         $agent->setUserAgent($data[0]);
         $browser = $agent->browser();
         $device = $agent->device();
         $platform = $agent->platform();
+        $total++;
 
         $version = $agent->version($browser);
         if (isset($version)) {
@@ -48,6 +57,12 @@ if (($handle = fopen($file, "r")) !== FALSE) {
 
 
         if ($agent->isRobot()) {
+
+            if (empty($devices['bots'][$agent->robot()])) {
+                $devices['bots'][$agent->robot()] = 0;
+            }
+            $devices['bots'][$agent->robot()]++;
+
             $robots[] = [
                 'agent' => $data[0],
                 'type' => $agent->robot()
@@ -57,5 +72,6 @@ if (($handle = fopen($file, "r")) !== FALSE) {
     fclose($handle);
 }
 
+echo "UAs analyzed {$total}" .PHP_EOL;
+echo "Robots " . count($robots) .PHP_EOL;
 print_r($devices);
-print_r($robots);
