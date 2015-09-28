@@ -7,7 +7,7 @@ use Flagship\Model\User;
 
 
 class Click extends AbstractEvent {
-    const NAME = "clicks";
+    const NAME = "click";
     const SEGMENT_NAME = "Offer Click";
     const SEGMENT_METHOD = "click";
 
