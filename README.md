@@ -80,7 +80,7 @@ PHP Application for building landing pages and tracking events.
 ### Small Projects
 
 - [ ] Custom Routes hook should use query like SELECT * FROM routes WHERE url = "{$request->getPathInfo()}" and add index on routes table (url column)
-- [ ] Need to add postgres migration for vertical on products table
+- [x] Need to add postgres migration for vertical on products table
 - [ ] Use source column of product table for affiliate company (eg: Oasis)
 - [x] OfferServices now add vertical information to product models
 
