@@ -5,7 +5,7 @@ namespace Flagship\Middleware;
 use \Slim\Middleware;
 
 use Flagship\Container;
-use Flagship\Event\BaseEvent;
+use Flagship\Event\AbstractEvent;
 use Flagship\Event\EventContextFactory;
 use Flagship\Event\EventBuilder;
 use Flagship\Middleware\Session;

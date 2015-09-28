@@ -5,12 +5,10 @@ use Flagship\Model\User;
 use Flagship\Model\Lander;
 
 
-class View extends BaseEvent {
-    const NAME = "PAGE_VIEW";
+class View extends AbstractEvent {
+    const NAME = "view";
     const SEGMENT_NAME = "Landing Pageview";
     const SEGMENT_METHOD = "page";
-    const AEROSPIKE_KEY = "views";
-    const LIBRATO_KEY = "views";
 
 
     public function __construct(

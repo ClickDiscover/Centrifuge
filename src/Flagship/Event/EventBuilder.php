@@ -51,7 +51,7 @@ class EventBuilder {
             throw new \InvalidArgumentException("EventBuilder::buildView is missing something");
         }
 
-        $this->getProfiler()->start(View::AEROSPIKE_KEY . '.createAndTrack');
+        $this->getProfiler()->start(View::NAME . '.createAndTrack');
         $ev = new View(
             $this->id,
             $this->user,
@@ -75,7 +75,7 @@ class EventBuilder {
             throw new \InvalidArgumentException("EventBuilder::buildClick is missing something: ". print_r(array_keys(get_object_vars($this)), 1));
         }
 
-        $this->getProfiler()->start(Click::AEROSPIKE_KEY . '.createAndTrack');
+        $this->getProfiler()->start(Click::NAME . '.createAndTrack');
         $ev = new Click(
             $this->id,
             $this->user,

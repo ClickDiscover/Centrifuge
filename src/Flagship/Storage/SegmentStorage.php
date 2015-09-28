@@ -2,7 +2,7 @@
 
 namespace Flagship\Storage;
 
-use Flagship\Event\BaseEvent;
+use Flagship\Event\EventInterface;
 use Flagship\Event\View;
 use Flagship\Event\Click;
 use Flagship\Model\User;
@@ -71,7 +71,7 @@ class SegmentStorage implements FunctionQueueInterface {
         return $arr;
     }
 
-    protected function identify(BaseEvent $ev) {
+    protected function identify(EventInterface $ev) {
         $user = $ev->getUser();
         $userId = $user->getId();
         if (empty($userId)) {
@@ -112,7 +112,7 @@ class SegmentStorage implements FunctionQueueInterface {
         return true;
     }
 
-    protected function buildContext(BaseEvent $ev) {
+    protected function buildContext(EventInterface $ev) {
         $context = $ev->context->all();
         $ga = $ev->getGoogleId();
         if (isset($ga)) {

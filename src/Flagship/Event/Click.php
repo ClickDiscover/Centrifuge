@@ -6,12 +6,10 @@ use Flagship\Model\Lander;
 use Flagship\Model\User;
 
 
-class Click extends BaseEvent {
-    const NAME = "OFFER_CLICK";
+class Click extends AbstractEvent {
+    const NAME = "clicks";
     const SEGMENT_NAME = "Offer Click";
     const SEGMENT_METHOD = "click";
-    const AEROSPIKE_KEY = "clicks";
-    const LIBRATO_KEY = "clicks";
 
     protected $stepId;
     protected $viewId;
