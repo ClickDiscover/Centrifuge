@@ -43,50 +43,50 @@ class EventBuilder {
     }
 
     public function buildView() {
-        if (
-            empty($this->id)      ||
-            empty($this->user)    ||
-            empty($this->context)
-        ) {
-            throw new \InvalidArgumentException("EventBuilder::buildView is missing something");
-        }
+        return $this->build("Flagship\Event\View");
+    }
 
-        $this->getProfiler()->start(View::NAME . '.createAndTrack');
-        $ev = new View(
+    public function buildClick() {
+        $this->checkMissing(["stepId"]);
+        $c = $this->build("Flagship\Event\Click");
+        $c->setStepId($this->stepId);
+        return $c;
+    }
+
+    protected function build($class) {
+        $this->checkMissing([
+            "id",
+            "user",
+            "context"
+        ]);
+        $this->getProfiler()->start($class::NAME . '.createAndTrack');
+        $ev = new $class(
             $this->id,
             $this->user,
             $this->context
         );
         $ev->setProfiler($this->getProfiler());
 
+        if (isset($this->stepId)) {
+            $ev->setStepId($this->stepId);
+        }
+
         if (isset($this->lander)) {
             $ev->setLander($this->lander);
         }
+
         return $ev;
     }
 
-    public function buildClick() {
-        if (
-            empty($this->id)      ||
-            empty($this->user)    ||
-            empty($this->context) ||
-            empty($this->stepId)
-        ) {
-            throw new \InvalidArgumentException("EventBuilder::buildClick is missing something: ". print_r(array_keys(get_object_vars($this)), 1));
-        }
 
-        $this->getProfiler()->start(Click::NAME . '.createAndTrack');
-        $ev = new Click(
-            $this->id,
-            $this->user,
-            $this->context,
-            $this->stepId
-        );
-        $ev->setProfiler($this->getProfiler());
-        if (isset($this->lander)) {
-            $ev->setLander($this->lander);
+    private function checkMissing($props) {
+        foreach ($props as $prop) {
+            $var = $this->$prop;
+            if (empty($var)) {
+                $caller = debug_backtrace()[1]['function'];
+                throw new \InvalidArgumentException("EventBuilder::{$caller} is missing {$prop}");
+            }
         }
-        return $ev;
     }
 }
 

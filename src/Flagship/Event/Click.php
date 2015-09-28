@@ -17,10 +17,8 @@ class Click extends AbstractEvent {
     public function __construct(
         $id,
         User $user,
-        EventContext $context,
-        $stepId
+        EventContext $context
     ) {
-        $this->setStepId($stepId);
         parent::__construct($id, $user, $context);
         $this->callCookieMethod('setLastOfferClickTime', time());
         $this->user->appendClick($this);
