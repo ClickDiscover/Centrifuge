@@ -6,12 +6,10 @@ use Flagship\Model\Lander;
 use Flagship\Model\User;
 
 
-class Click extends BaseEvent {
-    const NAME = "OFFER_CLICK";
+class Click extends AbstractEvent {
+    const NAME = "click";
     const SEGMENT_NAME = "Offer Click";
     const SEGMENT_METHOD = "click";
-    const AEROSPIKE_KEY = "clicks";
-    const LIBRATO_KEY = "clicks";
 
     protected $stepId;
     protected $viewId;
@@ -19,10 +17,8 @@ class Click extends BaseEvent {
     public function __construct(
         $id,
         User $user,
-        EventContext $context,
-        $stepId
+        EventContext $context
     ) {
-        $this->setStepId($stepId);
         parent::__construct($id, $user, $context);
         $this->callCookieMethod('setLastOfferClickTime', time());
         $this->user->appendClick($this);

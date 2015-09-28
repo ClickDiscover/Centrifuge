@@ -21,6 +21,7 @@ use Flagship\Storage\QueryCache;
 use Flagship\Service\NetworkOfferService;
 use Flagship\Service\AdexOfferService;
 use Flagship\Service\CustomRouteService;
+use Flagship\Middleware\ScriptMiddleware;
 use Flagship\Storage\LibratoStorage;
 use Flagship\Storage\CookieJar;
 use Flagship\Storage\SegmentStorage;
@@ -233,6 +234,7 @@ class Container extends \Pimple\Container {
             );
             $segment->setProfiler($c['profiler']);
             $c['event.queue']->addStorage($segment);
+            $c['middleware.scripts']->addScript($segment->scriptTag());
             return $segment;
         };
 
@@ -243,6 +245,10 @@ class Container extends \Pimple\Container {
             $aero->setProfiler($c['profiler']);
             $c['event.queue']->addStorage($aero);
             return $aero;
+        };
+
+        $this['middleware.scripts'] = function ($c) {
+            return new ScriptMiddleware($c);
         };
     }
 

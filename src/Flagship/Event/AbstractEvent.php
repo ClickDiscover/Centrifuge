@@ -15,15 +15,15 @@ use Flagship\Util\Profiler\Profiling;
 
 
 
-abstract class BaseEvent {
+abstract class AbstractEvent implements EventInterface {
 
     use Profiling;
 
-    const NAME = "";
-    const SEGMENT_NAME = "";
+    const NAME           = "";
+    const SEGMENT_NAME   = "";
     const SEGMENT_METHOD = "";
-    const AEROSPIKE_KEY = "";
-    const LIBRATO_KEY = "";
+    const AEROSPIKE_KEY  = self::NAME . "s";
+    const LIBRATO_KEY    = self::NAME . "s";
 
     const FILTER_CONTEXT_CAMPAIGN = ['ad', 'keyword']; // UTM dealt with seperatly
     const FILTER_CONTEXT_USER     = ['ip', 'user_agent'];
@@ -131,7 +131,7 @@ abstract class BaseEvent {
         $this->toLibrato  ($centrifuge['librato.performance']);
         $this->toSegment  ($centrifuge['segment']);
         $this->toAerospike($centrifuge['aerospike']);
-        $this->getProfiler()->stop(static::AEROSPIKE_KEY . '.createAndTrack');
+        $this->getProfiler()->stop(static::NAME . '.createAndTrack');
     }
 
     public function toLibrato(LibratoStorage $librato) {
