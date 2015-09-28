@@ -215,9 +215,6 @@ $app->get('/admin/ping', function () use ($app) {
 $app->get('/status/ping', function () use ($app) {
     echo "pong!";
 });
-$app->get('/status/ping', function () {
-    echo "pong!";
-});
 
 
 $app->get('/conversions', function() use ($app, $centrifuge) {
