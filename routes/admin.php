@@ -210,9 +210,11 @@ $app->get('/admin/phpinfo', function() {
     return phpinfo();
 });
 $app->get('/admin/ping', function () use ($app) {
+    $app->response->headers->set('Content-Type', 'application/json');
     echo 'pong!';
 });
 $app->get('/status/ping', function () use ($app) {
+    $app->response->headers->set('Content-Type', 'application/json');
     echo "pong!";
 });
 
