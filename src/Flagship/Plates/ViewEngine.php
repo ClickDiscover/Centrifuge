@@ -56,7 +56,8 @@ class ViewEngine extends SlimView {
             'step1_link'  => $steps[1]->getUrl(),
             'step2_name'  => $steps[2]->getName(),
             'step2_image' => $steps[2]->getImageUrl(),
-            'step2_link'  => $steps[2]->getUrl()
+            'step2_link'  => $steps[2]->getUrl(),
+            'scripts' => ''
         ]);
 
         $html = $app->render($template->getFile(), $data);
