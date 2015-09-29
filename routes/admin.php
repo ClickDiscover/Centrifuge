@@ -262,11 +262,14 @@ $app->group('/aerospike', function () use ($app, $centrifuge) {
         echo '</pre>Deleted ' . $count . ' records';
     });
 
-    $app->get('/:what', function($what) use ($app, $db) {
+    $app->get('/get/:ns/:what', function($ns, $what) use ($app, $db) {
         $db = $db->db();
+        echo "Scanning {$ns} for {$what}".PHP_EOL;
         echo '<pre>';
-        $db->scan('test', $what, function ($x) use ($app, $db, $what) {
-            $rec = $app->request->params('meta', false) ? $x : $x['bins'];
+        $ns = $app->request->params('ns', 'test');
+        $db->scan($ns, $what, function ($x) use ($app, $db, $what) {
+            // $rec = $app->request->params('meta', false) ? $x : $x['bins'];
+            $rec = $x;
             print_r($rec);
         });
         echo '</pre>';
