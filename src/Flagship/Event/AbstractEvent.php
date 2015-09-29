@@ -131,6 +131,7 @@ abstract class AbstractEvent implements EventInterface {
         $this->toLibrato  ($centrifuge['librato.performance']);
         $this->toSegment  ($centrifuge['segment']);
         $this->toAerospike($centrifuge['aerospike']);
+        $this->aerospikeSummary($centrifuge['aerospike.stats']);
         $this->getProfiler()->stop(static::NAME . '.createAndTrack');
     }
 
@@ -157,7 +158,6 @@ abstract class AbstractEvent implements EventInterface {
     }
 
     public function toAerospike(AerospikeNamespace $db) {
-
         $record = [
             'id' => $this->getId(),
             'userId' => $this->getUserId(),
@@ -175,6 +175,28 @@ abstract class AbstractEvent implements EventInterface {
         $data = array_merge($data, $this->properties->all());
         $record = array_merge($record, $data);
         $status = $db->putById(static::AEROSPIKE_KEY, $this->getId(), $record);
+    }
+
+    protected function aerospikeSummary(AerospikeNamespace $db) {
+        $now = time();
+        $interval = 60;
+        $bucket = $now - ($now % $interval);
+        $rec = $db->fetchById('globals', $bucket);
+        // var_dump($rec);
+
+        if (empty($rec)) {
+            $record = [
+                'ts' => $bucket,
+                static::AEROSPIKE_KEY => 1
+            ];
+            $rc = $db->putById('globals', $bucket, $record);
+        } else {
+            $record = $rec['bins'];
+            var_dump($rec);
+            $n = isset($record[static::AEROSPIKE_KEY]) ? $record[static::AEROSPIKE_KEY] : 0;
+            $record[static::AEROSPIKE_KEY] = $n + 1;
+            $rc = $db->putById('globals', $bucket, $record);
+        }
     }
 
     /////////////

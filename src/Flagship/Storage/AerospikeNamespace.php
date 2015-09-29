@@ -44,10 +44,13 @@ class AerospikeNamespace implements FunctionQueueInterface {
     }
 
     protected function checkResponseCode($funcName, $id, $rc) {
+        $log = $this->getLogger();
         if ($rc == \Aerospike::OK) {
             return true;
+        } elseif ($rc == \Aerospike::ERR_RECORD_NOT_FOUND) {
+            $log->info('Aerospike record not found', [$funcName, $id]);
+            return false;
         } else {
-            $log = $this->getLogger();
             $log->warn('Aerospike not OK', [$funcName, $id, $this->db->error(), $this->db->errorno()]);
             return false;
         }
@@ -55,5 +58,9 @@ class AerospikeNamespace implements FunctionQueueInterface {
 
     public function db() {
         return $this->db;
+    }
+
+    public function getNamespace() {
+        return $this->namespace;
     }
 }
