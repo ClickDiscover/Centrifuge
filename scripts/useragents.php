@@ -1,12 +1,13 @@
 <?php
 use Jenssegers\Agent\Agent;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
 date_default_timezone_set('UTC');
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$file = "/Users/patrick/src/flagship/tmp/ua_cloaker.csv";
-$limit = 1000000;
+$file = "/Users/patrick/src/flagship/tmp/user_agents.csv";
+$limit = 10000000;
 $devices = [
     'browser' => [],
     'device' => [],
@@ -15,6 +16,10 @@ $devices = [
 ];
 $robots = [];
 $total = 0;
+
+$cd = new CrawlerDetect;
+$crawlers = 0;
+$ctypes = [];
 
 $row = 0;
 if (($handle = fopen($file, "r")) !== FALSE) {
@@ -39,6 +44,14 @@ if (($handle = fopen($file, "r")) !== FALSE) {
         // }
         // $devices['version'][$version]++;
 
+        if ($cd->isCrawler($data[0])) {
+            $crawlers++;
+            $m = $cd->getMatches();
+            if (empty($ctypes[$m])) {
+                $ctypes[$m] = 0;
+            }
+            $ctypes[$m]++;
+        }
 
         if (empty($devices['browser'][$browser])) {
             $devices['browser'][$browser] = 0;
@@ -75,3 +88,6 @@ if (($handle = fopen($file, "r")) !== FALSE) {
 echo "UAs analyzed {$total}" .PHP_EOL;
 echo "Robots " . count($robots) .PHP_EOL;
 print_r($devices);
+
+echo "Crawlers {$crawlers}" .PHP_EOL;
+print_r($ctypes);
