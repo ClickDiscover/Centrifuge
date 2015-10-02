@@ -53,3 +53,9 @@ $app->get('/click/:stepId', $app->container['route_middleware.click'], function 
     $app->response->redirect($url);
 
 })->name('click')->conditions(array('stepId' => '[0-9]+'));
+
+$app->get('/track', function () use ($app, $centrifuge) {
+    $res = $app->response;
+    $res->headers->set('Content-type', 'image/gif');
+    $res->setBody(base64_decode('R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw=='));
+});
