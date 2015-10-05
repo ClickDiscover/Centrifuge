@@ -16,7 +16,7 @@ class AdexOfferService {
 
     protected $db;
     protected $curlCache;
-    protected $expires;
+    protected $expiration;
 
     public function __construct($db, $curlCache, $expires) {
         $this->db = $db;
@@ -62,14 +62,15 @@ class AdexOfferService {
 
     public function curlFetch(AdexParameters $p) {
         $pool = $this->curlCache;
-        $item = $pool->getItem($this->namespace, $p->affiliateId, $p->vertical, $p->country);
+        $item = $pool->getItem("adexchange", $p->affiliateId, $p->vertical, $p->country);
         $result = $item->get();
 
         if ($item->isMiss()) {
             $this->log->info("Cache miss adexchange: ", array($p->affiliateId, $p->vertical, $p->country));
             // $app->system->total("ae_cache_miss");
             $result = ad_exchange_request($p->affiliateId, $p->vertical, $p->country);
-            $item->set($result, $this->expires);
+            $this->log->info("Setting with TTL: " . $this->expiration, $result);
+            $item->set($result, $this->expiration);
         }
         return $result;
     }
