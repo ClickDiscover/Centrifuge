@@ -15,7 +15,7 @@ class DebugBarProfiler implements ProfilerInterface {
         $this->log = new Logger('Profiler', $log->getHandlers(), $log->getProcessors());
 
         // Fuck it. This is fair because this is a *DebugBar* profiler. DebugBar already uses _SERVER
-        if (strpos($_SERVER['REQUEST_URI'], '_debugbar') != false) {
+        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '_debugbar') != false) {
             $this->log->setHandlers([]);
         }
         $this->log->debug('Start time: ' . $timer->getRequestStartTime());
