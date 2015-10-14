@@ -52,10 +52,6 @@ class Geo {
         }
 
         $code = Currency::getCurrencyForTerritory($this->country);
-        if (empty($this->data['unit.money'])) {
-            $this->data['money.name'] = Currency::getName($code);
-        }
-
         if (empty($this->data['unit.money.symbol'])) {
             $this->data['money.symbol'] = Currency::getSymbol($code, $this->data['money.width']);
         }
@@ -91,6 +87,18 @@ class Geo {
         return $c . $num;
     }
 
+    public function moneyName($plural = true, $shorten = true, $locale = 'en') {
+        $loc  = ($locale != "") ? $locale : $this->locale;
+        $code = Currency::getCurrencyForTerritory($this->country);
+        $amount = ($plural) ? 2 : 1;
+        $name = Currency::getName($code, $amount, $loc);
+        if ($shorten) {
+            $arr = explode(' ', $name);
+            $name = array_pop($arr);
+        }
+        return $name;
+    }
+
     public function weight($amount, $unit = 'pound', $alt = '', $locale = 'en') {
         $mass = new Mass($amount, $unit);
         $unit = $this->data['unit.weight'];
@@ -122,6 +130,8 @@ class Geo {
         return Unit::format($value, $unit, $fmt, $loc);
     }
 
+    // Inserts a Geo-specific variable.
+    // Example: 'leader' might map to 'Barack Obama' for US but 'David Cameron' for the UK
     public function variable($key, $default = '') {
         if (empty($this->variables[$key])) {
             return $default;
@@ -129,7 +139,9 @@ class Geo {
         return $this->variables[$key];
     }
 
+    // Also inserts a Geo-specific variable but uses the key if no default is provided
     public function v($key, $override = null) {
+        $override = isset($override) ? $override : $key;
         return $this->variable($key, $override);
     }
 
@@ -146,6 +158,10 @@ class Geo {
             'Weight Unit' => $this->data['unit.weight'],
             'Unit Format' => $this->data['unit.format'],
             'Money Width' => $this->data['money.width'],
+            'Money Name' => $this->moneyName(),
+            'Money Name plural long' => $this->moneyName(true, false),
+            'Money Name single' => $this->moneyName(false),
+            'Money Name single long' => $this->moneyName(false, false),
             'Variables' => print_r($this->variables, true)
         ];
     }
