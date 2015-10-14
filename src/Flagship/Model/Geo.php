@@ -159,9 +159,6 @@ class Geo {
             'Unit Format' => $this->data['unit.format'],
             'Money Width' => $this->data['money.width'],
             'Money Name' => $this->moneyName(),
-            'Money Name plural long' => $this->moneyName(true, false),
-            'Money Name single' => $this->moneyName(false),
-            'Money Name single long' => $this->moneyName(false, false),
             'Variables' => print_r($this->variables, true)
         ];
     }
