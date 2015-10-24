@@ -48,6 +48,7 @@ class SlimBootstrap {
                 $scripts = $app->view->get('scripts');
             }
             $scripts[] = $segment->scriptTag();
+            $scripts[] = '<img src="//pixel.adblade.com/imps.php?sgms=16970" border="0" />';
             $app->view->set('scripts', $scripts);
             return $segment;
         });
