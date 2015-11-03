@@ -33,6 +33,7 @@ class CampaignContext {
         $qs = $request->params();
         foreach ($qs as $key => $value) {
             $key = str_replace('=', '', $key);
+            $key = str_replace('target', 'keyword', $key);
 
             if (strtolower($key) === $campaignKey) {
                 $keyword = $value;
