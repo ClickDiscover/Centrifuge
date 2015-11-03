@@ -198,6 +198,10 @@ class Container extends \Pimple\Container {
                 $c['logger']
             );
         };
+
+        $this['facebook.pixel'] = function ($c) {
+            return new \Flagship\Service\FacebookPixel($c['db']);
+        };
     }
 }
 

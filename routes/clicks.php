@@ -49,7 +49,8 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
 
 
     // Keyword Tracking
-    $keyword = $req->get('keyword');
+    // $keyword = $req->get('keyword');
+    $keyword = $tracking['context']->get('campaign', 'keyword', $app->request->params('keyword'));
     if (isset($keyword)) {
         $centrifuge['librato.performance']->breakout('keyword', $keyword, 'clicks');
     }
@@ -70,6 +71,15 @@ $app->get('/click/:stepId', function ($stepId) use ($app, $centrifuge) {
     $currentQuery[$stepName] = $stepId;
     $url->getQuery()->modify($currentQuery);
 
-    $app->redirect($url);
+    // Redirect in javascript
+    echo '<html><head>' . PHP_EOL;
+    // FB Conversion tracking
+    if (isset($keyword)) {
+        echo $centrifuge['facebook.pixel']->fetchForKeyword($keyword);
+    }
+    echo '<script>window.location.replace("' . $url . '")</script>' . PHP_EOL;
+    echo '</head><body>' . PHP_EOL;
+    echo '</body></html>' . PHP_EOL;
+
 
 })->name('click')->conditions(array('stepId' => '[0-9]+'));
