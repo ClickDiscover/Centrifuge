@@ -1,4 +1,3 @@
-name()
 -- PostgreSQL database dump
 --
 
