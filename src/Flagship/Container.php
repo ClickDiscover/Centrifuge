@@ -238,14 +238,29 @@ class Container extends \Pimple\Container {
             return $segment;
         };
 
+        $this['aerospike.db'] = function ($c) {
+            $conf = $c['config']['database']['aerospike'];
+            return new \Aerospike($conf['client']);
+        };
+
         $this['aerospike'] = function ($c) {
             $conf = $c['config']['database']['aerospike'];
-            $db = new \Aerospike($conf['client']);
+            $db = $c['aerospike.db'];
             $aero = new AerospikeNamespace($db, $conf['namespace']);
             $aero->setProfiler($c['profiler']);
             $c['event.queue']->addStorage($aero);
             return $aero;
         };
+
+        $this['aerospike.stats'] = function ($c) {
+            $conf = $c['config']['database']['aerospike'];
+            $db = $c['aerospike.db'];
+            $aero = new AerospikeNamespace($db, 'stats');
+            $aero->setProfiler($c['profiler']);
+            $c['event.queue']->addStorage($aero);
+            return $aero;
+        };
+
 
         $this['middleware.scripts'] = function ($c) {
             return new ScriptMiddleware($c);
