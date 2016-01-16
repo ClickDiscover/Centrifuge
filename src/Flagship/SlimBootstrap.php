@@ -44,11 +44,10 @@ class SlimBootstrap {
 
         $container->extend('segment', function ($segment, $c) use ($app) {
             $scripts = [];
-            if ($app->view->has('scripts')) {
-                $scripts = $app->view->get('scripts');
-            }
-            $scripts[] = $segment->scriptTag();
-            $scripts[] = '<img src="//pixel.adblade.com/imps.php?sgms=16970" border="0" />';
+            // if ($app->view->has('scripts')) {
+                // $scripts = $app->view->get('scripts');
+            // }
+            // $scripts[] = $segment->scriptTag();
             $app->view->set('scripts', $scripts);
             return $segment;
         });

@@ -101,10 +101,10 @@ class SegmentStorage {
     }
 
     protected function identify($tracking) {
-        if (empty($tracking['flagship.id'])) {
-            // Could return anon id.
-            return false;
-        }
+        return false;
+        // if (empty($tracking['flagship.id'])) {
+            // // Could return anon id.
+        // }
 
         $userId = $tracking['flagship.id'];
         if (empty($_SESSION['_fp_segment'])) {
