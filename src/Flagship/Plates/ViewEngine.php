@@ -39,27 +39,23 @@ class ViewEngine extends SlimView {
         if (!$folders->exists($namespace)) {
             $this->engine->addFolder($namespace, $this->engine->getDirectory() . $namespace);
         }
-        return new LanderTemplate($this->assetRoot, $lander);
+        $template = new LanderTemplate($this->assetRoot, $lander);
+        $steps = $template->getData()['steps'];
+        foreach ($steps as $idx => $step) {
+            $this->set("step{$idx}_name", $step->getName());
+            $this->set("step{$idx}_image", $step->getImageUrl());
+            $this->set("step{$idx}_link", $step->getUrl());
+        }
+        $this->set('debug_lander', $lander);
+        return $template;
     }
 
     public function landerRender($app, $lander) {
         $this->startTiming('landerRender');
         $template = $this->landerTemplate($lander);
-        $data = $template->getData();
         if ($this->has('scripts')) {
             $this->set('scripts', implode('\n', $this->get('scripts')));
         }
-        $steps = $data['steps'];
-        $app->view->replace([
-            'step1_name'  => $steps[1]->getName(),
-            'step1_image' => $steps[1]->getImageUrl(),
-            'step1_link'  => $steps[1]->getUrl(),
-            'step2_name'  => $steps[2]->getName(),
-            'step2_image' => $steps[2]->getImageUrl(),
-            'step2_link'  => $steps[2]->getUrl(),
-            'scripts' => ''
-        ]);
-
         $html = $app->render($template->getFile(), $data);
         $this->stopTiming('landerRender');
         return $html;

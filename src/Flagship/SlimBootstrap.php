@@ -52,6 +52,16 @@ class SlimBootstrap {
             return $offers;
         });
 
+        $container->extend('segment', function ($segment, $c) use ($app) {
+            $scripts = [];
+            // if ($app->view->has('scripts')) {
+                // $scripts = $app->view->get('scripts');
+            // }
+            // $scripts[] = $segment->scriptTag();
+            $app->view->set('scripts', $scripts);
+            return $segment;
+        });
+
         $container['cookie.jar']->setSlimApp($app);
         $app->log->setWriter($container['logger']);
         $app->view($container['plates']);

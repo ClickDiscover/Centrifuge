@@ -265,6 +265,10 @@ class Container extends \Pimple\Container {
         $this['middleware.scripts'] = function ($c) {
             return new ScriptMiddleware($c);
         };
+
+        $this['facebook.pixel'] = function ($c) {
+            return new \Flagship\Service\FacebookPixel($c['db']);
+        };
     }
 
 }

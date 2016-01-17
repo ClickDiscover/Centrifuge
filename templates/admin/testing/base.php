@@ -1,7 +1,7 @@
-<?php include dirname(dirname(__DIR__)) . "/landers/vars.php"; ?>
 <?php $this->layout('admin::models/layout', ['title' => 'Womens Dumb Mag']) ?>
 <?php $this->start('page') ?>
 
+<a href="/content/<?= $debug_lander->id ?>">Live lander</a>
 
 <div>
 <h4>Variable dump</h4>
@@ -18,18 +18,20 @@
 
 
 <div>
+<h4>Assets</h4>
+<p>Base path: <?= $assets ?></p>
+<p>Template:  <?= $debug_lander->website->templateFile ?>.php</p>
+</div>
+
+<div>
 <h4>Lander dump</h4>
 <pre>
 <?php
 // $web = $lander->website->toArray();
 
+print_r($debug_lander);
 ?>
 </pre>
-</div>
-
-<div>
-<h4>Assets</h4>
-<p>path: <?= $assets ?></p>
 </div>
 
 
@@ -43,7 +45,7 @@ echo 'Length: ' . $geo->unit('length'). PHP_EOL;
 echo PHP_EOL;
 
 ?>
-<?php var_dump($geo) ?>
+<?php //var_dump($geo) ?>
 </pre>
 </div>
 

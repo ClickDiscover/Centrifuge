@@ -72,6 +72,7 @@ class SegmentStorage implements FunctionQueueInterface {
     }
 
     protected function identify(EventInterface $ev) {
+        return false;
         $user = $ev->getUser();
         $userId = $user->getId();
         if (empty($userId)) {
