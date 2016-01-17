@@ -9,11 +9,11 @@ $app->get('/content/:id', function ($id) use ($app, $centrifuge) {
         $app->notFound();
     }
 
-    $view = $app
-        ->environment['event.builder']
-        ->setLander($lander)
-        ->buildView();
-    $view->track($centrifuge);
+    // $view = $app
+        // ->environment['event.builder']
+        // ->setLander($lander)
+        // ->buildView();
+    // $view->track($centrifuge);
 
     $centrifuge['plates']->landerRender($app, $lander);
     $_SESSION['last_lander'] = $lander;
@@ -33,13 +33,13 @@ $app->get('/landers/:id', function ($id) use ($app, $centrifuge) {
 $app->get('/click/:stepId', $app->container['route_middleware.click'], function ($stepId) use ($app, $centrifuge) {
     $req = $app->request;
     $lander = $app->environment['referring.lander'];
-    $click = $app
-        ->environment['event.builder']
-        ->setLander($lander)
-        ->setStepId($stepId)
-        ->buildClick();
+    // $click = $app
+        // ->environment['event.builder']
+        // ->setLander($lander)
+        // ->setStepId($stepId)
+        // ->buildClick();
 
-    $click->track($centrifuge);
+    // $click->track($centrifuge);
 
     // Now we redirect to cpv.flagshippromotions.com/base2.php
     // Eventually it will go to our campaign managment system

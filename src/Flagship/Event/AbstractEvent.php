@@ -182,7 +182,6 @@ abstract class AbstractEvent implements EventInterface {
         $interval = 60;
         $bucket = $now - ($now % $interval);
         $rec = $db->fetchById('globals', $bucket);
-        // var_dump($rec);
 
         if (empty($rec)) {
             $record = [
@@ -192,7 +191,6 @@ abstract class AbstractEvent implements EventInterface {
             $rc = $db->putById('globals', $bucket, $record);
         } else {
             $record = $rec['bins'];
-            var_dump($rec);
             $n = isset($record[static::AEROSPIKE_KEY]) ? $record[static::AEROSPIKE_KEY] : 0;
             $record[static::AEROSPIKE_KEY] = $n + 1;
             $rc = $db->putById('globals', $bucket, $record);

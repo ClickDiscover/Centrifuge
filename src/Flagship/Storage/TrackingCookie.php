@@ -73,9 +73,7 @@ class TrackingCookie {
     }
 
     public function incrementVisitCount() {
-        // echo "VI";
         $this->setVisitCount($this->visitCount + 1);
-        // var_dump($this->visitCount);
         return $this;
     }
 

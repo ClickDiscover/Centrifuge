@@ -68,6 +68,7 @@ class Container extends \Pimple\Container {
             if ($c['mode'] === 'development') {
                 $timer = new DebugBarProfiler($c['debug.bar']->getDebugBar()['time'], $c['logger'], $this->constructTime);
                 return $timer;
+                // return new NullProfiler();
             } else {
                 return new NullProfiler();
             }
@@ -156,7 +157,7 @@ class Container extends \Pimple\Container {
                 $c['config']['cache']['expiration']
             );
             $db->setLogger($c['logger']);
-            $db->setProfiler($c['profiler']);
+            // $db->setProfiler($c['profiler']);
             return $db;
         };
 
@@ -188,83 +189,83 @@ class Container extends \Pimple\Container {
         };
 
         // Conversions
-        $this['redis'] = function ($c) {
-            return new \Predis\Client($c['config']['database']['redis']);
-        };
+        // $this['redis'] = function ($c) {
+            // return new \Predis\Client($c['config']['database']['redis']);
+        // };
 
-        $this['conversions'] = function ($c) {
-            return new \Flagship\Service\ConversionService($c['redis']);
-        };
+        // $this['conversions'] = function ($c) {
+            // return new \Flagship\Service\ConversionService($c['redis']);
+        // };
 
-        // Librato
-        $this['statsd'] = function ($c) {
-            $conn = new StatsdSocket('localhost', 8125);
-            return new Statsd($conn);
-        };
+        // // Librato
+        // $this['statsd'] = function ($c) {
+            // $conn = new StatsdSocket('localhost', 8125);
+            // return new Statsd($conn);
+        // };
 
-        $this['librato.performance'] = function ($c) {
-            $librato = new LibratoStorage(
-                $c['statsd'],
-                [$c['config']['environment']],
-                [$c['config']['name'], 'performance']
-            );
-            $librato->setLogger($c['logger']);
-            return $librato;
-        };
+        // $this['librato.performance'] = function ($c) {
+            // $librato = new LibratoStorage(
+                // $c['statsd'],
+                // [$c['config']['environment']],
+                // [$c['config']['name'], 'performance']
+            // );
+            // $librato->setLogger($c['logger']);
+            // return $librato;
+        // };
 
-        $this['librato.system'] = function ($c) {
-            $librato = new LibratoStorage(
-                $c['statsd'],
-                [$c['config']['environment'], $c['config']['hostname']],
-                [$c['config']['name'], 'system']
-            );
-            $librato->setLogger($c['logger']);
-            return $librato;
-        };
+        // $this['librato.system'] = function ($c) {
+            // $librato = new LibratoStorage(
+                // $c['statsd'],
+                // [$c['config']['environment'], $c['config']['hostname']],
+                // [$c['config']['name'], 'system']
+            // );
+            // $librato->setLogger($c['logger']);
+            // return $librato;
+        // };
 
-        $this['event.queue'] = function ($c) {
-            return new EventQueueManager;
-        };
+        // $this['event.queue'] = function ($c) {
+            // return new EventQueueManager;
+        // };
 
-        $this['segment'] = function ($c) {
-            $segment = new SegmentStorage(
-                $c['config'],
-                $c['cookie.jar'],
-                $c['logger']
-            );
-            $segment->setProfiler($c['profiler']);
-            $c['event.queue']->addStorage($segment);
-            $c['middleware.scripts']->addScript($segment->scriptTag());
-            return $segment;
-        };
+        // $this['segment'] = function ($c) {
+            // $segment = new SegmentStorage(
+                // $c['config'],
+                // $c['cookie.jar'],
+                // $c['logger']
+            // );
+            // // $segment->setProfiler($c['profiler']);
+            // $c['event.queue']->addStorage($segment);
+            // // $c['middleware.scripts']->addScript($segment->scriptTag());
+            // return $segment;
+        // };
 
-        $this['aerospike.db'] = function ($c) {
-            $conf = $c['config']['database']['aerospike'];
-            return new \Aerospike($conf['client']);
-        };
+        // $this['aerospike.db'] = function ($c) {
+            // $conf = $c['config']['database']['aerospike'];
+            // return new \Aerospike($conf['client']);
+        // };
 
-        $this['aerospike'] = function ($c) {
-            $conf = $c['config']['database']['aerospike'];
-            $db = $c['aerospike.db'];
-            $aero = new AerospikeNamespace($db, $conf['namespace']);
-            $aero->setProfiler($c['profiler']);
-            $c['event.queue']->addStorage($aero);
-            return $aero;
-        };
+        // $this['aerospike'] = function ($c) {
+            // $conf = $c['config']['database']['aerospike'];
+            // $db = $c['aerospike.db'];
+            // $aero = new AerospikeNamespace($db, $conf['namespace']);
+            // $aero->setProfiler($c['profiler']);
+            // $c['event.queue']->addStorage($aero);
+            // return $aero;
+        // };
 
-        $this['aerospike.stats'] = function ($c) {
-            $conf = $c['config']['database']['aerospike'];
-            $db = $c['aerospike.db'];
-            $aero = new AerospikeNamespace($db, 'stats');
-            $aero->setProfiler($c['profiler']);
-            $c['event.queue']->addStorage($aero);
-            return $aero;
-        };
+        // $this['aerospike.stats'] = function ($c) {
+            // $conf = $c['config']['database']['aerospike'];
+            // $db = $c['aerospike.db'];
+            // $aero = new AerospikeNamespace($db, 'stats');
+            // $aero->setProfiler($c['profiler']);
+            // $c['event.queue']->addStorage($aero);
+            // return $aero;
+        // };
 
 
-        $this['middleware.scripts'] = function ($c) {
-            return new ScriptMiddleware($c);
-        };
+        // $this['middleware.scripts'] = function ($c) {
+            // return new ScriptMiddleware($c);
+        // };
 
         $this['facebook.pixel'] = function ($c) {
             return new \Flagship\Service\FacebookPixel($c['db']);
