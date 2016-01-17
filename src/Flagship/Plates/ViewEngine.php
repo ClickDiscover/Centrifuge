@@ -6,8 +6,12 @@ use League\Plates\Engine;
 use \Slim\View as SlimView;
 
 use Flagship\Plates\LanderTemplate;
+use Flagship\Util\Profiler\Profiling;
+
 
 class ViewEngine extends SlimView {
+
+    use Profiling;
 
     private $engine;
     private $assetRoot;
@@ -16,6 +20,7 @@ class ViewEngine extends SlimView {
         parent::__construct();
         $this->engine = $plates;
         $this->assetRoot = $assetRoot;
+        $this->setProfilingClass('ViewEngine');
     }
 
     public function render($template, $data = null) {
@@ -46,11 +51,15 @@ class ViewEngine extends SlimView {
     }
 
     public function landerRender($app, $lander) {
+        $this->startTiming('landerRender');
         $template = $this->landerTemplate($lander);
+        $data = $template->getData();
         if ($this->has('scripts')) {
             $this->set('scripts', implode('\n', $this->get('scripts')));
         }
-        return $app->render($template->getFile(), $template->getData());
+        $html = $app->render($template->getFile(), $data);
+        $this->stopTiming('landerRender');
+        return $html;
     }
 
     public function make($name) {

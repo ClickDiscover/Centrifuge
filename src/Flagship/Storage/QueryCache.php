@@ -3,10 +3,12 @@
 namespace Flagship\Storage;
 
 use Flagship\Container;
+use \Flagship\Util\Logging;
+use Flagship\Util\Profiler\Profiling;
 
 
 class QueryCache {
-    use \Flagship\Util\Logging;
+    use Logging, Profiling;
 
     public $db;
     protected $cache;
@@ -16,9 +18,11 @@ class QueryCache {
         $this->db = $db;
         $this->cache = $cache;
         $this->expiration = $expiration;
+        $this->setProfilingClass('QueryCache');
     }
 
     public function cachedQuery($namespace, $callback) {
+        $this->startTiming($namespace);
         $item = $this->cache->getItem($namespace);
         $result = $item->get();
         if($item->isMiss()) {
@@ -26,6 +30,7 @@ class QueryCache {
             $result = $callback($this->db);
             $item->set($result, $this->expiration);
         }
+        $this->stopTiming($namespace);
         return $result;
     }
 

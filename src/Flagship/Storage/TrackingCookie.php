@@ -57,10 +57,6 @@ class TrackingCookie {
         return $this->lastVisitTime;
     }
 
-    // public function getVisitTime() {
-    //     return $this->visitTime;
-    // }
-
     public function getLastOfferClickTime() {
         return $this->lastOfferClickTime;
     }
@@ -77,9 +73,7 @@ class TrackingCookie {
     }
 
     public function incrementVisitCount() {
-        // echo "VI";
         $this->setVisitCount($this->visitCount + 1);
-        // var_dump($this->visitCount);
         return $this;
     }
 
@@ -113,6 +107,22 @@ class TrackingCookie {
         );
     }
 
+    public function toAerospikeArray() {
+        $rec = [
+            'id' => $this->id,
+            'creation.ts' => $this->creationTime,
+            'visit.count' => $this->visitCount
+        ];
+        if (isset($this->lastVisitTime)) {
+            $rec['visit.ts'] = $this->lastVisitTime;
+        }
+        if (isset($this->lastOfferClickTime)) {
+            $rec['offer.ts'] = $this->lastOfferClickTime;
+        }
+        return $rec;
+    }
+
+
     public function pretty() {
         $out = [];
         $out['Cookie Value'] = $this->toCookie();
@@ -141,16 +151,15 @@ class TrackingCookie {
     /////////////////////
 
 
-    public static function getOrCreate($cookieValue, $hasher) {
+    public static function getOrCreate($cookieValue, $id) {
         if (empty($cookieValue)) {
-            return self::create($hasher);
+            return self::create($id);
         } else {
             return self::fromCookie($cookieValue);
         }
     }
 
-    public static function create($hasher) {
-        $id = $hasher->encode(mt_rand(0, $hasher->get_max_int_value()));
+    public static function create($id) {
         return new TrackingCookie($id, time(), 0);
     }
 

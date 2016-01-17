@@ -17,7 +17,7 @@ class NetworkOfferService {
     }
 
     public function fetch($id) {
-        $sql = "SELECT id, name, image_url FROM products WHERE id = ?";
+        $sql = "SELECT * FROM products WHERE id = ?";
         $row = $this->db->fetch($this->namespace, $id, $sql);
         return $this->fromRow($row);
     }
@@ -28,7 +28,8 @@ class NetworkOfferService {
             $row['id'],
             $row['name'],
             $url,
-            'network'
+            $row['source'],
+            $row['vertical']
         );
     }
 

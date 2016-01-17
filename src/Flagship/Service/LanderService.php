@@ -5,8 +5,11 @@ namespace Flagship\Service;
 use Flagship\Model\Lander;
 use Flagship\Model\Website;
 use Flagship\Model\Geo;
+use Flagship\Util\Profiler\Profiling;
 
 class LanderService {
+
+    use Profiling;
 
     public $namespace = "landers";
 
@@ -16,14 +19,22 @@ class LanderService {
     public function __construct($db, $offers) {
         $this->db = $db;
         $this->offers = $offers;
+        $this->setProfilingClass('LanderService');
     }
 
     public function fetch($id) {
+        $this->startTiming(__FUNCTION__, $id);
         $row = $this->db->fetch($this->namespace, $id, self::SQL_SELECT);
-        return $this->fromRow($row);
+        $l = $this->fromRow($row);
+        $this->stopTiming(__FUNCTION__, $id);
+        return $l;
     }
 
     public function fromRow($row) {
+        if (!$row) {
+            return false;
+        }
+
         $website = $this->websiteFromArray($row);
         $offers = $this->offers->fetch(
             $row['offer'],
@@ -65,10 +76,11 @@ SQL;
     // Changing because this is only in admin interface
     const SQL_SELECT_ALL = self::SQL_BASE . " WHERE l.active = TRUE ORDER BY id DESC";
 
-    public function fetchAll() {
+    public function fetchAll($pretty = false) {
         $rows = $this->db->uncachedFetchAll(self::SQL_SELECT_ALL);
-        return array_map(function ($x) {
-            return $this->fromRow($x);
+        return array_map(function ($x) use ($pretty) {
+            $r = $this->fromRow($x);
+            return ($pretty) ?  $this->prettyLander($r) : $r;
         }, $rows);
     }
 
@@ -130,6 +142,22 @@ SQL;
             $arr['active'] = true;
         }
         return $this->db->insertArray($this->namespace, $arr);
+    }
+
+
+    protected function prettyLander(Lander $lander) {
+        $row = array(
+            'ID' => $lander->id,
+            'Notes' => $lander->notes
+        );
+        $row['Type'] = $lander->offers[1]->product->source;
+        $row['Product 1'] = $lander->offers[1]->getName();
+        $row['Product 2'] = $lander->offers[2]->getName();
+        $row['Website'] = $lander->website->name;
+        $row['Geo'] = $lander->geo->name;
+        $row['Variants'] = json_encode($lander->variants);
+        $row['Active'] = 'True';
+        return $row;
     }
 
 }

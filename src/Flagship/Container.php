@@ -13,6 +13,7 @@ use League\Plates\Engine;
 use Slim\Middleware\DebugBar;
 
 use Flagship\Util\Logger;
+use Flagship\Event\EventQueueManager;
 use Flagship\Plates\VariantExtension;
 use Flagship\Plates\HtmlExtension;
 use Flagship\Plates\ViewEngine;
@@ -20,17 +21,27 @@ use Flagship\Storage\QueryCache;
 use Flagship\Service\NetworkOfferService;
 use Flagship\Service\AdexOfferService;
 use Flagship\Service\CustomRouteService;
+use Flagship\Middleware\ScriptMiddleware;
 use Flagship\Storage\LibratoStorage;
 use Flagship\Storage\CookieJar;
 use Flagship\Storage\SegmentStorage;
+use Flagship\Storage\AerospikeNamespace;
+use Flagship\Event\EventContextFactory;
+use Flagship\Util\Profiler\NullProfiler;
+use Flagship\Util\Profiler\DebugBarProfiler;
 
 
 class Container extends \Pimple\Container {
 
+    protected $constructTime;
+
     public function __construct(array $config) {
+        $this->constructTime = microtime(true);
         parent::__construct();
         $this['config'] = $config;
+        $this['mode'] = $this['config']['application']['mode'];
         $this->configure();
+        $this['profiler']->add('container.create', $this->constructTime, microtime(true));
     }
 
 
@@ -51,6 +62,16 @@ class Container extends \Pimple\Container {
             ));
             $debug->addCollector(new \DebugBar\Bridge\MonologCollector($c['logger']));
             return $debug;
+        };
+
+        $this['profiler'] = function ($c) {
+            if ($c['mode'] === 'development') {
+                $timer = new DebugBarProfiler($c['debug.bar']->getDebugBar()['time'], $c['logger'], $this->constructTime);
+                return $timer;
+                // return new NullProfiler();
+            } else {
+                return new NullProfiler();
+            }
         };
 
         // Logging
@@ -102,6 +123,13 @@ class Container extends \Pimple\Container {
             );
         };
 
+        $this['random.id'] = $this->factory(function ($c) {
+            return $c['cookie.jar']->getRandomId();
+        });
+
+        $this['context.factory'] = function ($c) {
+            return new EventContextFactory($c['config']['application']['tracking']);
+        };
 
         // Plates
         $this['plates'] = function ($c) {
@@ -113,6 +141,7 @@ class Container extends \Pimple\Container {
             $plates->loadExtension(new HtmlExtension);
             $view = new ViewEngine($plates, $assetRoot);
             $view->addFolder('admin', $c['config']['application']['templates.path'] . '/admin');
+            $view->setProfiler($c['profiler']);
             return $view;
         };
 
@@ -128,6 +157,7 @@ class Container extends \Pimple\Container {
                 $c['config']['cache']['expiration']
             );
             $db->setLogger($c['logger']);
+            // $db->setProfiler($c['profiler']);
             return $db;
         };
 
@@ -153,66 +183,105 @@ class Container extends \Pimple\Container {
         };
 
         $this['landers'] = function ($c) {
-            return new \Flagship\Service\LanderService($c['db'], $c['offers']);
+            $landers = new \Flagship\Service\LanderService($c['db'], $c['offers']);
+            $landers->setProfiler($c['profiler']);
+            return $landers;
         };
 
         // Conversions
-        $this['redis'] = function ($c) {
-            return new \Predis\Client($c['config']['database']['redis']);
-        };
+        // $this['redis'] = function ($c) {
+            // return new \Predis\Client($c['config']['database']['redis']);
+        // };
 
-        $this['conversions'] = function ($c) {
-            return new \Flagship\Service\ConversionService($c['redis']);
-        };
+        // $this['conversions'] = function ($c) {
+            // return new \Flagship\Service\ConversionService($c['redis']);
+        // };
 
-        // Librato
-        $this['statsd'] = function ($c) {
-            $conn = new StatsdSocket('localhost', 8125);
-            return new Statsd($conn);
-        };
+        // // Librato
+        // $this['statsd'] = function ($c) {
+            // $conn = new StatsdSocket('localhost', 8125);
+            // return new Statsd($conn);
+        // };
 
-        $this['librato.performance'] = function ($c) {
-            $librato = new LibratoStorage(
-                $c['statsd'],
-                [$c['config']['environment']],
-                [$c['config']['name'], 'performance']
-            );
-            $librato->setLogger($c['logger']);
-            return $librato;
-        };
+        // $this['librato.performance'] = function ($c) {
+            // $librato = new LibratoStorage(
+                // $c['statsd'],
+                // [$c['config']['environment']],
+                // [$c['config']['name'], 'performance']
+            // );
+            // $librato->setLogger($c['logger']);
+            // return $librato;
+        // };
 
-        $this['librato.system'] = function ($c) {
-            $librato = new LibratoStorage(
-                $c['statsd'],
-                [$c['config']['environment'], $c['config']['hostname']],
-                [$c['config']['name'], 'system']
-            );
-            $librato->setLogger($c['logger']);
-            return $librato;
-        };
+        // $this['librato.system'] = function ($c) {
+            // $librato = new LibratoStorage(
+                // $c['statsd'],
+                // [$c['config']['environment'], $c['config']['hostname']],
+                // [$c['config']['name'], 'system']
+            // );
+            // $librato->setLogger($c['logger']);
+            // return $librato;
+        // };
 
-        $this['segment'] = function ($c) {
-            return new SegmentStorage(
-                $c['config'],
-                $c['cookie.jar'],
-                $c['logger']
-            );
-        };
+        // $this['event.queue'] = function ($c) {
+            // return new EventQueueManager;
+        // };
+
+        // $this['segment'] = function ($c) {
+            // $segment = new SegmentStorage(
+                // $c['config'],
+                // $c['cookie.jar'],
+                // $c['logger']
+            // );
+            // // $segment->setProfiler($c['profiler']);
+            // $c['event.queue']->addStorage($segment);
+            // // $c['middleware.scripts']->addScript($segment->scriptTag());
+            // return $segment;
+        // };
+
+        // $this['aerospike.db'] = function ($c) {
+            // $conf = $c['config']['database']['aerospike'];
+            // return new \Aerospike($conf['client']);
+        // };
+
+        // $this['aerospike'] = function ($c) {
+            // $conf = $c['config']['database']['aerospike'];
+            // $db = $c['aerospike.db'];
+            // $aero = new AerospikeNamespace($db, $conf['namespace']);
+            // $aero->setProfiler($c['profiler']);
+            // $c['event.queue']->addStorage($aero);
+            // return $aero;
+        // };
+
+        // $this['aerospike.stats'] = function ($c) {
+            // $conf = $c['config']['database']['aerospike'];
+            // $db = $c['aerospike.db'];
+            // $aero = new AerospikeNamespace($db, 'stats');
+            // $aero->setProfiler($c['profiler']);
+            // $c['event.queue']->addStorage($aero);
+            // return $aero;
+        // };
+
+
+        // $this['middleware.scripts'] = function ($c) {
+            // return new ScriptMiddleware($c);
+        // };
 
         $this['facebook.pixel'] = function ($c) {
             return new \Flagship\Service\FacebookPixel($c['db']);
         };
     }
+
 }
 
 
 class DebugContainer extends Container {
     public function __construct(array $config) {
-        parent::__construct();
         $this->clog = new \Monolog\Logger('container');
         $this->clog->pushHandler(new StreamHandler(
             '/tmp/container.log', \Monolog\Logger::INFO
         ));
+        parent::__construct($config);
     }
     public function offsetGet($id) {
         $config = [$id];
@@ -223,5 +292,25 @@ class DebugContainer extends Container {
         return parent::offsetGet($id);
     }
 }
+
+
+// class ProfileContainer extends Container {
+//     public function __construct(array $config) {
+//         parent::__construct($config);
+//         Profiler::set(parent::offsetGet('profiler'));
+//     }
+//     public function offsetGet($id) {
+//         if ($id === 'profiler') {
+//             return parent::offsetGet($id);
+//         }
+
+//         $dtime = Profiler::get();
+//         $dtime->start('container::' . $id);
+//         $get = parent::offsetGet($id);
+//         $dtime->stop('container::' . $id);
+//         return $get;
+//     }
+// }
+
 
 

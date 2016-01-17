@@ -1,6 +1,6 @@
 <?php
 
-namespace Flagship\Util;
+namespace Flagship\Test;
 
 trait MiddlewareTrace {
     public function call() {

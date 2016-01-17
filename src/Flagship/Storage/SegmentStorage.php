@@ -2,8 +2,17 @@
 
 namespace Flagship\Storage;
 
+use Flagship\Event\EventInterface;
+use Flagship\Event\View;
+use Flagship\Event\Click;
+use Flagship\Model\User;
+use Flagship\Util\FunctionQueueInterface;
+use Flagship\Util\FunctionQueueTrait;
 
-class SegmentStorage {
+
+class SegmentStorage implements FunctionQueueInterface {
+
+    use FunctionQueueTrait;
 
     protected $writeKey;
     protected $jar;
@@ -14,132 +23,105 @@ class SegmentStorage {
         $options = isset($segconf['options']) ? $segconf['options'] : [];
         // $integrations = isset($segconf['options']) ? $segconf['options'] : [];
         $this->writeKey = $segconf['write.key'];
+        $this->setProfilingClass('Segment');
         \Segment::init($this->writeKey, $options);
         $this->jar = $jar;
         $this->log = $log;
     }
 
-    public function offerClick($tracking, $lander) {
-        if(!$this->identify($tracking)) {
+    public function page(View $view) {
+        if(!$this->identify($view)) {
             return false;
         }
+        $context = $this->buildContext($view);
+        $properties = $view->properties->all();
+        $integrations = ['All' => true];
 
-        $stepNumber = $tracking['click.step_id'];
-        $context = $this->buildContext($tracking);
-        $properties =  $this->buildProperties($tracking, $lander);
-        $properties['offer'] = $lander->offers[$stepNumber]->getName();
-        $properties['step.number'] = $stepNumber;
-
-        if (isset($tracking['cookie'])) {
-            $tc = $tracking['cookie'];
-            $view = $tc->getLastVisitTime();
-            $click = $tc->getLastOfferClickTime();
-            if (isset($view) && isset($click)) {
-                $properties['time_to_click'] = $click - $view;
-            }
-        }
-
-        $pg = array(
-            'userId' => $tracking['flagship.id'],
-            'event' => 'Offer Click',
+        $arr = [
+            'userId' => $view->getUserId(),
+            'name' => $view::SEGMENT_NAME,
+            'context' => $context,
             'properties' => $properties,
-            'integrations' => ['All' => true],
-            'context' => $context
-       );
-       \Segment::track($pg);
+            'integrations' => $integrations
+        ];
+        $this->enqueue(function () use ($arr) {
+            \Segment::page($arr);
+        }, 'page', $view->getId());
+        return $arr;
     }
 
-    public function landingPage($tracking, $lander) {
-        if(!$this->identify($tracking)) {
+    public function click(Click $click) {
+        if(!$this->identify($click)) {
             return false;
         }
+        $context = $this->buildContext($click);
+        $properties = $click->properties->all();
+        $integrations = ['All' => true];
 
-        $context = $this->buildContext($tracking);
-        $properties =  $this->buildProperties($tracking, $lander);
-        $properties['offer1'] = $lander->offers[1]->getName();
-        $properties['offer2'] = $lander->offers[2]->getName();
-
-        $pg = array(
-            'userId' => $tracking['flagship.id'],
-            'name' => 'Landing Pageview',
+        $arr = [
+            'userId' => $click->getUserId(),
+            'event' => $click::SEGMENT_NAME,
+            'context' => $context,
             'properties' => $properties,
-            'integrations' => ['All' => true],
-            'context' => $context
-       );
-        \Segment::page($pg);
-        return $pg;
+            'integrations' => $integrations
+        ];
+        $this->enqueue(function () use ($arr) {
+            \Segment::track($arr);
+        }, 'click', $click->getId());
+        return $arr;
     }
 
-    protected function buildProperties($tracking, $lander) {
-        $properties = array(
-            'lander_id' => $lander->id,
-            'title' => $lander->notes,
-            'website' => $lander->website->name,
-        );
-        $properties['offer_source'] = $lander->offers[1]->product->source;
-
-        $url = array_intersect_key($tracking['context']['url'], array_flip(['url', 'path']));
-        return array_merge($properties, $url);
-    }
-
-    protected function buildContext($tracking) {
-        $tc = $tracking['context'];
-        $user = array_intersect_key($tc['user'], array_flip(['ip', 'user_agent']));
-        $camp = array_intersect_key($tc['campaign'], array_flip(['keyword', 'ad']));
-
-        if (isset($tc['campaign']['utm'])) {
-            $camp = array_merge($camp, $tc['campaign']['utm']);
-        }
-
-        if (isset($tracking['google.id'])) {
-            $user['integrations'] = [
-                'Google Analytics' => ['clientId' => $tracking['google.id']]
-            ];
-        }
-        $user['campaign'] = $camp;
-        return array_merge($user, $camp);
-    }
-
-    protected function identify($tracking) {
+    protected function identify(EventInterface $ev) {
         return false;
-        // if (empty($tracking['flagship.id'])) {
-            // // Could return anon id.
-        // }
+        $user = $ev->getUser();
+        $userId = $user->getId();
+        if (empty($userId)) {
+            return false;
+        }
 
-        $userId = $tracking['flagship.id'];
+        $identifiedBefore = $user->getSegmentId();
+        if (empty($identifiedBefore)) {
+            $user->setSegmentId($user->getId());
+        }
+
         if (empty($_SESSION['_fp_segment'])) {
             $traits = [];
-            if (isset($tracking['cookie'])) {
-                $tc = $tracking['cookie'];
-                $traits['createdAt'] = date("Y-m-d H:i:s", $tc->getCreationTime());
+            $tc = $user->getCookie();
+            if (isset($tc)) {
                 $traits['visits'] = $tc->getVisitCount();
-                $traits['lastVisit'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());
+                $traits['createdAt'] = date("Y-m-d H:i:s", $tc->getCreationTime());
                 $lvt = $tc->getLastVisitTime();
                 if (isset($lvt)) {
                     $traits['lastVisitTime'] = date("Y-m-d H:i:s", $tc->getLastVisitTime());
                 }
-
                 $loct = $tc->getLastOfferClickTime();
                 if (isset($loct)) {
                     $traits['lastOfferClickTime'] = date("Y-m-d H:i:s", $tc->getLastOfferClickTime());
                 }
             }
 
-            $context = $this->buildContext($tracking);
-            \Segment::identify([
-                'userId' => $userId,
-                'context' => $context,
-                'traits' => $traits
-            ]);
-            $_SESSION['_fp_segment'] = $userId;
-            // $this->jar->setCookie('_fp_segment', $userId, CookieJar::MONTHS);
+            $context = $this->buildContext($ev);
+            $this->enqueue(function () use ($user, $context, $traits) {
+                \Segment::identify([
+                    'userId' => $user->getId(),
+                    'context' => $context,
+                    'traits' => $traits
+                ]);
+                $_SESSION['_fp_segment'] = $user->getId();
+            }, 'identify', $user->getId());
         }
-
-        // $segmentId = $this->jar->getCookie('_fp_segment');
-        // if (isset($segmentId) && $segmentId != $userId) {
-        //     $this->log->warn('Segment ID differs from User ID', [$userId, $segmentId, $tracking]);
-        // }
         return true;
+    }
+
+    protected function buildContext(EventInterface $ev) {
+        $context = $ev->context->all();
+        $ga = $ev->getGoogleId();
+        if (isset($ga)) {
+            $context['integrations'] = [
+                'Google Analytics' => ['clientId' => $ga]
+            ];
+        }
+        return $context;
     }
 
     public function scriptTag() {

@@ -8,7 +8,7 @@ use Flagship\Event\Context\CampaignContext;
 
 use League\Event\EventInterface;
 
-class EventFactory {
+class EventContextFactory {
 
     protected $config;
 
@@ -21,7 +21,7 @@ class EventFactory {
         $url  = UrlContext::fromRequest($request);
         $user = UserContext::fromRequest($request);
         $camp = CampaignContext::fromRequest($request, $c['campaign.key'], $c['ad.key']);
-        return new Event(array(
+        return new EventContext(array(
             'url' => $url,
             'user' => $user,
             'campaign' => $camp
@@ -29,11 +29,7 @@ class EventFactory {
     }
 }
 
-class Event extends \ArrayObject {
-    // protected $id = false;
-    // protected $userId = false;
-    // protected $gaId = false;
-
+class EventContext extends \ArrayObject {
     // Init is array of Contexts.. they need an interface...
     public function __construct($init) {
         parent::__construct($init, \ArrayObject::ARRAY_AS_PROPS);

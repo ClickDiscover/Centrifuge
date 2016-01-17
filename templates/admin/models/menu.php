@@ -8,6 +8,7 @@
             <li class="pure-menu-item"><a href="/admin/models/products" class="pure-menu-link">Products</a></li>
             <li class="pure-menu-item"><a href="/admin/tracking" class="pure-menu-link">Tracking</a></li>
             <li class="pure-menu-item"><a href="/conversions" class="pure-menu-link">Conversions</a></li>
+            <li class="pure-menu-item"><a href="/admin/control" class="pure-menu-link">Server</a></li>
         </ul>
     </div>
 </div>

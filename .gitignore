@@ -6,3 +6,4 @@ vendor/*
 *jpg
 templates/landers
 www/static
+.idea/*
