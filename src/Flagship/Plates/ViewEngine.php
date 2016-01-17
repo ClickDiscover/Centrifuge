@@ -56,6 +56,8 @@ class ViewEngine extends SlimView {
         $data = $template->getData();
         if ($this->has('scripts')) {
             $this->set('scripts', implode('\n', $this->get('scripts')));
+        } else {
+            $this->set('scripts', '');
         }
         $html = $app->render($template->getFile(), $data);
         $this->stopTiming('landerRender');
