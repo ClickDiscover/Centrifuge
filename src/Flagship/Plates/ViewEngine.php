@@ -53,6 +53,7 @@ class ViewEngine extends SlimView {
     public function landerRender($app, $lander) {
         $this->startTiming('landerRender');
         $template = $this->landerTemplate($lander);
+        $data = $template->getData();
         if ($this->has('scripts')) {
             $this->set('scripts', implode('\n', $this->get('scripts')));
         }
