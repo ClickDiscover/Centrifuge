@@ -1,36 +1,32 @@
 {
-    "name": "flagship/centrifuge",
+    "name": "clickdiscover/centrifuge",
+    "homepage": "http://clickdiscover.io",
     "license": "proprietary",
-    "description": "Landing page templates with rotating offers and tracking",
+    "description": "Landing Page Templating and Event Tracking",
     "require": {
         "php": ">=5.5",
-        "league/url": "^3.3",
+        "slim/slim": ">=3.0",
         "league/plates": "^3.1",
-        "symfony/http-foundation": "^2.7",
-        "hashids/hashids": "^1.0",
-        "nesQuick/Metrics": "^1.0",
-        "monolog/monolog": "^1.15",
-        "domnikl/statsd": "^2.1",
-        "tedivm/stash": "^0.12.3",
         "league/flysystem": "^1.0",
-        "predis/predis": "^1.0",
-        "segmentio/analytics-php": "^1.2",
-        "league/event": "^2.1",
-        "jenssegers/agent": "^2.1",
+        "tedivm/stash": "^0.12.3",
+        "monolog/monolog": "^1.15",
         "f3ath/lazypdo": "^0.0.1",
-        "slim/slim": "^2.6",
-        "Flynsarmy/Slim-Monolog": "^1.0",
         "pimple/pimple": "^3.0",
-        "wilmoore/attributes.php": "^0.1.4",
-        "anahkiasen/underscore-php": "^2.0",
-        "maximebf/debugbar": "^1.10",
-        "yusukezzz/slim-debugbar": "^1.1",
+        "acclimate/container": "^1.0.0",
         "punic/punic": "^1.6",
-        "triplepoint/php-units-of-measure": "^2.0",
-        "aws/aws-sdk-php": "^3.3"
+        "triplepoint/php-units-of-measure": "^2.0"
+    },
+
+    "require-dev": {
+        "hashids/hashids": "^1.0",
+        "predis/predis": "^1.0",
+        "domnikl/statsd": "^2.1",
+        "maximebf/debugbar": "^1.10",
+        "segmentio/analytics-php": "^1.2"
     },
     "autoload": {
         "psr-4": {
+            "ClickDiscover\\": "src/ClickDiscover/",
             "Flagship\\": "src/Flagship/",
             "Flagship\\Test\\": "test/Flagship/"
         }
@@ -39,8 +35,5 @@
         "flush-cache": [
             "php scripts/flush_cache.php"
         ]
-    },
-    "require-dev": {
-        "jaybizzle/crawler-detect": "^1.0"
     }
 }

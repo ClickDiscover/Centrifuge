@@ -9,17 +9,16 @@ if(php_sapi_name() === 'cli-server') {
     }
 }
 
-require_once dirname(__DIR__) . '/config.php';
-require CENTRIFUGE_ROOT . '/vendor/autoload.php';
-
-$centrifuge = new Flagship\Container($config);
-$app        = new Slim\Slim($config['application']);
-$bootstrap  = new Flagship\SlimBootstrap($app, $centrifuge);
-$app        = $bootstrap->bootstrap();
+$rootDir = dirname(__DIR__);
+require $rootDir . '/vendor/autoload.php';
 
 
-require_once $config['paths']['routes'] . 'admin.php';
-require_once $config['paths']['routes'] . 'main.php';
+$settings = require $rootDir . '/settings.php';
+$container = new Slim\Container($settings);
+$container->register(new ClickDiscover\CentrifugeServiceProvider());
+$app = new Slim\App($container);
+
+require_once $rootDir . '/routes/slim3.php';
 
 $app->run();
 ?>
