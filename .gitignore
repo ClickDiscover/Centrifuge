@@ -1,4 +1,5 @@
 config.php
+settings.php
 vendor/*
 **/vendor/*
 **DS_Store*
