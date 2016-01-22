@@ -51,7 +51,7 @@ class ScriptMiddleware extends Middleware {
     }
 
     protected function buildScriptTags() {
-        return implode('\n', $this->scripts);
+        return implode("\n", $this->scripts);
     }
 
 }
