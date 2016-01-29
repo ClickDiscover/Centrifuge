@@ -8,7 +8,7 @@ use Flagship\Plates\LanderTemplate;
 use Flagship\Util\Profiler\Profiling;
 
 
-class ViewEngine extends \Slim\Collection {
+class PlatesEngine extends \Slim\Collection {
 
     use Profiling;
 

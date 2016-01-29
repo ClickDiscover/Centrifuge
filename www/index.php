@@ -15,10 +15,8 @@ use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 $settings = require $rootDir . '/settings.php';
-$container = new Slim\Container($settings);
-$centrifuge = new ClickDiscover\CentrifugeServiceProvider();
-$centrifuge->register($container);
-$app = new Slim\App($container);
+$slim = new ClickDiscover\Centrifuge\SlimProvider($settings);
+$app = $slim->app;
 
 
 $app->get('/debug/{obj}', function ($req, $res, $args) use ($app) {
@@ -32,7 +30,7 @@ $app->get('/debug/{obj}', function ($req, $res, $args) use ($app) {
     echo '</pre>';
 });
 
-$app->get('/content/{id:[0-9]+}', function ($req, $res, $args) {
+$app->get('/content/{id:[0-9]+}', function (Request $req, Response $res, $args) {
     $lander = $this->landers->fetch($args['id']);
     // 404 on Not Found
 
@@ -41,7 +39,7 @@ $app->get('/content/{id:[0-9]+}', function ($req, $res, $args) {
     return $res;
 });
 
-$app->get('/content/{landerId:[0-9]+}/click[/{linkId:[0-9]+}]', function ($req, $res, $args) {
+$app->get('/content/{landerId:[0-9]+}/click[/{linkId:[0-9]+}]', function (Request $req, Response $res, $args) {
     // Old Procedure
     // 1) Get Lander From Session -> Referrer -> Query param fp_lid
     // 2) Read a global redirect URL set in config.php
@@ -51,6 +49,7 @@ $app->get('/content/{landerId:[0-9]+}/click[/{linkId:[0-9]+}]', function ($req, 
 
     echo '<pre>';
     echo "Clicked link # " . $linkId . " on Content / " . $args['landerId'] . PHP_EOL;
+    echo PHP_EOL . "Client IP: " . \Psr7Middlewares\Middleware\ClientIp::getIp($req);
     echo PHP_EOL . "Args: ";
     print_r($args);
     echo '</pre>';
@@ -58,18 +57,6 @@ $app->get('/content/{landerId:[0-9]+}/click[/{linkId:[0-9]+}]', function ($req, 
 })->setName('click');
 
 
-$app->add(function (Request $request, Response $response, callable $next) {
-    $uri = $request->getUri();
-    $path = $uri->getPath();
-    if ($path != '/' && substr($path, -1) == '/') {
-        // permanently redirect paths with a trailing slash
-        // to their non-trailing counterpart
-        $uri = $uri->withPath(substr($path, 0, -1));
-        return $response->withRedirect((string)$uri, 301);
-    }
-
-    return $next($request, $response);
-});
 
 $app->run();
 ?>

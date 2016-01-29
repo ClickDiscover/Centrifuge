@@ -1,6 +1,6 @@
 <?php
 
-namespace ClickDiscover;
+namespace ClickDiscover\Centrifuge;
 
 // use Slim\App;
 // use Slim\Container;
@@ -11,7 +11,7 @@ use Monolog\Handler\StreamHandler;
 use ClickDiscover\View\ViewEngine;
 
 
-class CentrifugeServiceProvider implements \Pimple\ServiceProviderInterface {
+class ServiceProvider implements \Pimple\ServiceProviderInterface {
 
     protected $settings;
 
@@ -101,7 +101,7 @@ class CentrifugeServiceProvider implements \Pimple\ServiceProviderInterface {
             $plates = new \League\Plates\Engine($templateRoot);
             $plates->loadExtension(new \Flagship\Plates\VariantExtension);
             $plates->loadExtension(new \Flagship\Plates\HtmlExtension);
-            $view = new ViewEngine($plates, $assetRoot);
+            $view = new \ClickDiscover\View\PlatesEngine($plates, $assetRoot);
             $view->addFolder('admin', $c['settings']['paths']['templates.path'] . '/admin');
             return $view;
         };
