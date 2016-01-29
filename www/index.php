@@ -1,11 +1,10 @@
 <?php
-if(php_sapi_name() === 'cli-server') {
-    if (preg_match('/\/static\//', $_SERVER['REQUEST_URI'])) {
+if (PHP_SAPI == 'cli-server') {
+    // To help the built-in PHP dev server, check if the request was actually for
+    // something which should probably be served as a static file
+    $file = __DIR__ . $_SERVER['REQUEST_URI'];
+    if (is_file($file)) {
         return false;
-    }
-    if (strpos($_SERVER['PHP_SELF'], '/index.php') === false) {
-        $_SERVER['PHP_SELF'] = '/index.php' . $_SERVER['PHP_SELF'];
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
     }
 }
 
@@ -15,10 +14,25 @@ require $rootDir . '/vendor/autoload.php';
 
 $settings = require $rootDir . '/settings.php';
 $container = new Slim\Container($settings);
-$container->register(new ClickDiscover\CentrifugeServiceProvider());
+$centrifuge = new ClickDiscover\CentrifugeServiceProvider();
+$centrifuge->register($container);
 $app = new Slim\App($container);
 
-require_once $rootDir . '/routes/slim3.php';
+$app->get('/settings', function ($req, $res, $args) use ($app) {
+    echo '<pre>';
+    print_r($app->getContainer());
+    echo '</pre>';
+});
+
+$app->get('/content/{id:[0-9]+}', function ($req, $res, $args) {
+    $lander = $this->landers->fetch($args['id']);
+    echo '<pre>';
+    echo "Welcome to " . $args['id'] . PHP_EOL;
+    // echo $cs() . PHP_EOL;
+    print_r($lander);
+    // echo $cs() . PHP_EOL;
+    echo '</pre>';
+});
 
 $app->run();
 ?>

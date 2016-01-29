@@ -14,13 +14,80 @@ class CentrifugeServiceProvider implements \Pimple\ServiceProviderInterface {
     protected $settings;
 
     public function register(\Pimple\Container $container) {
-
         $container['pdo'] = function ($c) {
             $pdo = new \F3\LazyPDO\LazyPDO($c['settings']['database']['pdo'], null, null, array(
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
             ));
             return $pdo;
         };
+
+        $container['offer.network'] = function ($c) {
+            return new \Flagship\Service\NetworkOfferService($c['db'], $c['settings']['application']['product.path']);
+        };
+
+        $container['offer.adex'] = function ($c) {
+            $service = new \Flagship\Service\AdexOfferService($c['db'], $c['cache'], $c['settings']['cache']['adex.expiration']);
+            $service->setLogger($c['logger']);
+            return $service;
+        };
+
+        $container['offers'] = function ($c) {
+            return new \Flagship\Service\OfferService($c['offer.network'], $c['offer.adex']);
+        };
+
+        $container['landers'] = function ($c) {
+            $landers = new \Flagship\Service\LanderService($c['db'], $c['offers']);
+            return $landers;
+        };
+
+        $container['logger'] = function ($c) {
+            $log = new \Monolog\Logger($c['settings']['name']);
+            $log->pushHandler(new \Monolog\Handler\StreamHandler(
+                $c['settings']['logging']['root'],
+                $c['settings']['logging']['level']
+            ));
+            return $log;
+        };
+
+
+        // Cache
+        $container['cacheDriver'] = function ($c) {
+            $driver = new \Stash\Driver\FileSystem();
+            $driver->setOptions(array('path' => $c['settings']['cache']['root']));
+            return $driver;
+        };
+        $container['cache'] = function ($c) {
+            $cache = new \Stash\Pool($c['cacheDriver']);
+            $cache->setNamespace($c['settings']['name']);
+            return $cache;
+        };
+
+        $container['session.cache'] = function ($c) {
+            $sessionCache= new \Stash\Pool($c['cacheDriver']);
+            $sessionCache->setNamespace('session');
+            return $sessionCache;
+        };
+
+
+        $container['db'] = function ($c) {
+            $db = new \Flagship\Storage\QueryCache(
+                $c['pdo'],
+                $c['cache'],
+                $c['settings']['cache']['expiration']
+            );
+            $db->setLogger($c['logger']);
+            // $db->setProfiler($c['profiler']);
+            return $db;
+        };
+
+        $container['fs'] = function ($c) {
+            $adapter = new \League\Flysystem\Adapter\Local($c['settings']['application']['templates.path']);
+            $fs = new \League\Flysystem\Filesystem($adapter);
+            $fs->addPlugin(new \League\Flysystem\Plugin\ListWith);
+            return $fs;
+        };
+
+
 
     }
 
@@ -44,37 +111,7 @@ class CentrifugeServiceProvider implements \Pimple\ServiceProviderInterface {
         $this['custom.routes'] = function ($c) {
             return new CustomRouteService($c['db']);
         };
-
-        $this['offer.network'] = function ($c) {
-            return new NetworkOfferService($c['db'], $c['config']['application']['product.path']);
-        };
-
-        $this['offer.adex'] = function ($c) {
-            $service = new AdexOfferService($c['db'], $c['cache'], $c['config']['cache']['adex.expiration']);
-            $service->setLogger($c['logger']);
-            return $service;
-        };
-
-        $this['offers'] = function ($c) {
-            return new \Flagship\Service\OfferService($c['offer.network'], $c['offer.adex']);
-        };
-
-        $this['landers'] = function ($c) {
-            $landers = new \Flagship\Service\LanderService($c['db'], $c['offers']);
-            $landers->setProfiler($c['profiler']);
-            return $landers;
-        };
-
         // Database Handlers / Logging / Utility
-        $container['logger'] = function ($c) {
-            $log = new \Monolog\Logger($c['settings']['name']);
-            $log->pushHandler(new \Monolog\Handler\StreamHandler(
-                $c['settings']['logging']['path'],
-                \Monolog\Logger::DEBUG
-            ));
-            return $log;
-        };
-
         // $container['pdo'] = function ($c) {
             // $pdo = new \F3\LazyPDO\LazyPDO($c['settings']['database']['pdo'], null, null, array(
                 // \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
@@ -82,44 +119,7 @@ class CentrifugeServiceProvider implements \Pimple\ServiceProviderInterface {
             // return $pdo;
         // };
 
-        // Cache
-        $this['cacheDriver'] = function ($c) {
-            $driver = new \Stash\Driver\FileSystem();
-            $driver->setOptions(array('path' => $c['settings']['cache']['root']));
-            return $driver;
-        };
-        $this['cache'] = function ($c) {
-            $cache = new Pool($c['cacheDriver']);
-            $cache->setNamespace($c['settings']['name']);
-            return $cache;
-        };
-
-        $this['db'] = function ($c) {
-            $db = new QueryCache(
-                $c['pdo'],
-                $c['cache'],
-                $c['config']['cache']['expiration']
-            );
-            $db->setLogger($c['logger']);
-            // $db->setProfiler($c['profiler']);
-            return $db;
-        };
-
-        $this['fs'] = function ($c) {
-            $adapter = new \League\Flysystem\Adapter\Local($c['config']['application']['templates.path']);
-            $fs = new \League\Flysystem\Filesystem($adapter);
-            $fs->addPlugin(new \League\Flysystem\Plugin\ListWith);
-            return $fs;
-        };
-
-
         // Session
-        $this['session.cache'] = function ($c) {
-            $sessionCache= new Pool($c['cacheDriver']);
-            $sessionCache->setNamespace('session');
-            return $sessionCache;
-        };
-
         // Cookies
         $this['hashids'] = function ($c) {
             return new \Hashids\Hashids(
