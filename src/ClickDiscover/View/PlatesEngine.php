@@ -1,15 +1,14 @@
 <?php
 
-namespace Flagship\Plates;
+namespace ClickDiscover\View;
 
 use League\Plates\Engine;
-use \Slim\View as SlimView;
 
 use Flagship\Plates\LanderTemplate;
 use Flagship\Util\Profiler\Profiling;
 
 
-class ViewEngine extends SlimView {
+class ViewEngine extends \Slim\Collection {
 
     use Profiling;
 
@@ -44,13 +43,18 @@ class ViewEngine extends SlimView {
         foreach ($steps as $idx => $step) {
             $this->set("step{$idx}_name", $step->getName());
             $this->set("step{$idx}_image", $step->getImageUrl());
-            $this->set("step{$idx}_link", $step->getUrl());
+
+            // WARNING: Temporary Hack
+            // Hacking in the new URL scheme to the step link.
+            // This needs to be deeper into Model/Service
+            $url = "/content/" . $lander->id . $step->getUrl();
+            $this->set("step{$idx}_link", $url);
         }
         $this->set('debug_lander', $lander);
         return $template;
     }
 
-    public function landerRender($app, $lander) {
+    public function landerRender($lander) {
         $this->startTiming('landerRender');
         $template = $this->landerTemplate($lander);
         $data = $template->getData();
@@ -59,7 +63,7 @@ class ViewEngine extends SlimView {
         } else {
             $this->set('scripts', '');
         }
-        $html = $app->render($template->getFile(), $data);
+        $html = $this->render($template->getFile(), $data);
         $this->stopTiming('landerRender');
         return $html;
     }

@@ -8,6 +8,8 @@ namespace ClickDiscover;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+use ClickDiscover\View\ViewEngine;
+
 
 class CentrifugeServiceProvider implements \Pimple\ServiceProviderInterface {
 
@@ -87,25 +89,24 @@ class CentrifugeServiceProvider implements \Pimple\ServiceProviderInterface {
             return $fs;
         };
 
+        // View
+        $container['plates'] = function ($c) {
+            $templateRoot = $c['settings']['paths']['templates.path'] . $c['settings']['paths']['relative.landers'];
+            $assetRoot = $c['settings']['paths']['relative.static'];
+
+            $plates = new \League\Plates\Engine($templateRoot);
+            $plates->loadExtension(new \Flagship\Plates\VariantExtension);
+            $plates->loadExtension(new \Flagship\Plates\HtmlExtension);
+            $view = new ViewEngine($plates, $assetRoot);
+            $view->addFolder('admin', $c['settings']['paths']['templates.path'] . '/admin');
+            return $view;
+        };
+
 
 
     }
 
     public function dontuse(\Pimple\Container $container) {
-
-        // View
-        $this['plates'] = function ($c) {
-            $templateRoot = $c['config']['application']['templates.path'] . $c['config']['paths']['relative_landers'];
-            $assetRoot = $c['config']['paths']['relative_static'];
-
-            $plates = new Engine($templateRoot);
-            $plates->loadExtension(new VariantExtension);
-            $plates->loadExtension(new HtmlExtension);
-            $view = new ViewEngine($plates, $assetRoot);
-            $view->addFolder('admin', $c['config']['application']['templates.path'] . '/admin');
-            $view->setProfiler($c['profiler']);
-            return $view;
-        };
 
         // Centrifuge Services
         $this['custom.routes'] = function ($c) {

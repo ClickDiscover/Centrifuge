@@ -14,7 +14,8 @@
         "pimple/pimple": "^3.0",
         "acclimate/container": "^1.0.0",
         "punic/punic": "^1.6",
-        "triplepoint/php-units-of-measure": "^2.0"
+        "triplepoint/php-units-of-measure": "^2.0",
+        "slim/php-view": "^2.0"
     },
 
     "require-dev": {
