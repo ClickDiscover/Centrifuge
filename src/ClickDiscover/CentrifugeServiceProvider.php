@@ -34,7 +34,11 @@ class CentrifugeServiceProvider implements \Pimple\ServiceProviderInterface {
         };
 
         $container['offers'] = function ($c) {
-            return new \Flagship\Service\OfferService($c['offer.network'], $c['offer.adex']);
+            $offers = new \Flagship\Service\OfferService($c['offer.network'], $c['offer.adex']);
+            $offers->setUrlFor(function ($name, $args) use ($c) {
+                return '/click' . '/' . $args['stepId'];
+            });
+            return $offers;
         };
 
         $container['landers'] = function ($c) {

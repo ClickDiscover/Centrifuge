@@ -20,16 +20,15 @@ $centrifuge = new ClickDiscover\CentrifugeServiceProvider();
 $centrifuge->register($container);
 $app = new Slim\App($container);
 
-$app->getContainer()->extend('offers', function ($offers, $c) {
-    $offers->setUrlFor(function ($name, $args) use ($c) {
-        return $c->router->pathFor($name, $args);
-    });
-    return $offers;
-});
 
-$app->get('/settings', function ($req, $res, $args) use ($app) {
+$app->get('/debug/{obj}', function ($req, $res, $args) use ($app) {
     echo '<pre>';
-    print_r($app->getContainer());
+    $c = $app->getContainer();
+    $obj = $args['obj'];
+    if($obj != 'this') {
+        $c = $c->get($obj);
+    }
+    print_r($c);
     echo '</pre>';
 });
 
@@ -42,27 +41,22 @@ $app->get('/content/{id:[0-9]+}', function ($req, $res, $args) {
     return $res;
 });
 
-$app->get('/click/{stepId:[0-9]+}', function ($req, $res, $args) {
-    echo "Old Click";
-    print_r($args);
-})->setName('click');
-
-
-$app->get('/content/{landerId:[0-9]+}/click[/{stepId:[0-9]+}]', function ($req, $res, $args) {
+$app->get('/content/{landerId:[0-9]+}/click[/{linkId:[0-9]+}]', function ($req, $res, $args) {
     // Old Procedure
     // 1) Get Lander From Session -> Referrer -> Query param fp_lid
     // 2) Read a global redirect URL set in config.php
     // 2b) Track the event
     // 3) Redirect to url and fill in some query params
-    $stepId = $req->getAttribute("stepId", 1);
+    $linkId = $req->getAttribute("linkId", 1);
 
     echo '<pre>';
-    echo "Clicked link # " . $stepId . " on Content / " . $args['landerId'] . PHP_EOL;
+    echo "Clicked link # " . $linkId . " on Content / " . $args['landerId'] . PHP_EOL;
     echo PHP_EOL . "Args: ";
     print_r($args);
     echo '</pre>';
 
-})->setName('clickImproved');
+})->setName('click');
+
 
 $app->add(function (Request $request, Response $response, callable $next) {
     $uri = $request->getUri();
