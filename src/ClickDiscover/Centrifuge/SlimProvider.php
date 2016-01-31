@@ -20,8 +20,21 @@ class SlimProvider {
         $this->container = new \Slim\Container($this->settings);
         $this->services  = new ServiceProvider();
         $this->services->register($this->container);
-        $this->app = new \Slim\App($this->container);
 
+        $this->container['twig'] = function ($c) {
+            $view = new \Slim\Views\Twig($c['settings']['paths']['templates.path'], [
+                'cache' => '/tmp',
+                'debug' => true,
+                'cache' => false
+            ]);
+            $view->addExtension(new \Slim\Views\TwigExtension(
+                $c['router'],
+                $c['request']->getUri()
+            ));
+            return $view;
+        };
+
+        $this->app = new \Slim\App($this->container);
         $this->addMiddlewares();
 
         return $this->app;

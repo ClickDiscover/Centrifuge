@@ -14,9 +14,12 @@
         "pimple/pimple": "^3.0",
         "acclimate/container": "^1.0.0",
         "punic/punic": "^1.6",
-        "triplepoint/php-units-of-measure": "^2.0",
+        "php-units-of-measure/php-units-of-measure": "^2.0",
         "slim/php-view": "^2.0",
-        "oscarotero/psr7-middlewares": "^3.12"
+        "oscarotero/psr7-middlewares": "^3.12",
+        "slim/twig-view": "^2.0",
+        "components/jquery": "^2.2",
+        "robloach/component-installer": "^0.2.3"
     },
 
     "require-dev": {
@@ -37,5 +40,8 @@
         "flush-cache": [
             "php scripts/flush_cache.php"
         ]
+    },
+    "config": {
+        "component-dir": "www/components"
     }
 }

@@ -34,8 +34,12 @@ $app->get('/content/{id:[0-9]+}', function (Request $req, Response $res, $args) 
     $lander = $this->landers->fetch($args['id']);
     // 404 on Not Found
 
-    $html = $this->plates->landerRender($lander);
-    $res->getBody()->write($html);
+    // $html = $this->plates->landerRender($lander);
+    // $res->getBody()->write($html);
+    //
+    $this->twig->render($res, 'test.twig', [
+        'title' => $lander->id
+    ]);
     return $res;
 });
 

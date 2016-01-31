@@ -69,7 +69,7 @@ class ServiceProvider implements \Pimple\ServiceProviderInterface {
         };
 
         $container['session.cache'] = function ($c) {
-            $sessionCache= new \Stash\Pool($c['cacheDriver']);
+            $sessionCache = new \Stash\Pool($c['cacheDriver']);
             $sessionCache->setNamespace('session');
             return $sessionCache;
         };
@@ -93,10 +93,13 @@ class ServiceProvider implements \Pimple\ServiceProviderInterface {
             return $fs;
         };
 
+        $container['settings']['templateRoot'] = $container['settings']['paths']['templates.path'] . $container['settings']['paths']['relative.landers'];
+        $container['settings']['assetRoot'] = $container['settings']['paths']['relative.static'];
+
         // View
         $container['plates'] = function ($c) {
-            $templateRoot = $c['settings']['paths']['templates.path'] . $c['settings']['paths']['relative.landers'];
-            $assetRoot = $c['settings']['paths']['relative.static'];
+            $templateRoot = $c['settings']['templateRoot'];
+            $assetRoot = $c['settings']['assetRoot'];
 
             $plates = new \League\Plates\Engine($templateRoot);
             $plates->loadExtension(new \Flagship\Plates\VariantExtension);
