@@ -93,22 +93,6 @@ class ServiceProvider implements \Pimple\ServiceProviderInterface {
             return $fs;
         };
 
-        $container['settings']['templateRoot'] = $container['settings']['paths']['templates.path'] . $container['settings']['paths']['relative.landers'];
-        $container['settings']['assetRoot'] = $container['settings']['paths']['relative.static'];
-
-        // View
-        $container['plates'] = function ($c) {
-            $templateRoot = $c['settings']['templateRoot'];
-            $assetRoot = $c['settings']['assetRoot'];
-
-            $plates = new \League\Plates\Engine($templateRoot);
-            $plates->loadExtension(new \Flagship\Plates\VariantExtension);
-            $plates->loadExtension(new \Flagship\Plates\HtmlExtension);
-            $view = new \ClickDiscover\View\PlatesEngine($plates, $assetRoot);
-            $view->addFolder('admin', $c['settings']['paths']['templates.path'] . '/admin');
-            return $view;
-        };
-
 
 
     }

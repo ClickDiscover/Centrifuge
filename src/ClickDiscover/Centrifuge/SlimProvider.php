@@ -21,6 +21,17 @@ class SlimProvider {
         $this->services  = new ServiceProvider();
         $this->services->register($this->container);
 
+        $this->app = new \Slim\App($this->container);
+        $this->addMiddlewares();
+
+        // Add renderers
+        $this->addTwig();
+        $this->addPlates();
+
+        return $this->app;
+    }
+
+    public function addTwig() {
         $this->container['twig'] = function ($c) {
             $view = new \Slim\Views\Twig($c['settings']['paths']['templates.path'], [
                 'cache' => '/tmp',
@@ -33,11 +44,21 @@ class SlimProvider {
             ));
             return $view;
         };
+    }
 
-        $this->app = new \Slim\App($this->container);
-        $this->addMiddlewares();
+    public function addPlates() {
+        $container['plates'] = function ($c) {
+            $templateRoot =
+                $container['settings']['paths']['templates.path'] .
+                $container['settings']['paths']['relative.landers'];
 
-        return $this->app;
+            $plates = new \League\Plates\Engine($templateRoot);
+            $plates->loadExtension(new \Flagship\Plates\VariantExtension);
+            $plates->loadExtension(new \Flagship\Plates\HtmlExtension);
+            $view = new \ClickDiscover\View\PlatesEngine($plates, $c['settings']['paths']['relative.static']);
+            $view->addFolder('admin', $c['settings']['paths']['templates.path'] . '/admin');
+            return $view;
+        };
     }
 
     public function addMiddlewares() {
