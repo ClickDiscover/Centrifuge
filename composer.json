@@ -20,7 +20,8 @@
         "slim/twig-view": "^2.0",
         "components/jquery": "^2.2",
         "robloach/component-installer": "^0.2.3",
-        "league/fractal": "^0.13.0"
+        "league/fractal": "^0.13.0",
+        "fzaninotto/faker": "^1.5"
     },
 
     "require-dev": {

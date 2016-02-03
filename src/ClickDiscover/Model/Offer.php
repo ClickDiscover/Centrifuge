@@ -9,7 +9,6 @@ class Offer extends \ClickDiscover\Interfaces\ImmutableObject {
     protected $product;
     protected $source = 'network';
     protected $vertical = 'diet'; // vertical
-    protected $vendorName = null;
 
     // public function __construct(
         // $id,
