@@ -3,9 +3,11 @@
 require 'vendor/autoload.php';
 
 $settings = require_once 'settings.php';
-$container = new \Slim\Container($settings);
-$services  = new \ClickDiscover\Centrifuge\ServiceProvider();
-$services->register($container);
+// $container = new \Slim\Container($settings);
+// $services  = new \ClickDiscover\Centrifuge\ServiceProvider();
+// $services->register($container);
+//
+$container = \ClickDiscover\Centrifuge\ServiceProvider::withSlimContainer($settings);
 
 $faker = Faker\Factory::create();
 
@@ -19,7 +21,6 @@ $IMAGES = 3;
 $CTA = 3;
 
 $ARTICLES = 5;
-
 function output($t, $cols, $f) {
     global $container;
     $sql = 'INSERT INTO ' . $t . ' (' . implode(',', $cols) . ') VALUES (' . implode(',', array_pad([], count($cols), '?')) . ')';
@@ -43,11 +44,11 @@ function output($t, $cols, $f) {
     // output('products', ['uuid', 'name', 'image_href'], $f);
 // }
 
-echo 'OFFERS'.PHP_EOL;
-foreach (range(0, $OFFERS) as $i) {
-    $f = [$faker->uuid, 'cpa', rand(0, $PRODUCTS), rand(0, $NETWORKS)];
-    output('offers', ['uuid', 'incentive', 'product_id', 'network_id'], $f);
-}
+// echo 'OFFERS'.PHP_EOL;
+// foreach (range(0, $OFFERS) as $i) {
+    // $f = [$faker->uuid, 'cpa', rand(0, $PRODUCTS), rand(0, $NETWORKS)];
+    // output('offers', ['uuid', 'incentive', 'product_id', 'network_id'], $f);
+// }
 
 // echo 'TEXTS'.PHP_EOL;
 // foreach (range(0, $TEXTS) as $i) {

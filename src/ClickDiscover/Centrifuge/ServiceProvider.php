@@ -92,9 +92,13 @@ class ServiceProvider implements \Pimple\ServiceProviderInterface {
             $fs->addPlugin(new \League\Flysystem\Plugin\ListWith);
             return $fs;
         };
+    }
 
-
-
+    public static function withSlimContainer($settings) {
+        $container = new \Slim\Container($settings);
+        $services  = new ServiceProvider();
+        $services->register($container);
+        return $container;
     }
 
     public function dontuse(\Pimple\Container $container) {

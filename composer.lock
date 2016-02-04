@@ -635,16 +635,16 @@
         },
         {
             "name": "oscarotero/psr7-middlewares",
-            "version": "v3.12.4",
+            "version": "v3.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/psr7-middlewares.git",
-                "reference": "953f99cb30e736814d51062e348393b14c0bf724"
+                "reference": "5a36263b3c331aa67012f41936dd323576e9099b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/psr7-middlewares/zipball/953f99cb30e736814d51062e348393b14c0bf724",
-                "reference": "953f99cb30e736814d51062e348393b14c0bf724",
+                "url": "https://api.github.com/repos/oscarotero/psr7-middlewares/zipball/5a36263b3c331aa67012f41936dd323576e9099b",
+                "reference": "5a36263b3c331aa67012f41936dd323576e9099b",
                 "shasum": ""
             },
             "require": {
@@ -653,7 +653,7 @@
             "require-dev": {
                 "aura/router": "^3.0",
                 "aura/session": "2.*",
-                "filp/whoops": "^1.1",
+                "filp/whoops": "2.*",
                 "google/recaptcha": "^1.1",
                 "imagecow/imagecow": "^2.0",
                 "league/route": "2.0.0-RC1",
@@ -723,7 +723,7 @@
                 "psr-7",
                 "psr-messages"
             ],
-            "time": "2016-01-30 17:48:38"
+            "time": "2016-01-31 20:24:02"
         },
         {
             "name": "php-units-of-measure/php-units-of-measure",
@@ -1190,16 +1190,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "f4794f1d00f0746621be3020ffbd8c5e0b217ee3"
+                "reference": "dfecef47506179db2501430e732adbf3793099c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/f4794f1d00f0746621be3020ffbd8c5e0b217ee3",
-                "reference": "f4794f1d00f0746621be3020ffbd8c5e0b217ee3",
+                "url": "https://api.github.com/repos/symfony/process/zipball/dfecef47506179db2501430e732adbf3793099c8",
+                "reference": "dfecef47506179db2501430e732adbf3793099c8",
                 "shasum": ""
             },
             "require": {
@@ -1235,7 +1235,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2015-12-23 11:04:02"
+            "time": "2016-02-02 13:44:19"
         },
         {
             "name": "tedivm/stash",
@@ -1571,16 +1571,16 @@
         },
         {
             "name": "segmentio/analytics-php",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/segmentio/analytics-php.git",
-                "reference": "f2dafad1166898394120d2b24655e44843a8ae6d"
+                "reference": "084111c25ccffc5babba70803e5fc78c944f2ea4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/segmentio/analytics-php/zipball/f2dafad1166898394120d2b24655e44843a8ae6d",
-                "reference": "f2dafad1166898394120d2b24655e44843a8ae6d",
+                "url": "https://api.github.com/repos/segmentio/analytics-php/zipball/084111c25ccffc5babba70803e5fc78c944f2ea4",
+                "reference": "084111c25ccffc5babba70803e5fc78c944f2ea4",
                 "shasum": ""
             },
             "require": {
@@ -1613,7 +1613,7 @@
                 "segment",
                 "segmentio"
             ],
-            "time": "2016-01-06 07:56:57"
+            "time": "2016-02-01 22:46:39"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1676,16 +1676,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "87db8700deb12ba2b65e858f656a1f885530bcb0"
+                "reference": "24bb94807eff00db49374c37ebf56a0304e8aef3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/87db8700deb12ba2b65e858f656a1f885530bcb0",
-                "reference": "87db8700deb12ba2b65e858f656a1f885530bcb0",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/24bb94807eff00db49374c37ebf56a0304e8aef3",
+                "reference": "24bb94807eff00db49374c37ebf56a0304e8aef3",
                 "shasum": ""
             },
             "require": {
@@ -1735,7 +1735,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2015-12-05 11:13:14"
+            "time": "2016-01-07 13:38:51"
         }
     ],
     "aliases": [],

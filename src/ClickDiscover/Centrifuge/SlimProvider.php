@@ -12,16 +12,13 @@ class SlimProvider {
 
     protected $settings;
     protected $container;
-    protected $services;
     public $app;
 
     public function __construct($settings) {
         $this->settings = $settings;
-        $this->container = new \Slim\Container($this->settings);
-        $this->services  = new ServiceProvider();
-        $this->services->register($this->container);
-
+        $this->container = ServiceProvider::withSlimContainer($settings);
         $this->app = new \Slim\App($this->container);
+
         $this->addMiddlewares();
 
         // Add renderers
