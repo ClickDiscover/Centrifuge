@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "add8c4834929ba4d807abb3dc91178a1",
-    "content-hash": "845ce2a09549651bf6ed05af1e21d70e",
+    "hash": "dd05e738e02ada7bdb648aafd8ea937e",
+    "content-hash": "38de18a0c052976321334f74f3ff4c2e",
     "packages": [
         {
             "name": "acclimate/container",
@@ -68,6 +68,74 @@
             "time": "2014-03-19 19:15:54"
         },
         {
+            "name": "components/bootstrap",
+            "version": "3.3.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/bootstrap.git",
+                "reference": "fb4923919c620b8b2aa8a11eda16b49b0a9e8a27"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/bootstrap/zipball/fb4923919c620b8b2aa8a11eda16b49b0a9e8a27",
+                "reference": "fb4923919c620b8b2aa8a11eda16b49b0a9e8a27",
+                "shasum": ""
+            },
+            "require": {
+                "components/jquery": "1.9.1 - 2"
+            },
+            "suggest": {
+                "components/bootstrap-default": "Provide a theme for Bootstrap as components/bootstrap only provides the CSS as file assets"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "js/bootstrap.js"
+                    ],
+                    "files": [
+                        "js/*.js",
+                        "css/*.css",
+                        "css/*.map",
+                        "fonts/*",
+                        "less/mixins/*.less",
+                        "less/*.less"
+                    ],
+                    "shim": {
+                        "deps": [
+                            "jquery"
+                        ]
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jacob Thornton",
+                    "email": "jacobthornton@gmail.com"
+                },
+                {
+                    "name": "Mark Otto",
+                    "email": "markdotto@gmail.com"
+                }
+            ],
+            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+            "homepage": "http://getbootstrap.com",
+            "keywords": [
+                "css",
+                "framework",
+                "front-end",
+                "less",
+                "mobile-first",
+                "responsive",
+                "web"
+            ],
+            "time": "2015-11-24 20:19:41"
+        },
+        {
             "name": "components/jquery",
             "version": "2.2.0",
             "source": {
@@ -108,6 +176,36 @@
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
             "time": "2016-01-08 23:29:41"
+        },
+        {
+            "name": "components/pure",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/pure.git",
+                "reference": "dd4bbc285623c9c0bb4e974abc35bcaeb9cacd09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/pure/zipball/dd4bbc285623c9c0bb4e974abc35bcaeb9cacd09",
+                "reference": "dd4bbc285623c9c0bb4e974abc35bcaeb9cacd09",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "styles": [
+                        "pure.css"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Shim repository for Pure.",
+            "homepage": "http://github.com/components/pure",
+            "time": "2015-02-16 13:57:21"
         },
         {
             "name": "container-interop/container-interop",
@@ -1740,7 +1838,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "components/pure": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

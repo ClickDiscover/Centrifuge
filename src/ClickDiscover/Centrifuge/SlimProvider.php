@@ -18,14 +18,12 @@ class SlimProvider {
         $this->settings = $settings;
         $this->container = ServiceProvider::withSlimContainer($settings);
         $this->app = new \Slim\App($this->container);
-
-        $this->addMiddlewares();
-
+ 
         // Add renderers
         $this->addTwig();
         $this->addPlates();
 
-        return $this->app;
+        $this->addMiddlewares();
     }
 
     public function addTwig() {
@@ -44,10 +42,10 @@ class SlimProvider {
     }
 
     public function addPlates() {
-        $container['plates'] = function ($c) {
+        $this->container['plates'] = function ($c) {
             $templateRoot =
-                $container['settings']['paths']['templates.path'] .
-                $container['settings']['paths']['relative.landers'];
+                $c['settings']['paths']['templates.path'] .
+                $c['settings']['paths']['relative.landers'];
 
             $plates = new \League\Plates\Engine($templateRoot);
             $plates->loadExtension(new \Flagship\Plates\VariantExtension);
@@ -71,6 +69,13 @@ class SlimProvider {
             Middleware::TrailingSlash(false)
                 ->redirect(301)
         );
+
+        // $app->add(function (Request $request, Response $response, callable $next) {
+            // $response->getBody()->write('<html>');
+            // $response = $next ($request, $response);
+            // $response->getBody()->write('</html>');
+            // return $response;
+        // });
 
 
         // Appends trailing / to urls

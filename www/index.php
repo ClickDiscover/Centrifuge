@@ -18,27 +18,40 @@ $settings = require $rootDir . '/settings.php';
 $slim = new ClickDiscover\Centrifuge\SlimProvider($settings);
 $app = $slim->app;
 
+$debug = function ($req, $res, callable $next) {
+    $res->getBody()->write('<html><body><pre>');
+    $res = $next ($req, $res);
+    $res->getBody()->write('</pre></body></html>');
+    return $res;
+};
+$html = function ($req, $res, callable $next) {
+    $res->getBody()->write('<html>');
+    $res->getBody()->write('<head><link rel="stylesheet" href="components/pure/pure.css"></head>');
+    $res->getBody()->write('<body>');
+    $res = $next ($req, $res);
+    $res->getBody()->write('</body></html>');
+    return $res;
+};
 
-$app->get('/debug/{obj}', function ($req, $res, $args) use ($app) {
-    echo '<pre>';
-    $c = $app->getContainer();
-    $obj = $args['obj'];
-    if($obj != 'this') {
-        $c = $c->get($obj);
+$app->get('/', function ($req, $res, $args) use ($app) {
+    // foreach (["products", 'networks', 'offers'] as $t) {
+    foreach (['ad_text', 'ad_image', 'ad_cta'] as $t) {
+        echo "<h1> $t </h1>";
+        $arr = $this->pdo->query("SELECT * FROM $t");
+        echo \Flagship\Plates\HtmlExtension::table($arr->fetchAll());
+        echo "<br><br><br>";
     }
-    print_r($c);
-    echo '</pre>';
-});
+})->add($html);
 
 $app->get('/content/{id:[0-9]+}', function (Request $req, Response $res, $args) {
-    $lander = $this->landers->fetch($args['id']);
+    // $lander = $this->landers->fetch($args['id']);
     // 404 on Not Found
 
     // $html = $this->plates->landerRender($lander);
     // $res->getBody()->write($html);
     //
     $this->twig->render($res, 'test.twig', [
-        'title' => $lander->id
+        'title' => 'adsf'
     ]);
     return $res;
 });

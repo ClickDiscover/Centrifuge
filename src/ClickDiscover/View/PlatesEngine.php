@@ -12,8 +12,8 @@ class PlatesEngine extends \Slim\Collection {
 
     use Profiling;
 
-    private $engine;
-    private $assetRoot;
+    public $engine;
+    public $assetRoot;
 
     public function __construct($plates, $assetRoot) {
         parent::__construct();
