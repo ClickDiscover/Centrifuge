@@ -33,6 +33,7 @@ class SlimProvider {
                 'debug' => true,
                 'cache' => false
             ]);
+            $view->addExtension(new \Twig_Extension_Debug());
             $view->addExtension(new \Slim\Views\TwigExtension(
                 $c['router'],
                 $c['request']->getUri()

@@ -1,0 +1,39 @@
+{% extends 'layouts/blog.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_style %}
+  <link rel="stylesheet" href="{{ base_url() }}/css/blog.css">
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div class="posts">
+    <h1 class="content-subhead">Featured {{ title }}</h1>
+
+      {% for p in index %}
+
+        <section class="post">
+            <header class="post-header">
+              <img class="post-avatar" alt="{{ p.name }} avatar" height="48" width="48" src="{{ p.image_href }}">
+
+                <h2 class="post-title">{{ p.name }}</h2>
+
+                <p class="post-meta">
+                  UUID <a href="#" class="post-author">{{ p.uuid }}</a>
+                </p>
+            </header>
+
+            <div class="post-description">
+                <p>
+                    <pre>{{ dump(p) }}</pre>
+                </p>
+            </div>
+        </section>
+
+      {% endfor %}
+
+{% endblock %}

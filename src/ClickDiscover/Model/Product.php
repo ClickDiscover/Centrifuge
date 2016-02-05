@@ -2,8 +2,10 @@
 
 namespace ClickDiscover\Model;
 
+use ClickDiscover\Interfaces\ImmutableObject;
 
-class Product extends \ClickDiscover\Interfaces\ImmutableObject {
+
+class Product extends ImmutableObject {
 
     protected $id;
     protected $name;
