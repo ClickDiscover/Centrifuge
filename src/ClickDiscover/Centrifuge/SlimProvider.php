@@ -28,7 +28,7 @@ class SlimProvider {
 
     public function addTwig() {
         $this->container['twig'] = function ($c) {
-            $view = new \Slim\Views\Twig($c['settings']['paths']['templates.path'], [
+            $view = new \Slim\Views\Twig($c['settings']['paths']['root.buzzlily'], [
                 'cache' => '/tmp',
                 'debug' => true,
                 'cache' => false
@@ -44,14 +44,14 @@ class SlimProvider {
     public function addPlates() {
         $this->container['plates'] = function ($c) {
             $templateRoot =
-                $c['settings']['paths']['templates.path'] .
+                $c['settings']['paths']['root.templates'] .
                 $c['settings']['paths']['relative.landers'];
 
             $plates = new \League\Plates\Engine($templateRoot);
             $plates->loadExtension(new \Flagship\Plates\VariantExtension);
             $plates->loadExtension(new \Flagship\Plates\HtmlExtension);
             $view = new \ClickDiscover\View\PlatesEngine($plates, $c['settings']['paths']['relative.static']);
-            $view->addFolder('admin', $c['settings']['paths']['templates.path'] . '/admin');
+            $view->addFolder('admin', $c['settings']['paths']['root.templates'] . '/admin');
             return $view;
         };
     }
