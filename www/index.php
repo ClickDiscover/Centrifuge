@@ -50,7 +50,7 @@ $app->get('/content/{id:[0-9]+}', function (Request $req, Response $res, $args) 
     // $html = $this->plates->landerRender($lander);
     // $res->getBody()->write($html);
     //
-    $this->twig->render($res, 'test.twig', [
+    $this->twig->render($res, 'posts.twig', [
         'title' => 'adsf'
     ]);
     return $res;

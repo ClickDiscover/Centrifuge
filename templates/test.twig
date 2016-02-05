@@ -1,9 +1,24 @@
-{% extends 'layout.twig' %}
+{% extends 'blog.layout.twig' %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<h1>{{ title }}</h1>
-WhooA
-asdff
+    <section class="post">
+        <header class="post-header">
+            <img class="post-avatar" alt="Eric Ferraiuolo&#x27;s avatar" height="48" width="48" src="/images/329f97a4b8fd9dd1fb5d2b72519f83eb.jpg">
+
+            <h2 class="post-title">Everything You Need to Know About Grunt</h2>
+
+            <p class="post-meta">
+                By <a class="post-author" href="#">Eric Ferraiuolo</a> under <a class="post-category post-category-js" href="#">JavaScript</a>
+            </p>
+        </header>
+
+        <div class="post-description">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            </p>
+        </div>
+    </section>
+
 {% endblock %}
