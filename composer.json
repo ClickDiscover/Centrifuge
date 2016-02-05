@@ -23,7 +23,9 @@
         "league/fractal": "^0.13.0",
         "fzaninotto/faker": "^1.5",
         "components/pure": "dev-master",
-        "components/bootstrap": "^3.3"
+        "components/bootstrap": "^3.3",
+        "league/tactician": "^1.0",
+        "league/event": "^2.1"
     },
 
     "require-dev": {
