@@ -23,6 +23,10 @@ class ServiceProvider implements \Pimple\ServiceProviderInterface {
             return $pdo;
         };
 
+        $container['creatives'] = function ($c) {
+            return new \ClickDiscover\Service\CreativeService($c['db']);
+        };
+
         $container['offer.network'] = function ($c) {
             return new \Flagship\Service\NetworkOfferService($c['db'], $c['settings']['application']['product.path']);
         };

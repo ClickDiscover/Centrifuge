@@ -29,7 +29,7 @@ $app->get('/ad', function ($req, $res, $args) use ($app) {
     echo "</body></html>";
 });
 
-$app->get('/content/{id:[0-9]+}', function (Request $req, Response $res, $args) {
+$app->get('/products', function (Request $req, Response $res, $args) {
     // $lander = $this->landers->fetch($args['id']);
     // 404 on Not Found
 
@@ -40,6 +40,22 @@ $app->get('/content/{id:[0-9]+}', function (Request $req, Response $res, $args) 
         'title' => 'Products',
         'index' => $arr
     ]);
+    return $res;
+});
+
+$app->get('/creative/{id:[0-9]+}', function (Request $req, Response $res, $args) {
+    $creative = $this->creatives->fetchCreative($args['id']);
+    echo '<pre>';
+    print_r($creative);
+    echo '</pre>';
+    // $this->twig->render($res, 'creative.twig', [
+        // 'title' => 'Random Creative',
+        // 'creative' => $creative->toArray(),
+        // 'foo' => [
+            // 'image' => $creative->image,
+            // 'text' => $creative->text
+        // ]
+    // ]);
     return $res;
 });
 

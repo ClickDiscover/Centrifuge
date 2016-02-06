@@ -21,6 +21,9 @@ $IMAGES = 3;
 $CTA = 3;
 
 $ARTICLES = 5;
+
+$SLOTS = 3; 
+
 function output($t, $cols, $f) {
     global $container;
     $sql = 'INSERT INTO ' . $t . ' (' . implode(',', $cols) . ') VALUES (' . implode(',', array_pad([], count($cols), '?')) . ')';
@@ -31,6 +34,29 @@ function output($t, $cols, $f) {
     var_dump($s);
     echo $res;
 }
+
+// foreach (range(0, $SLOTS) as $i) {
+    // $f = [$faker->uuid, 1, 1,  true];
+    // output('slots', ['uuid', 'article_id', 'type', 'enabled'], $f);
+// }
+
+
+// foreach (range(1, 4) as $x) {
+    // $f = [$faker->uuid, 11, $x];
+    // output('traffickings', ['uuid', 'offer_id', 'slot_id'], $f);
+// }
+
+output('offers_creatives', ['uuid', 'offer_id', 'slot_id'], [$faker->uuid, 3, 1]);
+output('offers_creatives', ['uuid', 'offer_id', 'slot_id'], [$faker->uuid, 11, 2]);
+
+// foreach (range(1, 4) as $x) {
+    // foreach (range(1, 4) as $y) {
+        // foreach (range(1,4) as $z) {
+            // $f = [$faker->uuid, $x, $y, $z];
+            // output('creatives', ['uuid', 'text_id', 'image_id', 'cta_id'], $f);
+        // }
+    // }
+// }
 
 // echo 'networks'.PHP_EOL;
 // foreach (range(0, $NETWORKS) as $i) {

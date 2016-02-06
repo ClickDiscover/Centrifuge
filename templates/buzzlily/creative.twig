@@ -1,0 +1,38 @@
+{% extends 'layouts/blog.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_style %}
+  <link rel="stylesheet" href="{{ base_url() }}/css/blog.css">
+{% endblock %}
+
+
+
+
+{% block content %}
+
+
+<div class="posts">
+    <h1 class="content-subhead">Featured {{ title }}</h1>
+
+
+      <section class="post">
+          <header class="post-header">
+            <img height="200" width="200" src="{{ creative.image.image }}">
+
+              <h2 class="post-title">{{ creative.image.uuid }}</h2>
+
+              <p class="post-meta">
+                UUID <a href="#" class="post-author">{{ creative.text.uuid }}</a>
+              </p>
+          </header>
+
+          <div class="post-description">
+              <p>
+                  <pre>{{ creative.text.text }}</pre>
+              </p>
+          </div>
+      </section>
+
+
+{% endblock %}
