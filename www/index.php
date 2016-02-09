@@ -59,6 +59,15 @@ $app->get('/creative/{id:[0-9]+}', function (Request $req, Response $res, $args)
     return $res;
 });
 
+$app->get('/slot/{id:[0-9]+}', function (Request $req, Response $res, $args) {
+    $slot = $this->slots->fetch($args['id']);
+    echo '<pre>';
+    print_r($slot);
+    echo '</pre>';
+    return $res;
+});
+
+
 $app->get('/content/{landerId:[0-9]+}/click[/{linkId:[0-9]+}]', function (Request $req, Response $res, $args) {
     // Old Procedure
     // 1) Get Lander From Session -> Referrer -> Query param fp_lid

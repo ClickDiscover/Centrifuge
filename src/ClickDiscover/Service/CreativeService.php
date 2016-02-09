@@ -18,8 +18,7 @@ class CreativeService {
         $image = $this->db->fetch('ad_image', $arr['image_id'], $this->sqlFor('ad_image'));
         $cta = $this->db->fetch('ad_cta', $arr['cta_id'], $this->sqlFor('ad_cta'));
 
-        $creative = new Creative;
-        $creative->fromArray([
+        $creative = new Creative([
             'id' => $id,
             'text' => $text,
             'image' => $image,
@@ -37,8 +36,7 @@ class CreativeService {
         $text = $this->selectRandom('ad_text');
         $cta = $this->selectRandom('ad_cta');
 
-        $creative = new Creative;
-        $creative->fromArray([
+        $creative = new Creative([
             'text' => $text,
             'image' => $image,
             'cta' => $cta,

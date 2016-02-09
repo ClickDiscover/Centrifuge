@@ -27,6 +27,10 @@ class ServiceProvider implements \Pimple\ServiceProviderInterface {
             return new \ClickDiscover\Service\CreativeService($c['db']);
         };
 
+        $container['slots'] = function ($c) {
+            return new \ClickDiscover\Service\SlotService($c['db'], $c['creatives']);
+        };
+
         $container['offer.network'] = function ($c) {
             return new \Flagship\Service\NetworkOfferService($c['db'], $c['settings']['application']['product.path']);
         };

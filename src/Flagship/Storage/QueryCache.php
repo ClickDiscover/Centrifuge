@@ -77,8 +77,8 @@ class QueryCache {
     }
 
     public function uncachedFetchAll($sql, $params = []) {
-        $s = $this->db->query($sql);
-        $s->execute($params);
+        $s = $this->db->prepare($sql);
+        $res = $s->execute($params);
         return $s->fetchAll();
     }
 
