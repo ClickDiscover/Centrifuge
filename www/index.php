@@ -25,6 +25,11 @@ $app->get('/ad', function ($req, $res, $args) use ($app) {
     $t = "products";
     echo "<h1> $t </h1>";
     $arr = $this->pdo->query("SELECT * FROM $t");
+    foreach ($arr as $a) {
+        echo "<p><pre>";
+        print_r($a);
+        echo "</pre><p>";
+    }
 
     echo "</body></html>";
 });
