@@ -133,14 +133,14 @@ class Container extends \Pimple\Container {
 
         // Plates
         $this['plates'] = function ($c) {
-            $templateRoot = $c['config']['application']['templates.path'] . $c['config']['paths']['relative_landers'];
-            $assetRoot = $c['config']['paths']['relative_static'];
+            $templateRoot = $c['config']['paths']['root.templates'] . $c['config']['paths']['relative.landers'];
+            $assetRoot = $c['config']['paths']['relative.static'];
 
             $plates = new Engine($templateRoot);
             $plates->loadExtension(new VariantExtension);
             $plates->loadExtension(new HtmlExtension);
             $view = new ViewEngine($plates, $assetRoot);
-            $view->addFolder('admin', $c['config']['application']['templates.path'] . '/admin');
+            $view->addFolder('admin', $c['config']['paths']['root.templates'] . '/admin');
             $view->setProfiler($c['profiler']);
             return $view;
         };
@@ -162,14 +162,14 @@ class Container extends \Pimple\Container {
         };
 
         $this['fs'] = function ($c) {
-            $adapter = new \League\Flysystem\Adapter\Local($c['config']['application']['templates.path']);
+            $adapter = new \League\Flysystem\Adapter\Local($c['config']['paths']['root.templates']);
             $fs = new \League\Flysystem\Filesystem($adapter);
             $fs->addPlugin(new \League\Flysystem\Plugin\ListWith);
             return $fs;
         };
 
         $this['offer.network'] = function ($c) {
-            return new NetworkOfferService($c['db'], $c['config']['application']['product.path']);
+            return new NetworkOfferService($c['db'], $c['config']['paths']['relative.product']);
         };
 
         $this['offer.adex'] = function ($c) {

@@ -12,6 +12,7 @@ if(php_sapi_name() === 'cli-server') {
 require_once dirname(__DIR__) . '/config.php';
 require CENTRIFUGE_ROOT . '/vendor/autoload.php';
 
+$config     = $config['settings'];
 $centrifuge = new Flagship\Container($config);
 $app        = new Slim\Slim($config['application']);
 $bootstrap  = new Flagship\SlimBootstrap($app, $centrifuge);

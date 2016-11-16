@@ -74,7 +74,7 @@ $app->group('/admin', function() use ($app, $centrifuge) {
             $app->get('/', function () use ($app, $centrifuge) {
                 $fs = $centrifuge['fs'];
                 $products = $centrifuge['admin.products'];
-                $productRoot = $centrifuge['config']['paths']['relative_product'];
+                $productRoot = $centrifuge['config']['paths']['relative.product'];
                 $finder = ProductFinder::go($fs, $productRoot, $products);
                 $finder['products'] = $products;
                 return $app->render('admin::models/products', $finder);
